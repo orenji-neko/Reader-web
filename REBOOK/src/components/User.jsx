@@ -56,8 +56,8 @@ const User = () => {
   };
 
   return (
-    <div className="bg-teal-100 p-6 w-1000000000 flex justify-left h-screen items-start">
-      <div className="flex space-y-">
+    <div className="bg-teal-100 p-6 w-1000000000 flex justify-left h-screen items-start ">
+      <div className="flex space-y- user">
         <div className="flex-shrink-0 text-center">
           <div className="bg-white p-10 rounded-3xl shadow-md">
             <div className="relative">
@@ -97,7 +97,7 @@ const User = () => {
                   type="text"
                   name="name"
                   placeholder={userDetails.name}
-                  value={userDetails.name}
+                
                   onChange={handleChange}
                   className="p-2 border rounded-lg w-full"
                   disabled={editingField !== "name"}
@@ -115,7 +115,7 @@ const User = () => {
                   type="email"
                   name="email"
                   placeholder={userDetails.email}
-                  value={userDetails.email}
+                 
                   onChange={handleChange}
                   className="p-2 border rounded-lg w-full"
                   disabled={editingField !== "email"}
@@ -133,7 +133,7 @@ const User = () => {
                   type="text"
                   name="contact"
                   placeholder={userDetails.contact}
-                  value={userDetails.contact}
+                 
                   onChange={handleChange}
                   className="p-2 border rounded-lg w-full"
                   disabled={editingField !== "contact"}
@@ -152,7 +152,7 @@ const User = () => {
                     type="password"
                     name="password"
                     placeholder="**********"
-                    value={userDetails.password}
+                  
                     onChange={handleChange}
                     className="p-2 border rounded-lg w-full"
                     disabled={editingField !== "password"}
@@ -169,7 +169,7 @@ const User = () => {
                     type="password"
                     name="confirmpassword"
                     placeholder="**********"
-                    value={userDetails.confirmpassword}
+                 
                     onChange={handleChange}
                     className="p-2 border rounded-lg w-full"
                     disabled={editingField !== "confirmpassword"}
