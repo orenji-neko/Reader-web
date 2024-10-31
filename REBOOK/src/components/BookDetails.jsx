@@ -121,7 +121,7 @@ function BookDetails() {
   }
 
   return (
-    <div className="book-details p-6">
+    <div className="book-details p-6 h-screen">
       {/* Chevron for navigating back */}
       <div className="flex items-center mb-4">
         <button onClick={handleGoBack} className="flex items-center text-blue-500 hover:text-blue-700">
