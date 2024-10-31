@@ -16,6 +16,7 @@ const Landing = () => {
   const [isDragging, setIsDragging] = useState(false);
   const [startY, setStartY] = useState(0);
   const [scrollTop, setScrollTop] = useState(0);
+
   const toggleDropdown = () => {
     setDropdownOpen(!isDropdownOpen);
   };
@@ -41,10 +42,10 @@ const Landing = () => {
   };
 
   return (
-    <div className=" bg-teal-100 p-6">
-      <div className=" ">
+    <div className="bg-teal-100 p-6 flex flex-col h-screen">
+      <div>
         {/* Search Bar and Categories Dropdown */}
-        <div className="flex justify-between items-center  max-w-2xl mb-2 space-x-4">
+        <div className="flex justify-between items-center max-w-2xl mb-2 space-x-4">
           <div className="flex items-center border border-gray-300 rounded-full p-2 bg-white flex-1">
             <FaSearch className="text-black mr-2" />
             <input
@@ -58,14 +59,15 @@ const Landing = () => {
               <FaTimes className="text-black cursor-pointer ml-2" onClick={clearSearch} />
             )}
           </div>
-
           {/* Categories Dropdown */}
           <div className="relative">
-            <button onClick={toggleDropdown} className="bg-white border border-gray-300 rounded-full px-4 py-2 shadow-md flex items-center">
+            <button
+              onClick={toggleDropdown}
+              className="bg-white border border-gray-300 rounded-full px-4 py-2 shadow-md flex items-center"
+            >
               <span className="pr-2">Categories</span>
               <FaChevronDown className={`text-gray-500 transition-transform duration-300 ${isDropdownOpen ? 'rotate-180' : ''}`} />
             </button>
-
             {isDropdownOpen && (
               <div className="absolute z-10 bg-white border border-gray-300 rounded-lg shadow-md mt-1 w-48">
                 <ul className="space-y-2 p-2">
@@ -82,9 +84,9 @@ const Landing = () => {
         <Pics searchTerm={searchTerm} />
       </div>
       <h2 className="text-2xl font-bold p-4">Latest</h2>
-      <div className="relative bg-white p-1 rounded-md shadow-lg h-48">
+      <div className="relative bg-white p-1 rounded-md shadow-lg flex-1 mb-4 mx-2 overflow-hidden">
         <div
-          className="overflow-y-scroll h-full"
+          className="overflow-y-scroll h-full scroll-hide mb-4"
           ref={scrollRef}
           onMouseDown={handleMouseDown}
           onMouseMove={handleMouseMove}
