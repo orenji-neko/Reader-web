@@ -7,13 +7,13 @@ function Sidebar() {
       {/* User Section */}
       <div>
         <div className="p-4 flex items-center h-10">
-          <a href="/components/Dashboard.jsx">
+          <Link to="/User">
             <img
               src="/rebook-images/image.png"
-              alt="user"
+              alt="User"
               className="w-10 h-7 rounded-full mr-2"
             />
-          </a>
+          </Link>
           <h1 className="text-black text-sm mb-2 pt-3">
             Welcome, <span className="font-bold">Nicki</span>
           </h1>
