@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FaPencilAlt, FaSave, FaTimes, FaUser } from 'react-icons/fa';
 
 const User = () => {
@@ -9,9 +9,20 @@ const User = () => {
     password: "12345678910",
     confirmpassword: "12345678910"
   });
-
   const [editingField, setEditingField] = useState("");
+  const [tempDetails, setTempDetails] = useState({});
   const [image, setImage] = useState("/rebook-images/image.png");
+
+  useEffect(() => {
+    const storedUserDetails = localStorage.getItem("userDetails");
+    if (storedUserDetails) {
+      setUserDetails(JSON.parse(storedUserDetails));
+    }
+    const storedImage = localStorage.getItem("userImage");
+    if (storedImage) {
+      setImage(storedImage);
+    }
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -23,13 +34,17 @@ const User = () => {
 
   const handleEditClick = (field) => {
     setEditingField(field);
+    setTempDetails(userDetails); // Save current details to tempDetails
   };
 
   const handleSave = () => {
     setEditingField("");
+    localStorage.setItem("userDetails", JSON.stringify(userDetails));
+    localStorage.setItem("userImage", image);
   };
 
   const handleCancel = () => {
+    setUserDetails(tempDetails); // Revert to previous details
     setEditingField("");
   };
 
@@ -59,7 +74,7 @@ const User = () => {
               </label>
             </div>
             <h1 className="text-black text-2xl mb-6 pt-3">
-              <span className="font-bold">Nicki</span>
+              <span className="font-bold">{userDetails.name}</span>
             </h1>
             <input
               type="file"
@@ -70,12 +85,10 @@ const User = () => {
             />
           </div>
         </div>
-
         <div className="flex bg-white p-10 rounded-3xl shadow-md w-full space-x-6 h-full">
           <div className="w-full">
             <h2 className="text-xl font-bold mb-4">Account Settings</h2>
             <h3 className="text-lg font-semibold mb-4">Reader Information</h3>
-
             {/* Name Field */}
             <div className="mb-4">
               <h2 className="text-xl font-bold mb-1">Name</h2>
@@ -94,7 +107,6 @@ const User = () => {
                 )}
               </div>
             </div>
-
             {/* Email Field */}
             <div className="mb-4">
               <h2 className="text-xl font-bold mb-1">Email</h2>
@@ -113,7 +125,6 @@ const User = () => {
                 )}
               </div>
             </div>
-
             {/* Contact Field */}
             <div className="mb-4">
               <h2 className="text-xl font-bold mb-1">Contact</h2>
@@ -132,7 +143,6 @@ const User = () => {
                 )}
               </div>
             </div>
-
             {/* Password and Confirm Password Fields */}
             <div className="flex mb-4 space-x-4">
               <div className="flex-1">
@@ -170,7 +180,6 @@ const User = () => {
                 </div>
               </div>
             </div>
-
             {/* Save and Cancel Buttons */}
             {editingField && (
               <div className="flex justify-end space-x-4 mt-4">
@@ -182,7 +191,7 @@ const User = () => {
                 </button>
                 <button
                   onClick={handleSave}
-                  className="bg-[#73C5C0] text-white px-4 py-2 rounded-lg hover:bg-blue-600 flex items-center space-x-2"
+                  className="bg-[#73C5C0] text-black px-4 py-2 rounded-lg hover:bg-blue-600 flex items-center space-x-2"
                 >
                   <FaSave />
                   <span>Save Changes</span>
