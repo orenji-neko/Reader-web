@@ -4,25 +4,20 @@ import { faBell } from '@fortawesome/free-solid-svg-icons';
 
 function Navbar({ toggleSidebar, isSidebarOpen }) {
   return (
-    <div className="flex  justify-between bg-teal-200  p-4 border-b-2  border-gray-400">
-      <div className="flex align-[3px] ">
-        <button onClick={toggleSidebar} className="focus:outline-none flex flex-row justify-center items-center">
-          <div 
-            className={`h-6 w-1 bg-black transition-transform duration-300 ${isSidebarOpen ? 'rotate-0' : 'rotate-90'}`} 
-          />
-          <div 
-            className={`h-6 w-1 bg-black mt-1 transition-opacity duration-300 ${isSidebarOpen ? 'rotate-0' : 'rotate-90'}`} 
-          />
-          <div 
-            className={`h-6 w-1 bg-black mt-1 transition-transform duration-300 ${isSidebarOpen ? 'rotate-0' : '-rotate-90'}`} 
-          />
+    <div className="flex justify-between bg-teal-200 p-4 border-b-2 border-gray-400">
+      <div className="flex items-center">
+        <button
+          onClick={toggleSidebar}
+          className={`focus:outline-none flex flex-col justify-center items-center space-y-1 transform transition-transform duration-500 ease-in-out ${
+            isSidebarOpen ? 'rotate-90' : 'rotate-0'
+          }`}
+        >
+          <div className="h-1 w-6 bg-black transition-transform duration-500 ease-in-out" />
+          <div className="h-1 w-6 bg-black transition-transform duration-500 ease-in-out" />
+          <div className="h-1 w-6 bg-black transition-transform duration-500 ease-in-out" />
         </button>
         <a href="/">
-          <img 
-            src="/rebook-images/Component2.png" 
-            alt="ReBook Logo"
-            className="ml-4 h-8" 
-          />
+          <img src="/rebook-images/Component2.png" alt="ReBook Logo" className="ml-4 h-8" />
         </a>
       </div>
       <div className="flex items-center">
