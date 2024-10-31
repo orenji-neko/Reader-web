@@ -42,7 +42,9 @@ const Landing = () => {
   };
 
   return (
-    <div className="bg-teal-100 p-6 flex flex-col h-screen">
+    <div className="bg-teal-100 flex flex-col w-full h-full min-h-screen">
+
+    <div className="bg-teal-100 p-6 flex flex-col ">
       <div>
         {/* Search Bar and Categories Dropdown */}
         <div className="flex justify-between items-center max-w-2xl mb-2 space-x-4">
@@ -84,9 +86,9 @@ const Landing = () => {
         <Pics searchTerm={searchTerm} />
       </div>
       <h2 className="text-2xl font-bold p-4">Latest</h2>
-      <div className="relative bg-white p-1 rounded-md shadow-lg flex-1 mb-4 mx-2 overflow-hidden">
+      <div className="relative bg-white p-1 rounded-2xl shadow-lg flex-1 mb-4 mx-2 overflow-hidden">
         <div
-          className="overflow-y-scroll h-full scroll-hide mb-4"
+          className="overflow-y-scroll max-h-[300px] scroll-hide mb-4"
           ref={scrollRef}
           onMouseDown={handleMouseDown}
           onMouseMove={handleMouseMove}
@@ -120,6 +122,7 @@ const Landing = () => {
           </table>
         </div>
       </div>
+    </div>
     </div>
   );
 };
