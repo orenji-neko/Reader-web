@@ -37,7 +37,7 @@ const BorrowB = () => {
   };
 
   return (
-    <div className="bg-teal-100 p-6">
+    <div className="bg-teal-100 p-6 h-screen">
       {/* Search Bar and Categories Dropdown */}
       <div className="flex justify-between items-center max-w-2xl mb-2 space-x-4">
         <div className="flex items-center border border-gray-300 rounded-full p-2 bg-white flex-1">
