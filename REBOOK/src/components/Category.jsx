@@ -19,9 +19,9 @@ const booksData = [
   { id: 8, title: "Circles", author: "Madeline Miller", category: "Fiction", cover: "/rebook-images/circle.png", link: "/books/circles" },
   { id: 8, title: "Circles", author: "Madeline Miller", category: "Fiction", cover: "/rebook-images/circle.png", link: "/books/circles" },
   { id: 6, title: "Solitaire", author: "Alice Oseman", category: "Mystery", cover: "/rebook-images/solitaire.png", link: "/books/solitaire" },
-  { id: 6, title: "Solitaire", author: "Alice Oseman", category: "Mystery", cover: "/rebook-images/solitaire.png", link: "/books/solitaire" },
-  { id: 6, title: "Solitaire", author: "Alice Oseman", category: "Mystery", cover: "/rebook-images/solitaire.png", link: "/books/solitaire" },
-  { id: 6, title: "Solitaire", author: "Alice Oseman", category: "Mystery", cover: "/rebook-images/solitaire.png", link: "/books/solitaire" },
+  { id: 6, title: "Solitaire", author: "Alice Oseman", category: "History", cover: "/rebook-images/solitaire.png", link: "/books/solitaire" },
+  { id: 6, title: "Solitaire", author: "Alice Oseman", category: "History", cover: "/rebook-images/solitaire.png", link: "/books/solitaire" },
+  { id: 6, title: "Solitaire", author: "Alice Oseman", category: "History", cover: "/rebook-images/solitaire.png", link: "/books/solitaire" },
 
 
 
