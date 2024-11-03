@@ -6,6 +6,7 @@ import History from './components/History';
 import BookDetails from './components/BookDetails'; // Import the BookDetails component
 import User from './components/User'; // Import User component
 import LandingLayout from './components/Layout/LandingLayout'; // Ensure LandingLayout is properly imported
+import Category from './components/Category'; // Import the Category component
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
           <Route path="History" element={<History />} />
           <Route path="books/:bookTitle" element={<BookDetails />} />
           <Route path="User" element={<User />} />
+          <Route path="category/:categoryName" element={<Category />} /> {/* New route for categories */}
         </Route>
       </Routes>
     </Router>

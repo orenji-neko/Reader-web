@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { FaSearch, FaTimes, FaChevronDown } from 'react-icons/fa'; // Ensure react-icons is installed
+import { Link } from 'react-router-dom'; // Import Link for navigation
 import Sortable from '../components/Sortable';
 
 const BorrowB = () => {
@@ -9,6 +10,8 @@ const BorrowB = () => {
   const [isDragging, setIsDragging] = useState(false);
   const [startY, setStartY] = useState(0);
   const [scrollTop, setScrollTop] = useState(0);
+
+  const categories = ["Fiction", "Non-Fiction", "Science", "History", "Mystery"]; // Define categories
 
   const toggleDropdown = () => {
     setDropdownOpen(!isDropdownOpen);
@@ -69,11 +72,11 @@ const BorrowB = () => {
           {isDropdownOpen && (
             <div className="absolute z-10 bg-white border border-gray-300 rounded-lg shadow-md mt-1 w-48">
               <ul className="space-y-2 p-2">
-                <li className="p-2 bg-gray-100 rounded hover:bg-teal-600 hover:text-white cursor-pointer">Fiction</li>
-                <li className="p-2 bg-gray-100 rounded hover:bg-teal-600 hover:text-white cursor-pointer">Non-Fiction</li>
-                <li className="p-2 bg-gray-100 rounded hover:bg-teal-600 hover:text-white cursor-pointer">Science</li>
-                <li className="p-2 bg-gray-100 rounded hover:bg-teal-600 hover:text-white cursor-pointer">History</li>
-                <li className="p-2 bg-gray-100 rounded hover:bg-teal-600 hover:text-white cursor-pointer">Mystery</li>
+                {categories.map((category) => (
+                  <li key={category} className="p-2 bg-gray-100 rounded hover:bg-teal-600 hover:text-white cursor-pointer">
+                    <Link to={`/category/${category}`}>{category}</Link> {/* Wrap with Link */}
+                  </li>
+                ))}
               </ul>
             </div>
           )}

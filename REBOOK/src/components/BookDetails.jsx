@@ -1,5 +1,5 @@
 import React from 'react';
-import { useParams, useNavigate } from 'react-router-dom'; // Import useNavigate for navigation
+import { useParams, useNavigate } from 'react-router-dom';
 
 const bookData = {
   "blink": {
@@ -113,7 +113,11 @@ function BookDetails() {
 
   // Function to go back to the previous page or landing page
   const handleGoBack = () => {
-    navigate("/"); // Navigate back to landing page
+    if (window.history.length > 1) {
+      navigate(-1); // Go back to the previous page in the history stack
+    } else {
+      navigate("/"); // Fallback to landing page if no history
+    }
   };
 
   if (!book) {
