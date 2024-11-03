@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
-import { Link } from 'react-router-dom'; // Import Link from react-router-dom
 import Pics from './Pics';
+import { Link } from 'react-router-dom';
 import { FaSearch, FaTimes, FaChevronDown } from 'react-icons/fa';
 
 const latestBooksData = [
@@ -8,6 +8,11 @@ const latestBooksData = [
   { id: 3, title: "Book Title 3", author: "Author 3", cover: "/rebook-images/hold.png", rating: 4.0, status: "Checked Out" },
   { id: 4, title: "Book Title 4", author: "Author 4", cover: "/rebook-images/slow.png", rating: 3.8, status: "Available" },
   { id: 5, title: "Book Title 5", author: "Author 5", cover: "/rebook-images/solitaire.png", rating: 4.7, status: "Available" },
+  { id: 6, title: "Book Title 6", author: "Author 6", cover: "/rebook-images/solitaire.png", rating: 4.7, status: "Available" },
+  { id: 7, title: "Book Title 2", author: "Author 2", cover: "/rebook-images/blink.png", rating: 4.5, status: "Available" },
+  { id: 8, title: "Book Title 3", author: "Author 3", cover: "/rebook-images/hold.png", rating: 4.0, status: "Checked Out" },
+  { id: 9, title: "Book Title 4", author: "Author 4", cover: "/rebook-images/slow.png", rating: 3.8, status: "Available" },
+  { id: 10, title: "Book Title 5", author: "Author 5", cover: "/rebook-images/solitaire.png", rating: 4.7, status: "Available" },
 ];
 
 const categories = ["Fiction", "Non-Fiction", "Science", "History", "Mystery"]; // Define your categories
@@ -46,7 +51,7 @@ const Landing = () => {
 
   return (
     <div className="bg-teal-100 flex flex-col w-full h-full min-h-screen">
-      <div className="bg-teal-100 p-6 flex flex-col ">
+      <div className="bg-teal-100 p-6 flex flex-col">
         <div>
           {/* Search Bar and Categories Dropdown */}
           <div className="flex justify-between items-center max-w-2xl mb-2 space-x-4">
@@ -74,23 +79,23 @@ const Landing = () => {
               </button>
               {isDropdownOpen && (
                 <div className="absolute z-10 bg-white border border-gray-300 rounded-lg shadow-md mt-1 w-48">
-                  <ul className="space-y-2 p-2">
-                    {categories.map((category) => (
-                      <li key={category} className="p-2 bg-gray-100 rounded hover:bg-teal-600 hover:text-white cursor-pointer">
-                        <Link to={`/category/${category}`}>{category}</Link> {/* Wrap with Link */}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+                <ul className="space-y-2 p-2">
+                  {categories.map((category) => (
+                    <li key={category} className="p-2 bg-gray-100 rounded hover:bg-teal-600 hover:text-white cursor-pointer">
+                      <Link to={`/category/${category}`}>{category}</Link> {/* Wrap with Link */}
+                    </li>
+                  ))}
+                </ul>
+              </div>
               )}
             </div>
           </div>
           <Pics searchTerm={searchTerm} />
         </div>
         <h2 className="text-2xl font-bold p-4">Latest</h2>
-        <div className="relative bg-white p-1 rounded-2xl shadow-lg flex-1 mb-4 mx-2 overflow-hidden">
+        <div className="relative bg-white p-4 rounded-2xl shadow-lg flex-1 mb-4 mx-2 overflow-hidden">
           <div
-            className="overflow-y-scroll max-h-[300px] scroll-hide mb-4"
+            className="overflow-y-auto max-h-full"
             ref={scrollRef}
             onMouseDown={handleMouseDown}
             onMouseMove={handleMouseMove}
