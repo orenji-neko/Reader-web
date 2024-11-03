@@ -11,7 +11,8 @@ const User = () => {
   });
   const [editingField, setEditingField] = useState("");
   const [tempDetails, setTempDetails] = useState({});
-  const [image, setImage] = useState("/rebook-images/image.png");
+  const [image, setImage] = useState("/rebook-images/default_profile.png");
+  const [image2, setImage2] = useState("/rebook-images/default_editprofile.png");
 
   useEffect(() => {
     const storedUserDetails = localStorage.getItem("userDetails");
@@ -21,6 +22,8 @@ const User = () => {
     const storedImage = localStorage.getItem("userImage");
     if (storedImage) {
       setImage(storedImage);
+    } else {
+      setImage("/rebook-images/default_profile.png");
     }
   }, []);
 
@@ -34,19 +37,23 @@ const User = () => {
 
   const handleEditClick = (field) => {
     setEditingField(field);
-    setTempDetails(userDetails); // Save current details to tempDetails
+    setTempDetails(userDetails);
   };
 
   const handleSave = () => {
     setEditingField("");
     localStorage.setItem("userDetails", JSON.stringify(userDetails));
     localStorage.setItem("userImage", image);
+    window.location.reload(); // Refreshes the page after saving
   };
 
   const handleCancel = () => {
-    setUserDetails(tempDetails); // Revert to previous details
-    setEditingField("");
+    if (editingField) {
+      setUserDetails(tempDetails);
+      setEditingField("");
+    }
   };
+  
 
   const handleImageChange = (e) => {
     if (e.target.files && e.target.files[0]) {
@@ -56,24 +63,28 @@ const User = () => {
   };
 
   return (
-    <div className="bg-teal-100 p-6 w-1000000000 flex justify-left h-screen items-start ">
+    <div className="bg-teal-100 p-6 w-1000000000 flex justify-left h-screen items-start">
       <div className="flex space-y- user">
         <div className="flex-shrink-0 text-center">
-          <div className="bg-white p-10 rounded-3xl shadow-md">
-            <div className="relative">
+          <div className="bg-white p-10 rounded-3xl shadow-md mr-3" style={{ width: '300px', height: '350px' }}>
+            <div className="relative flex justify-center items-center h-48">
               <img
                 src={image}
                 alt="User"
-                className="w-40 h-40 rounded-full"
+                className="w-48 h-48 rounded-full"
               />
               <label
                 htmlFor="imageUpload"
                 className="absolute bottom-0 right-0 mb-2 mr-2 cursor-pointer"
               >
-                <FaUser className="text-xl text-gray-500 transition duration-200 hover:text-gray-800" />
+                <img
+                  src={image2}
+                  alt="Edit User"
+                  className="w-12 h-12 rounded-full"
+                />
               </label>
             </div>
-            <h1 className="text-black text-2xl mb-6 pt-3">
+            <h1 className="text-black text-5xl mb-6 pt-3" style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
               <span className="font-bold">{userDetails.name}</span>
             </h1>
             <input
@@ -87,9 +98,8 @@ const User = () => {
         </div>
         <div className="flex bg-white p-10 rounded-3xl shadow-md w-full space-x-6 h-full">
           <div className="w-full">
-            <h2 className="text-xl font-bold mb-4">Account Settings</h2>
+            <h2 className="text-3xl font-bold mb-4">Account Settings</h2>
             <h3 className="text-lg font-semibold mb-4">Reader Information</h3>
-            {/* Name Field */}
             <div className="mb-4">
               <h2 className="text-xl font-bold mb-1">Name</h2>
               <div className="relative">
@@ -97,7 +107,7 @@ const User = () => {
                   type="text"
                   name="name"
                   placeholder={userDetails.name}
-                
+                  value={editingField === "name" ? userDetails.name : ""}
                   onChange={handleChange}
                   className="p-2 border rounded-lg w-full"
                   disabled={editingField !== "name"}
@@ -107,7 +117,6 @@ const User = () => {
                 )}
               </div>
             </div>
-            {/* Email Field */}
             <div className="mb-4">
               <h2 className="text-xl font-bold mb-1">Email</h2>
               <div className="relative">
@@ -115,7 +124,7 @@ const User = () => {
                   type="email"
                   name="email"
                   placeholder={userDetails.email}
-                 
+                  value={editingField === "email" ? userDetails.email : ""}
                   onChange={handleChange}
                   className="p-2 border rounded-lg w-full"
                   disabled={editingField !== "email"}
@@ -125,7 +134,6 @@ const User = () => {
                 )}
               </div>
             </div>
-            {/* Contact Field */}
             <div className="mb-4">
               <h2 className="text-xl font-bold mb-1">Contact</h2>
               <div className="relative">
@@ -133,7 +141,7 @@ const User = () => {
                   type="text"
                   name="contact"
                   placeholder={userDetails.contact}
-                 
+                  value={editingField === "contact" ? userDetails.contact : ""}
                   onChange={handleChange}
                   className="p-2 border rounded-lg w-full"
                   disabled={editingField !== "contact"}
@@ -143,7 +151,6 @@ const User = () => {
                 )}
               </div>
             </div>
-            {/* Password and Confirm Password Fields */}
             <div className="flex mb-4 space-x-4">
               <div className="flex-1">
                 <h2 className="text-xl font-bold mb-1">Password</h2>
@@ -152,7 +159,7 @@ const User = () => {
                     type="password"
                     name="password"
                     placeholder="**********"
-                  
+                    value={editingField === "password" ? userDetails.password : ""}
                     onChange={handleChange}
                     className="p-2 border rounded-lg w-full"
                     disabled={editingField !== "password"}
@@ -169,7 +176,7 @@ const User = () => {
                     type="password"
                     name="confirmpassword"
                     placeholder="**********"
-                 
+                    value={editingField === "confirmpassword" ? userDetails.confirmpassword : ""}
                     onChange={handleChange}
                     className="p-2 border rounded-lg w-full"
                     disabled={editingField !== "confirmpassword"}
@@ -180,8 +187,7 @@ const User = () => {
                 </div>
               </div>
             </div>
-            {/* Save and Cancel Buttons */}
-            {editingField && (
+          
               <div className="flex justify-end space-x-4 mt-4">
                 <button
                   onClick={handleCancel}
@@ -197,7 +203,7 @@ const User = () => {
                   <span>Save Changes</span>
                 </button>
               </div>
-            )}
+         
           </div>
         </div>
       </div>
