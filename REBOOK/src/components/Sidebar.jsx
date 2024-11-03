@@ -2,13 +2,19 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom"; // Using React Router's Link
 
 function Sidebar() {
-  const [image, setImage] = useState("/rebook-images/image.png");
+  const [image, setImage] = useState("/rebook-images/default_profile.png");
+  const [name, setName] = useState("User"); // Initialize the state for name
 
-  // Load image from localStorage on component mount
+  // Load image and name from localStorage on component mount
   useEffect(() => {
     const storedImage = localStorage.getItem("userImage");
+    const storedUserDetails = localStorage.getItem("userDetails");
     if (storedImage) {
       setImage(storedImage);
+    }
+    if (storedUserDetails) {
+      const { name } = JSON.parse(storedUserDetails);
+      setName(name);
     }
   }, []);
 
@@ -25,7 +31,7 @@ function Sidebar() {
             />
           </Link>
           <h1 className="text-black text-sm sm:text-base mb-2 pt-3">
-            Welcome, <span className="font-bold">Nicki</span>
+            Welcome, <span className="font-bold">{name}</span>
           </h1>
         </div>
         {/* Navigation Links */}
