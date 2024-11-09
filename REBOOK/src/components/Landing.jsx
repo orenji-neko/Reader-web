@@ -1,21 +1,31 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import Pics from './Pics';
 import { Link } from 'react-router-dom';
 import { FaSearch, FaTimes, FaChevronDown } from 'react-icons/fa';
+import PropTypes from 'prop-types';
 
-const latestBooksData = [
-  { id: 2, title: "Book Title 2", author: "Author 2", cover: "/rebook-images/blink.png", rating: 4.5, status: "Available" },
-  { id: 3, title: "Book Title 3", author: "Author 3", cover: "/rebook-images/hold.png", rating: 4.0, status: "Checked Out" },
-  { id: 4, title: "Book Title 4", author: "Author 4", cover: "/rebook-images/slow.png", rating: 3.8, status: "Available" },
-  { id: 5, title: "Book Title 5", author: "Author 5", cover: "/rebook-images/solitaire.png", rating: 4.7, status: "Available" },
-  { id: 6, title: "Book Title 6", author: "Author 6", cover: "/rebook-images/solitaire.png", rating: 4.7, status: "Available" },
-  { id: 7, title: "Book Title 2", author: "Author 2", cover: "/rebook-images/blink.png", rating: 4.5, status: "Available" },
-  { id: 8, title: "Book Title 3", author: "Author 3", cover: "/rebook-images/hold.png", rating: 4.0, status: "Checked Out" },
-  { id: 9, title: "Book Title 4", author: "Author 4", cover: "/rebook-images/slow.png", rating: 3.8, status: "Available" },
-  { id: 10, title: "Book Title 5", author: "Author 5", cover: "/rebook-images/solitaire.png", rating: 4.7, status: "Available" },
-];
-
-const categories = ["Fiction", "Non-Fiction", "Science", "History", "Mystery"]; // Define your categories
+const LatestBooksTableEntry = ({ title, coverUrl, rating, author, status }) => {
+  return (
+    <tr>
+      <td className="p-4 border-b border-gray-200">
+        <img src={coverUrl} alt={title} className="h-16 w-16 object-cover rounded-md" />
+      </td>
+      <td className="p-4 border-b border-gray-200">{title}</td>
+      <td className="p-4 border-b border-gray-200">{rating}</td>
+      <td className="p-4 border-b border-gray-200">{author ? author : "" }</td>
+      <td className={`p-4 border-b border-gray-200 ${status === 'Available' ? 'text-green-600' : 'text-red-600'}`}>
+        {status}
+      </td>
+    </tr>
+  )
+}
+LatestBooksTableEntry.propTypes = {
+  title: PropTypes.string,
+  rating: PropTypes.number,
+  author: PropTypes.string,
+  status: PropTypes.string,
+  coverUrl: PropTypes.string
+}
 
 const Landing = () => {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
@@ -24,6 +34,9 @@ const Landing = () => {
   const [isDragging, setIsDragging] = useState(false);
   const [startY, setStartY] = useState(0);
   const [scrollTop, setScrollTop] = useState(0);
+
+  const [latestBooksData, setLatestBooksData] = useState([]);
+  const [categories, setCategories] = useState([]);
 
   const toggleDropdown = () => {
     setDropdownOpen(!isDropdownOpen);
@@ -48,6 +61,23 @@ const Landing = () => {
   const handleMouseUp = () => {
     setIsDragging(false);
   };
+
+  // don't touch
+  useEffect(() => {
+    /*
+     *  [GET] /api/v1/books
+     */
+    const load = async () => {
+      const book_response  = await fetch("/api/v1/books?sort=latest", { method: "GET" });
+      const book_data = await book_response.json();
+
+
+
+      setLatestBooksData(await book_data);
+    }
+
+    load();
+  }, [setLatestBooksData]) // 5 sec
 
   return (
     <div className="bg-teal-100 flex flex-col w-full h-full min-h-screen">
@@ -112,18 +142,15 @@ const Landing = () => {
                 </tr>
               </thead>
               <tbody>
-                {latestBooksData.map((book) => (
-                  <tr key={book.id}>
-                    <td className="p-4 border-b border-gray-200">
-                      <img src={book.cover} alt={book.title} className="h-16 w-16 object-cover rounded-md" />
-                    </td>
-                    <td className="p-4 border-b border-gray-200">{book.title}</td>
-                    <td className="p-4 border-b border-gray-200">{book.rating}</td>
-                    <td className="p-4 border-b border-gray-200">{book.author}</td>
-                    <td className={`p-4 border-b border-gray-200 ${book.status === 'Available' ? 'text-green-600' : 'text-red-600'}`}>
-                      {book.status}
-                    </td>
-                  </tr>
+                {latestBooksData.map((book, index) => (
+                  <LatestBooksTableEntry  
+                    key={index} 
+                    title={book.title} 
+                    rating={book.rating}
+                    author={book.author ? book.author.name : ""}
+                    status={book.status}
+                    coverUrl={`/api/v1/cover/${book.cover}`}
+                  />
                 ))}
               </tbody>
             </table>
