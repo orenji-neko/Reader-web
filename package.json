@@ -1,0 +1,11 @@
+{
+  "name": "reader-web",
+  "version": "1.0.0",
+  "scripts": {
+    "backend": "cd api && bun run dev",
+    "frontend": "cd REBOOK && npm run dev"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}
