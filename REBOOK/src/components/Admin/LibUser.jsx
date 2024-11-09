@@ -4,7 +4,7 @@ import { FaPencilAlt, FaSave, FaTimes, FaUser } from 'react-icons/fa';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'; // Import FontAwesomeIcon component
 import { faUser } from '@fortawesome/free-solid-svg-icons'; // Import the solid user icon
 
-const User = () => {
+const LibUser = () => {
   const [userDetails, setUserDetails] = useState({
     name: "Nicki",
     email: "Gwapakoe@gmail.com",
@@ -218,4 +218,4 @@ const User = () => {
   );
 };
 
-export default User;
+export default LibUser;

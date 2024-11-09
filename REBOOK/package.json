@@ -13,12 +13,15 @@
     "eject": "react-scripts eject"
   },
   "dependencies": {
+    "@fortawesome/free-regular-svg-icons": "^6.6.0",
     "@fortawesome/free-solid-svg-icons": "^6.6.0",
     "@fortawesome/react-fontawesome": "^0.2.2",
+    "@material-tailwind/react": "^2.1.10",
     "axios": "^1.7.7",
     "framer-motion": "^11.11.8",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "react-flaticons": "^1.1.5",
     "react-horizontal-scrolling-menu": "^8.1.0",
     "react-icons": "^5.3.0",
     "react-router-dom": "^6.27.0",
