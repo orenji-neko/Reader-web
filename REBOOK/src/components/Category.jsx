@@ -1,8 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { FaSearch, FaTimes, FaChevronDown } from 'react-icons/fa';
-
-const BookLink = ()
 
 const Category = () => {
   const { categoryId } = useParams();
@@ -14,32 +12,36 @@ const Category = () => {
   const [booksData, setBooksData] = useState([]);
   const [categoriesData, setCategories] = useState([]);
 
+  const [filteredBooks, setFilteredBooks] = useState([]);
+
   useEffect(() => {
     const load = async () => {
-      // books
-      const book_response  = await fetch("/api/v1/books", { method: "GET" });
-      const book_data = await book_response.json();
-      // categories
-      const category_response  = await fetch("/api/v1/categories", { method: "GET" });
-      const category_data = await category_response.json();
-      // this category
-
-      const books = await book_data;
-      const categories = await category_data;
-
-      console.log(books);
-      
-      
-      setCategories(categories);
-
-      const category = categories.find(value => value.id === parseInt(categoryId));
-      setCategoryName(category.name);
-
-      setBooksData(books.filter(book => book.categoryId === parseInt(categoryId)))
-    }
+      try {
+        // Books
+        const bookResponse = await fetch("/api/v1/books");
+        const books = await bookResponse.json();
+        
+        // Categories
+        const categoryResponse = await fetch("/api/v1/categories");
+        const categories = await categoryResponse.json();
+        
+        setCategories(categories);
+        
+        const category = categories.find(value => value.id === parseInt(categoryId));
+        if (category) {
+          setCategoryName(category.name);
+          setBooksData(books);
+          setFilteredBooks(books.filter(book => book.categoryId === parseInt(categoryId)));
+        } else {
+          setFilteredBooks([]);
+        }
+      } catch (error) {
+        console.error("Error loading data:", error);
+      }
+    };
 
     load();
-  }, [categoryId])
+  }, [categoryId]);
 
   const toggleDropdown = () => {
     setDropdownOpen(!isDropdownOpen);
@@ -47,15 +49,25 @@ const Category = () => {
 
   const clearSearch = () => {
     setSearchTerm('');
+    setFilteredBooks(booksData);
   };
 
-  // Filter books based on the selected category
-  const filteredBooks = booksData.filter(book => {
-    return book.categoryId === parseInt(categoryId) && 
-           (searchTerm === '' || 
-            book.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
-            book.author.toLowerCase().includes(searchTerm.toLowerCase()));
-  });
+  const searchHandler = useCallback((e) => {
+    const term = e.target.value;
+    setSearchTerm(term);
+
+    if (term === '') {
+      setFilteredBooks(booksData);
+    } else {
+      const fe = booksData.filter(book => {
+        return book.categoryId === parseInt(categoryId) && 
+               (term === '' || 
+                book.title.toLowerCase().includes(term.toLowerCase()) || 
+                book.author.name.toLowerCase().includes(term.toLowerCase()));
+      });
+      setFilteredBooks(fe);
+    }
+  }, [booksData, categoryId]);
 
   return (
     <div className="bg-teal-100 flex flex-col w-full h-full min-h-screen">
@@ -69,7 +81,7 @@ const Category = () => {
               placeholder="Search by title or author..."
               className="outline-none flex-1"
               value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
+              onChange={searchHandler}
             />
             {searchTerm && (
               <FaTimes className="text-black cursor-pointer ml-2" onClick={clearSearch} />
@@ -103,10 +115,10 @@ const Category = () => {
 
           {/* Books Grid */}
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 p-2 overflow-y-auto w-full max-h-[500px] scrollbar-hidden">
-            {booksData ? booksData.map((book) => (
+            {filteredBooks.length > 0 ? filteredBooks.map((book) => (
                 <Link 
                   key={book.id} 
-                  to={""} 
+                  to={`/book/${book.id}`} 
                   className="text-center bg-white w-full max-w-[120px] p-2 rounded-md hover:shadow-2xl transition-shadow duration-300 cursor-pointer"
                 >
                   <img
@@ -115,7 +127,7 @@ const Category = () => {
                     className="object-cover h-32 w-full rounded-md"
                   />
                   <h3 className="mt-2 text-sm font-bold">{book.title}</h3>
-                  <p className="text-xs">{book.author}</p>
+                  <p className="text-xs">{book.author.name}</p>
                 </Link>
               ))
             :
