@@ -1,8 +1,9 @@
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBell } from '@fortawesome/free-solid-svg-icons';
+import { Link } from "react-router-dom";
 
-function Navbar({ toggleSidebar, isSidebarOpen }) {
+function Navbar({ toggleSidebar, isSidebarOpen, toggleNotif }) {
   return (
     <div className="flex justify-between bg-teal-200 p-4 border-b-2 border-gray-400">
       <div className="flex items-center">
@@ -21,7 +22,7 @@ function Navbar({ toggleSidebar, isSidebarOpen }) {
         </a>
       </div>
       <div className="flex items-center">
-        <FontAwesomeIcon icon={faBell} className="text-black text-xl cursor-pointer" />
+        <FontAwesomeIcon icon={faBell} className="text-black text-xl cursor-pointer" onClick={toggleNotif} />
       </div>
     </div>
   );
