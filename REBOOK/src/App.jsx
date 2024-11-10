@@ -24,7 +24,7 @@ function App() {
           <Route path="History" element={<History />} />
           <Route path="books/:bookTitle" element={<BookDetails />} />
           <Route path="User" element={<User />} />
-          <Route path="category/:categoryName" element={<Category />} />
+          <Route path="category/:categoryId" element={<Category />} />
         </Route>
         <Route path="/admin" element={<LiblandingLayout />}>
           <Route index element={<LibLanding />} /> {/* This is your dashboard */}

@@ -9,15 +9,24 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Book {
+model Category {
   id        Int       @id @default(autoincrement())
-  title     String
-  cover     String?   
-  rating    Int       @default(0)
-  status    String    @default("Available")
+  name      String
+  books     Book[]
+}
 
-  author    Author?   @relation(fields: [authorId], references: [id])    
-  authorId  Int?
+model Book {
+  id          Int       @id @default(autoincrement())
+  title       String
+  cover       String?   
+  rating      Int       @default(0)
+  status      String    @default("Available")
+
+  author      Author?   @relation(fields: [authorId], references: [id])    
+  authorId    Int?
+
+  category    Category? @relation(fields: [categoryId], references: [id]) 
+  categoryId  Int?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

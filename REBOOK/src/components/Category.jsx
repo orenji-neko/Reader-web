@@ -1,39 +1,45 @@
-import React, { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { FaSearch, FaTimes, FaChevronDown } from 'react-icons/fa';
 
-// Sample books data
-const booksData = [
-  { id: 1, title: "Blink", author: "Malcolm Gladwell", category: "Fiction", cover: "/rebook-images/blink.png", link: "/books/blink" },
-  { id: 2, title: "Hold Still", author: "Author 3", category: "Non-Fiction", cover: "/rebook-images/hold.png", link: "/books/holdstill" },
-  { id: 3, title: "Circle", author: "Madeline Miller", category: "Fiction", cover: "/rebook-images/circle.png", link: "/books/circle" },
-  { id: 4, title: "1984", author: "George Orwell", category: "Fiction", cover: "/rebook-images/1984.png", link: "/books/1984" },
-  { id: 5, title: "Slow Down", author: "Rachelle Williams", category: "Science", cover: "/rebook-images/slow.png", link: "/books/slow" },
-  { id: 6, title: "Solitaire", author: "Alice Oseman", category: "Mystery", cover: "/rebook-images/solitaire.png", link: "/books/solitaire" },
-  { id: 7, title: "Sunstroke", author: "Author 3", category: "Fiction", cover: "/rebook-images/sunstroke.png", link: "/books/sunstroke" },
-  { id: 8, title: "Circles", author: "Madeline Miller", category: "Fiction", cover: "/rebook-images/circle.png", link: "/books/circles" },
-  { id: 8, title: "Circles", author: "Madeline Miller", category: "Fiction", cover: "/rebook-images/circle.png", link: "/books/circles" },
-  { id: 8, title: "Circles", author: "Madeline Miller", category: "Fiction", cover: "/rebook-images/circle.png", link: "/books/circles" },
-  { id: 8, title: "Circles", author: "Madeline Miller", category: "Fiction", cover: "/rebook-images/circle.png", link: "/books/circles" },
-  { id: 8, title: "Circles", author: "Madeline Miller", category: "Fiction", cover: "/rebook-images/circle.png", link: "/books/circles" },
-  { id: 8, title: "Circles", author: "Madeline Miller", category: "Fiction", cover: "/rebook-images/circle.png", link: "/books/circles" },
-  { id: 8, title: "Circles", author: "Madeline Miller", category: "Fiction", cover: "/rebook-images/circle.png", link: "/books/circles" },
-  { id: 6, title: "Solitaire", author: "Alice Oseman", category: "Mystery", cover: "/rebook-images/solitaire.png", link: "/books/solitaire" },
-  { id: 6, title: "Solitaire", author: "Alice Oseman", category: "History", cover: "/rebook-images/solitaire.png", link: "/books/solitaire" },
-  { id: 6, title: "Solitaire", author: "Alice Oseman", category: "History", cover: "/rebook-images/solitaire.png", link: "/books/solitaire" },
-  { id: 6, title: "Solitaire", author: "Alice Oseman", category: "History", cover: "/rebook-images/solitaire.png", link: "/books/solitaire" },
-
-
-
-  // Add more unique books as needed...
-];
-
-const categories = ["Fiction", "Non-Fiction", "Science", "History", "Mystery"];
+const BookLink = ()
 
 const Category = () => {
-  const { categoryName } = useParams();
+  const { categoryId } = useParams();
+  const [categoryName, setCategoryName] = useState("");
+
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
+
+  const [booksData, setBooksData] = useState([]);
+  const [categoriesData, setCategories] = useState([]);
+
+  useEffect(() => {
+    const load = async () => {
+      // books
+      const book_response  = await fetch("/api/v1/books", { method: "GET" });
+      const book_data = await book_response.json();
+      // categories
+      const category_response  = await fetch("/api/v1/categories", { method: "GET" });
+      const category_data = await category_response.json();
+      // this category
+
+      const books = await book_data;
+      const categories = await category_data;
+
+      console.log(books);
+      
+      
+      setCategories(categories);
+
+      const category = categories.find(value => value.id === parseInt(categoryId));
+      setCategoryName(category.name);
+
+      setBooksData(books.filter(book => book.categoryId === parseInt(categoryId)))
+    }
+
+    load();
+  }, [categoryId])
 
   const toggleDropdown = () => {
     setDropdownOpen(!isDropdownOpen);
@@ -45,7 +51,7 @@ const Category = () => {
 
   // Filter books based on the selected category
   const filteredBooks = booksData.filter(book => {
-    return book.category === categoryName && 
+    return book.categoryId === parseInt(categoryId) && 
            (searchTerm === '' || 
             book.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
             book.author.toLowerCase().includes(searchTerm.toLowerCase()));
@@ -81,9 +87,9 @@ const Category = () => {
             {isDropdownOpen && (
               <div className="absolute z-10 bg-white border border-gray-300 rounded-lg shadow-md mt-1 w-48">
                 <ul className="space-y-2 p-2">
-                  {categories.map((category) => (
-                    <li key={category} className="p-2 bg-gray-100 rounded hover:bg-teal-600 hover:text-white cursor-pointer">
-                      <Link to={`/category/${category}`}>{category}</Link>
+                  {categoriesData && categoriesData.map((category, index) => (
+                    <li key={index} className="p-2 bg-gray-100 rounded hover:bg-teal-600 hover:text-white cursor-pointer">
+                      <Link to={`/category/${category.id}`}>{category.name}</Link>
                     </li>
                   ))}
                 </ul>
@@ -97,15 +103,14 @@ const Category = () => {
 
           {/* Books Grid */}
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 p-2 overflow-y-auto w-full max-h-[500px] scrollbar-hidden">
-            {filteredBooks.length > 0 ? (
-              filteredBooks.map((book) => (
+            {booksData ? booksData.map((book) => (
                 <Link 
                   key={book.id} 
-                  to={book.link} 
+                  to={""} 
                   className="text-center bg-white w-full max-w-[120px] p-2 rounded-md hover:shadow-2xl transition-shadow duration-300 cursor-pointer"
                 >
                   <img
-                    src={book.cover}
+                    src={`/api/v1/cover/${book.cover}`}
                     alt={book.title}
                     className="object-cover h-32 w-full rounded-md"
                   />
@@ -113,11 +118,11 @@ const Category = () => {
                   <p className="text-xs">{book.author}</p>
                 </Link>
               ))
-            ) : (
+            :
               <div className="flex justify-center items-center min-h-[100px] w-full">
                 <p className="text-center text-gray-500">No books available in this category.</p>
               </div>
-            )}
+            }
           </div>
         </div>
       </div>

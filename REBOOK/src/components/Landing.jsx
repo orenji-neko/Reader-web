@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import Pics from './Pics';
 import { Link } from 'react-router-dom';
 import { FaSearch, FaTimes, FaChevronDown } from 'react-icons/fa';
@@ -71,9 +71,12 @@ const Landing = () => {
       const book_response  = await fetch("/api/v1/books?sort=latest", { method: "GET" });
       const book_data = await book_response.json();
 
+      const category_response  = await fetch("/api/v1/categories", { method: "GET" });
+      const category_data = await category_response.json();
 
 
       setLatestBooksData(await book_data);
+      setCategories(await category_data);
     }
 
     load();
@@ -110,9 +113,9 @@ const Landing = () => {
               {isDropdownOpen && (
                 <div className="absolute z-10 bg-white border border-gray-300 rounded-lg shadow-md mt-1 w-48">
                 <ul className="space-y-2 p-2">
-                  {categories.map((category) => (
-                    <li key={category} className="p-2 bg-gray-100 rounded hover:bg-teal-600 hover:text-white cursor-pointer">
-                      <Link to={`/category/${category}`}>{category}</Link> {/* Wrap with Link */}
+                  {categories.map((category, index) => (
+                    <li key={index} className="p-2 bg-gray-100 rounded hover:bg-teal-600 hover:text-white cursor-pointer">
+                      <Link to={`/category/${category.id}`}>{category.name}</Link> {/* Wrap with Link */}
                     </li>
                   ))}
                 </ul>
