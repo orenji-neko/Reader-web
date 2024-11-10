@@ -9,6 +9,17 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User {
+  id        Int       @id @default(autoincrement())
+  email     String    @unique
+  password  String    
+  name      String
+  username  String
+  contacts  String
+
+  comments  Comment[]
+}
+
 model Category {
   id        Int       @id @default(autoincrement())
   name      String
@@ -21,12 +32,15 @@ model Book {
   cover       String?   
   rating      Int       @default(0)
   status      String    @default("Available")
+  description String?    
 
   author      Author?   @relation(fields: [authorId], references: [id])    
   authorId    Int?
 
   category    Category? @relation(fields: [categoryId], references: [id]) 
   categoryId  Int?
+
+  comments    Comment[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -37,4 +51,18 @@ model Author {
   name      String
 
   books     Book[]
+}
+
+model Comment {
+  id        Int       @id @default(autoincrement())
+  text      String
+
+  user      User      @relation(fields: [userId], references: [id])
+  userId    Int
+
+  book      Book      @relation(fields: [bookId], references: [id])
+  bookId    Int
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate, useOutletContext } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { Link, useNavigate, useOutletContext } from 'react-router-dom';
 import { FaArrowLeft, FaArrowRight } from 'react-icons/fa';
 import './App.css';
+import PropTypes from 'prop-types';
 
 function Pics({ searchTerm }) {
   const navigate = useNavigate();
@@ -51,7 +52,7 @@ function Pics({ searchTerm }) {
     const totalItems = filteredBooks.length;
     const maxStartIndex = Math.max(0, totalItems - itemsPerPage);
     setStartIndex(Math.min(startIndex, maxStartIndex));
-  }, [itemsPerPage, filteredBooks.length]);
+  }, [itemsPerPage, filteredBooks.length, startIndex]);
 
   const handleBookClick = (book) => {
     navigate(`/books/${book.title.toLowerCase().replace(/ /g, '-')}`);
@@ -89,19 +90,20 @@ function Pics({ searchTerm }) {
         <div className="min-w-[300px] max-w-full overflow-x-auto scroll-hide snap-start flex space-x-10 p-2">
           {filteredBooks.length > 0 ? (
             filteredBooks.slice(startIndex, startIndex + itemsPerPage).map((book) => (
-              <div
-                key={book.id}
-                className="flex-shrink-0 text-center bg-white p-2 rounded-md hover:shadow-2xl transition-shadow duration-900 cursor-pointer"
-                onClick={() => handleBookClick(book)}
-              >
-                <img
-                  src={`/api/v1/cover/${book.cover}`}
-                  alt={book.title}
-                  className="object-cover h-24 rounded-md"
-                />
-                <h3 className="mt-2 text-[12px] font-bold">{book.title}</h3>
-                <p className="text-[10px]">{book.author.name}</p>
-              </div>
+              <Link key={book.id} to={`/book/${book.id}`}>
+                <div
+                  className="flex-shrink-0 text-center bg-white p-2 rounded-md hover:shadow-2xl transition-shadow duration-900 cursor-pointer"
+                  onClick={() => handleBookClick(book)}
+                >
+                  <img
+                    src={`/api/v1/cover/${book.cover}`}
+                    alt={book.title}
+                    className="object-cover h-24 rounded-md"
+                  />
+                  <h3 className="mt-2 text-[12px] font-bold">{book.title}</h3>
+                  <p className="text-[10px]">{book.author.name}</p>
+                </div>
+              </Link>
             ))
           ) : (
             <div className="flex justify-center items-center min-h-[100px] w-full">
@@ -112,6 +114,9 @@ function Pics({ searchTerm }) {
       </div>
     </div>
   );
+}
+Pics.propTypes = {
+  searchTerm: PropTypes.string
 }
 
 export default Pics;

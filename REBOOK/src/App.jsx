@@ -21,7 +21,7 @@ function App() {
           <Route index element={<Landing />} />
           <Route path="BorrowB" element={<BorrowB />} />
           <Route path="History" element={<History />} />
-          <Route path="books/:bookTitle" element={<BookDetails />} />
+          <Route path="book/:bookId" element={<BookDetails />} />
           <Route path="User" element={<User />} />
           <Route path="category/:categoryId" element={<Category />} />
         </Route>

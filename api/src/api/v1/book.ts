@@ -7,13 +7,6 @@ import { saveImage } from "../../utils/file";
  * Books API
  */
 
-type BookQuery = {
-    include: {
-        author: boolean
-    },
-    orderBy: any | null
-}
-
 const app = new Elysia()
     .decorate("prisma", new PrismaClient())
     /**
@@ -23,9 +16,23 @@ const app = new Elysia()
     .get("/books", async ({ query, prisma }) => {
         const { sort } = query;
 
-        const config: BookQuery = {
+        const config: any = {
             include: {
-                author: true
+                author: true,
+                comments: {
+                    include: {
+                        user: {
+                            select: {
+                                id: true,
+                                email: true,
+                                name: true,
+                                username: true
+                            }
+                        },
+                        userId: false,
+                        bookId: false
+                    }
+                }
             },
             orderBy: undefined
         }
@@ -43,6 +50,43 @@ const app = new Elysia()
     }, {
         query: t.Object({
             sort: t.Optional(t.String())
+        })
+    })
+    /**
+     * [GET]    /api/v1/book/:id
+     * [DESC]   Get a list of books.
+     */
+    .get("/book/:id", async ({ params, prisma }) => {
+        const config: any = {
+            where: {
+                id: parseInt(params.id)
+            },
+            include: {
+                author: true,
+                comments: {
+                    include: {
+                        user: {
+                            select: {
+                                id: true,
+                                email: true,
+                                name: true,
+                                username: true
+                            }
+                        },
+                        userId: false,
+                        bookId: false
+                    }
+                }
+            },
+            orderBy: undefined
+        }
+
+        const result = await prisma.book.findUnique(config);
+
+        return result;
+    }, {
+        params: t.Object({
+            id: t.String()
         })
     })
     /**
