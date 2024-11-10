@@ -54,7 +54,7 @@ function Pics({ searchTerm }) {
   }, [itemsPerPage, filteredBooks.length]);
 
   const handleBookClick = (book) => {
-    navigate(book.link);
+    navigate(`/books/${book.title.toLowerCase().replace(/ /g, '-')}`);
   };
 
   const handleNext = () => {
