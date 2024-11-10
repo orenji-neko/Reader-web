@@ -9,23 +9,23 @@ function Pics({ searchTerm }) {
   const [startIndex, setStartIndex] = useState(0);
   const [itemsPerPage, setItemsPerPage] = useState(6); // Default to 6 items per page
   const [resizeKey, setResizeKey] = useState(Date.now()); // Key for forcing re-render
+  const [books, setPopularBooks] = useState([]);
 
-  const books = [
-    { id: 1, title: "Blink", author: "Malcolm Gladwell", cover: "/rebook-images/blink.png", link: "/books/blink" },
-    { id: 2, title: "Hold Still", author: "Author 3", cover: "/rebook-images/hold.png", link: "/books/holdstill" },
-    { id: 3, title: "Slow Down", author: "Rachelle Williams", cover: "/rebook-images/slow.png", link: "/books/slow" },
-    { id: 4, title: "Solitaire", author: "Alice Oseman", cover: "/rebook-images/solitaire.png", link: "/books/solitaire" },
-    { id: 5, title: "1984", author: "George Orwell", cover: "/rebook-images/1984.png", link: "/books/1984" },
-    { id: 6, title: "Circle", author: "Madeline Miller", cover: "/rebook-images/circle.png", link: "/books/circle" },
-    { id: 7, title: "Sunsstroke", author: "Author 3", cover: "/rebook-images/sunstroke.png", link: "/books/sunstroke" },
-    { id: 8, title: "Circles", author: "Madeline Miller", cover: "/rebook-images/circle.png", link: "/books/circles" },
-    { id: 9, title: "Book Title 3", author: "Author 3", cover: "/rebook-images/hold.png", link: "/books/book-title-3" },
-    { id: 10, title: "Book Title 3", author: "Author 3", cover: "/rebook-images/hold.png", link: "/books/book-title-3" },
-  ];
+  // Fetch books from API
+  useEffect(() => {
+    const load = async () => {
+      const book_response = await fetch("/api/v1/books?sort=popular", { method: "GET" });
+      const book_data = await book_response.json();
+
+      setPopularBooks(book_data);
+    }
+
+    load();
+  }, []);
 
   const filteredBooks = books.filter((book) =>
     book.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    book.author.toLowerCase().includes(searchTerm.toLowerCase())
+    book.author.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   useEffect(() => {
@@ -95,12 +95,12 @@ function Pics({ searchTerm }) {
                 onClick={() => handleBookClick(book)}
               >
                 <img
-                  src={book.cover}
+                  src={`/api/v1/cover/${book.cover}`}
                   alt={book.title}
                   className="object-cover h-24 rounded-md"
                 />
                 <h3 className="mt-2 text-[12px] font-bold">{book.title}</h3>
-                <p className="text-[10px]">{book.author}</p>
+                <p className="text-[10px]">{book.author.name}</p>
               </div>
             ))
           ) : (
