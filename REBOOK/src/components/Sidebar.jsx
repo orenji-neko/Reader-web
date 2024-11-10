@@ -25,7 +25,7 @@ function Sidebar() {
   }, []);
 
   return (
-    <div className="min-w-64 bg-teal-500 text-white h-full flex flex-col justify-between p-4">
+    <div className="w-[100%] bg-teal-500 text-white h-full flex flex-col justify-between p-4">
       {/* User Section */}
       <div>
         <div className="p-4 flex items-center h-10">

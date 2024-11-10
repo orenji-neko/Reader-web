@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { FaSearch, FaTimes, FaChevronDown } from 'react-icons/fa';
 
+
 const Category = () => {
   const { categoryId } = useParams();
   const [categoryName, setCategoryName] = useState("");
