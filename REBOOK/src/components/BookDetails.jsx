@@ -18,17 +18,12 @@ function BookDetails() {
     console.log(book);
   }, [book, bookId]);
 
-  // Function to go back to the previous page or landing page
-  const handleGoBack = () => {
-    if (window.history.length > 1) {
-      navigate(-1); // Go back to the previous page in the history stack
-    } else {
-      navigate("/"); // Fallback to landing page if no history
-    }
-  };
-
   if (!book) {
     return <p>Book not found!</p>; // Handle case where the book does not exist
+  }
+
+  const handleGoBack = () => {
+    navigate("/");
   }
 
   return (
