@@ -18,22 +18,21 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/Reader" element={<LandingLayout />}>
+        <Route path="/reader" element={<LandingLayout />}>
           <Route index element={<Landing />} />
-          <Route path="BorrowB" element={<BorrowB />} />
-          <Route path="History" element={<History />} />
+          <Route path="borrow" element={<BorrowB />} />
+          <Route path="history" element={<History />} />
           <Route path="book/:bookId" element={<BookDetails />} />
-          <Route path="User" element={<User />} />
+          <Route path="user" element={<User />} />
           <Route path="category/:categoryId" element={<Category />} />
         </Route>
-        <Route path="/Librarian" element={<LiblandingLayout />}>
+        <Route path="/librarian" element={<LiblandingLayout />}>
           <Route index element={<LibLanding />} /> {/* This is your dashboard */}
-          <Route path="Request" element={<Request />} /> {/* Request component */}
-          <Route path="BookInventory" element={<BookInventory />} /> {/* Book Inventory component */}
-          <Route path="Readers" element={<Readers />} /> {/* Readers component */}
-          <Route path="LibUser" element={<User />} />
-          
-          <Route path="Due" element={<DueBooks />} /> {/* Due Books component */}
+          <Route path="request" element={<Request />} /> {/* Request component */}
+          <Route path="inventory" element={<BookInventory />} /> {/* Book Inventory component */}
+          <Route path="readers" element={<Readers />} /> {/* Readers component */}
+          <Route path="users" element={<User />} />
+          <Route path="due" element={<DueBooks />} /> {/* Due Books component */}
         </Route>
         <Route path="/" element={<Index />}>
           {/* Login & Register*/}
