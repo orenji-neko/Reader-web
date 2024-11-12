@@ -17,6 +17,7 @@ model User {
   username  String
   contacts  String
   auth      String    @default("READER")
+  profile   String?
 
   comments  Comment[]
   requests  Request[]

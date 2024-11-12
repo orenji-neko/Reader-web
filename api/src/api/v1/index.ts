@@ -1,7 +1,7 @@
 import { Elysia } from "elysia";
 
 import Books from "./book";
-import Cover from "./cover";
+import Files from "./file";
 import Category from "./category";
 import Request from "./request";
 
@@ -13,7 +13,7 @@ const app = new Elysia()
     .group("/v1", app => 
         app
             .use(Books)
-            .use(Cover)
+            .use(Files)
             .use(Category)
             .use(Request)
     );

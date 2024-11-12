@@ -208,7 +208,7 @@ const Request = () => {
                   requests.map((request) => (
                     <tr key={request.id}>
                       <td className="p-4 border-b border-gray-200">
-                        <img src={`/api/v1/cover/${request.book.cover}`} alt={request.book.title} className="h-16 w-16 object-cover rounded-md" />
+                        <img src={`/api/v1/file/${request.book.cover}`} alt={request.book.title} className="h-16 w-16 object-cover rounded-md" />
                       </td>
                       <td className="p-4 border-b border-gray-200">{request.book.title}</td>
                       <td className="p-4 border-b border-gray-200">{request.book.author.name}</td>

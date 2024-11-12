@@ -211,7 +211,7 @@ const BookInventory = () => {
                 {books.map((book) => (
                   <tr key={book.id}>
                     <td className="p-4 border-b border-gray-200">
-                      <img  src={`/api/v1/cover/${book.cover}`} 
+                      <img  src={`/api/v1/file/${book.cover}`} 
                             alt={book.title} 
                             className="h-16 w-16 object-cover rounded-md" 
                             />
