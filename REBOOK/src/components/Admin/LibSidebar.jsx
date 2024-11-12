@@ -35,7 +35,7 @@ function LibSidebar() {
       {/* User Section */}
       <div>
         <div className="p-4 flex items-center h-10">
-          <Link to="/Admin/LibUser" className="flex items-center">
+          <Link to="/admin/user" className="flex items-center">
             {image ? (
               <img
                 src={image}
@@ -63,28 +63,28 @@ function LibSidebar() {
           </li>
           <hr className="border-black" />
           <li className="group rounded py-2 hover:bg-teal-200">
-            <Link to="/admin/Request" className="flex items-center px-3">
+            <Link to="/admin/request" className="flex items-center px-3">
               <BsFillPersonLinesFill className="inline-block mr-2 text-black" /> {/* Request Icon */}
               <span className="transition-colors duration-200 group-hover:text-black text-white">Request</span>
             </Link>
           </li>
           <hr className="border-black" />
           <li className="group rounded py-2 hover:bg-teal-200">
-            <Link to="/admin/BookInventory" className="flex items-center px-3">
+            <Link to="/admin/inventory" className="flex items-center px-3">
               <MdInventory2 className="inline-block mr-2 text-black" /> {/* Book Inventory Icon */}
               <span className="transition-colors duration-200 group-hover:text-black text-white">Book Inventory</span>
             </Link>
           </li>
           <hr className="border-black" />
           <li className="group rounded py-2 hover:bg-teal-200">
-            <Link to="/admin/Readers" className="flex items-center px-3">
+            <Link to="/admin/readers" className="flex items-center px-3">
               <FaBookReader className="inline-block mr-2 text-black" /> {/* Readers Icon */}
               <span className="transition-colors duration-200 group-hover:text-black text-white">Readers</span>
             </Link>
           </li>
           <hr className="border-black" />
           <li className="group rounded py-2 hover:bg-teal-200">
-            <Link to="/admin/Due" className="flex items-center px-3">
+            <Link to="/admin/due" className="flex items-center px-3">
               <IoMdWarning className="inline-block mr-2 text-black" /> {/* Due Books Icon */}
               <span className="transition-colors duration-200 group-hover:text-black text-white">Due Books</span>
             </Link>
