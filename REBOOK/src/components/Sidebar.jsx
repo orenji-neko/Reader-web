@@ -50,7 +50,7 @@ function Sidebar() {
         {/* Navigation Links */}
         <ul className="mt-0 text-gray-300">
           <li className="group rounded py-2 hover:bg-teal-200">
-            <Link to="/" className="flex items-center px-3 w-full group hover:text-black">
+            <Link to="/reader" className="flex items-center px-3 w-full group hover:text-black">
               <img
                 src="/src/assets/icons/search-engine.png"
                 alt="Browse Books"
@@ -61,7 +61,7 @@ function Sidebar() {
           </li>
           <hr className="border-black" />
           <li className="group rounded py-2 hover:bg-teal-200">
-            <Link to="/borrow" className="flex items-center px-3 group-hover:text-black">
+            <Link to="/reader/borrow" className="flex items-center px-3 group-hover:text-black">
               <img
                 src="/src/assets/icons/borrow.png"
                 alt="Borrow Books"
@@ -72,7 +72,7 @@ function Sidebar() {
           </li>
           <hr className="border-black" />
           <li className="group rounded py-2 hover:bg-teal-200">
-            <Link to="/history" className="flex items-center px-3 group-hover:text-black">
+            <Link to="/reader/history" className="flex items-center px-3 group-hover:text-black">
               <img
                 src="/src/assets/icons/clock.png"
                 alt="History"
