@@ -18,21 +18,20 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<LandingLayout />}>
-          <Route index element={<Landing />} />
-          <Route path="BorrowB" element={<BorrowB />} />
-          <Route path="History" element={<History />} />
-          <Route path="book/:bookId" element={<BookDetails />} />
-          <Route path="User" element={<User />} />
-          <Route path="category/:categoryId" element={<Category />} />
+          <Route index                        element={<Landing />} />
+          <Route path="borrow"                element={<BorrowB />} />
+          <Route path="history"               element={<History />} />
+          <Route path="book/:bookId"          element={<BookDetails />} />
+          <Route path="user"                  element={<User />} />
+          <Route path="category/:categoryId"  element={<Category />} />
         </Route>
-        <Route path="/admin" element={<LiblandingLayout />}>
-          <Route index element={<LibLanding />} /> {/* This is your dashboard */}
-          <Route path="Request" element={<Request />} /> {/* Request component */}
-          <Route path="BookInventory" element={<BookInventory />} /> {/* Book Inventory component */}
-          <Route path="Readers" element={<Readers />} /> {/* Readers component */}
-          <Route path="LibUser" element={<User />} />
-          
-          <Route path="Due" element={<DueBooks />} /> {/* Due Books component */}
+        <Route path="/admin"                  element={<LiblandingLayout />}>
+          <Route index                        element={<LibLanding />} />
+          <Route path="request"               element={<Request />} />
+          <Route path="inventory"         element={<BookInventory />} />
+          <Route path="readers"               element={<Readers />} />
+          <Route path="user"                  element={<User />} />
+          <Route path="due"                   element={<DueBooks />} />
         </Route>
       </Routes>
     </Router>
