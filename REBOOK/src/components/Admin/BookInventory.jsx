@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { FaSearch, FaTimes, FaChevronDown, FaFilter, FaEdit, FaTrash } from 'react-icons/fa';
 
-// Sample book data with category field added
+/*// Sample book data with category field added
 const latestBooksData = [
   {
     id: 1,
@@ -63,7 +63,7 @@ const latestBooksData = [
 
 // Categories and statuses
 const categories = ["All", "Fiction", "Non-Fiction", "Science", "History", "Mystery"];
-const statuses = ["All", "Approved", "Denied", "Pending", "Blocked", "Available", "Not Available"];
+const statuses = ["All", "Approved", "Denied", "Pending", "Blocked", "Available", "Not Available"];*/
 
 const BookInventory = () => {
   const [isFilterDropdownOpen, setFilterDropdownOpen] = useState(false);
