@@ -16,8 +16,10 @@ model User {
   name      String
   username  String
   contacts  String
+  auth      String    @default("READER")
 
   comments  Comment[]
+  requests  Request[]
 }
 
 model Category {
@@ -41,12 +43,13 @@ model Book {
   categoryId  Int?
 
   comments    Comment[]
-
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  requests    Request[]
   
   available   Int       @default(0)
   total       Int       @default(0)
+
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 }
 
 model Author {
@@ -66,6 +69,20 @@ model Comment {
   book      Book      @relation(fields: [bookId], references: [id])
   bookId    Int
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Request {
+  id        Int       @id @default(autoincrement())
+  approved  Boolean   @default(false)
+
+  book      Book      @relation(fields: [bookId], references: [id])
+  bookId    Int
+
+  reader    User      @relation(fields: [readerId], references: [id])
+  readerId  Int
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
 }

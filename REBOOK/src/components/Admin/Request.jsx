@@ -1,55 +1,7 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { FaSearch, FaTimes, FaChevronDown, FaFilter } from 'react-icons/fa';
 
-const latestBooksData = [
-  {
-    id: 1,
-    title: "Blink",
-    author: "Malcolm Gladwell",
-    cover: "/rebook-images/blink.png",
-    reader: "Nicki Minaj",
-    status: "Not Available",
-    category: "Non-Fiction",
-  },
-  {
-    id: 2,
-    title: "Hold Still",
-    author: "Author 3",
-    cover: "/rebook-images/hold.png",
-    reader: "Princess V",
-    status: "Not Available",
-    category: "Non-Fiction",
-  },
-  {
-    id: 3,
-    title: "Circle",
-    author: "Madeline Miller",
-    cover: "/rebook-images/circle.png",
-    reader: "Angie Rose",
-    status: "Not Available",
-    category: "Fiction",
-  },
-  {
-    id: 4,
-    title: "1984",
-    author: "George Orwell",
-    cover: "/rebook-images/1984.png",
-    reader: "Jeralyn D.",
-    category: "Fiction",
-    status: "Available",
-  },
-  {
-    id: 5,
-    title: "Slow Down",
-    author: "Rachelle Williams",
-    category: "Science",
-    cover: "/rebook-images/slow.png",
-    status: "Available",
-  },
-];
-
-const categories = ["All", "Fiction", "Non-Fiction", "Science", "History", "Mystery"];
 const statuses = ["All", "Approved", "Denied", "Pending", "Blocked", "Available", "Not Available"];
 
 const Request = () => {
@@ -57,7 +9,6 @@ const Request = () => {
   const [isCategoryDropdownOpen, setCategoryDropdownOpen] = useState(false);
   const [isStatusDropdownOpen, setStatusDropdownOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('All');
   const [selectedStatus, setSelectedStatus] = useState('All');
 
   const scrollRef = useRef(null);
@@ -67,6 +18,54 @@ const Request = () => {
 
   const toggleFilterDropdown = () => setFilterDropdownOpen(!isFilterDropdownOpen);
   const clearSearch = () => setSearchTerm('');
+
+  const [requests, setRequests] = useState([]);
+  const [requestsData, setRequestsData] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [categoriesData, setCategoriesData] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState({});
+
+  /**
+   * Used for fetching data
+   */
+  useEffect(() => {
+    const fetchBooks = async () => {
+      const response = await fetch("/api/v1/requests");
+      const result = await response.json();
+
+      setRequestsData(result);
+    }
+    
+    const fetchCategories = async () => {
+      const response = await fetch("/api/v1/categories");
+      const result = await response.json();
+
+      setCategoriesData(result);
+    }
+
+    fetchCategories();
+    fetchBooks();
+  }, []);
+
+  /**
+   * Used for searching and filtering
+   */
+  useEffect(() => {
+    // search
+    const filteredRequests = requestsData.filter(request => {
+
+      const matchesTerm = request.book.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                          request.book.author.name.toLowerCase().includes(searchTerm.toLowerCase());
+
+      const matchesCategory = !selectedCategory.id ? true : selectedCategory.id === request.book.categoryId;
+
+      return matchesTerm && matchesCategory;
+    });
+
+    setRequests(filteredRequests);
+    setCategories(categoriesData);
+
+  }, [categories, categoriesData, requestsData, searchTerm, selectedCategory, selectedCategory.id]);
 
   const handleMouseDown = (e) => {
     setIsDragging(true);
@@ -91,18 +90,6 @@ const Request = () => {
     setSelectedStatus(status);
     setStatusDropdownOpen(false);
   };
-
-  const filteredBooks = latestBooksData.filter((book) => {
-    const matchesSearch =
-      book.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      book.author.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      book.reader.toLowerCase().includes(searchTerm.toLowerCase());
-
-    const matchesCategory = selectedCategory === "All" || book.category === selectedCategory;
-    const matchesStatus = selectedStatus === "All" || book.status === selectedStatus;
-
-    return matchesSearch && matchesCategory && matchesStatus;
-  });
 
   return (
     <div className="bg-teal-100 flex flex-col w-full h-full min-h-screen">
@@ -155,7 +142,7 @@ const Request = () => {
                             onChange={() => handleCategorySelect(category)}
                             className="w-4 h-4 text-teal-500"
                           />
-                          <span>{category}</span>
+                          <span>{category.name}</span>
                         </li>
                       ))}
                     </ul>
@@ -195,7 +182,7 @@ const Request = () => {
           </div>
         </div>
 
-        <h2 className="text-2xl font-bold p-4">Latest</h2>
+        <h2 className="text-2xl font-bold p-4">Requests</h2>
         <div className="relative bg-white p-4 rounded-2xl shadow-lg flex-1 mb-4 mx-2 overflow-hidden">
           <div
             className="overflow-y-auto max-h-full"
@@ -217,20 +204,20 @@ const Request = () => {
                 </tr>
               </thead>
               <tbody>
-                {filteredBooks.length > 0 ? (
-                  filteredBooks.map((book) => (
-                    <tr key={book.id}>
+                {requests.length > 0 ? (
+                  requests.map((request) => (
+                    <tr key={request.id}>
                       <td className="p-4 border-b border-gray-200">
-                        <img src={book.cover} alt={book.title} className="h-16 w-16 object-cover rounded-md" />
+                        <img src={`/api/v1/cover/${request.book.cover}`} alt={request.book.title} className="h-16 w-16 object-cover rounded-md" />
                       </td>
-                      <td className="p-4 border-b border-gray-200">{book.title}</td>
-                      <td className="p-4 border-b border-gray-200">{book.author}</td>
-                      <td className="p-4 border-b border-gray-200">{book.reader}</td>
-                      <td className={`p-4 border-b border-gray-200 ${book.status === 'Available' ? 'text-green-600' : 'text-red-600'}`}>
-                        {book.status}
+                      <td className="p-4 border-b border-gray-200">{request.book.title}</td>
+                      <td className="p-4 border-b border-gray-200">{request.book.author.name}</td>
+                      <td className="p-4 border-b border-gray-200">{request.reader.name}</td>
+                      <td className={`p-4 border-b border-gray-200 ${request.book.status === 'Available' ? 'text-green-600' : 'text-red-600'}`}>
+                        {request.book.status}
                       </td>
                       <td className="p-4 border-b border-gray-200">
-                        <Link to={`/manage/${book.reader}`} className="underline">
+                        <Link to={`/manage/${request.id}`} className="underline">
                           View Details
                         </Link>
                       </td>
