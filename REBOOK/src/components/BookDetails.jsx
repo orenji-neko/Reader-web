@@ -23,7 +23,7 @@ function BookDetails() {
   }
 
   const handleGoBack = () => {
-    navigate("/");
+    navigate("/reader");
   }
 
   return (
@@ -39,7 +39,7 @@ function BookDetails() {
       </div>
       <div className="flex">
         {/* Book cover */}
-        <img src={`/api/v1/cover/${book.cover}`} alt={book.title} className="w-32 h-48 rounded-md shadow-lg" />
+        <img src={`/api/v1/file/${book.cover}`} alt={book.title} className="w-32 h-48 rounded-md shadow-lg" />
         {/* Book Information */}
         <div className="ml-6">
           <h1 className="text-4xl font-bold">{book.title}</h1>
