@@ -29,7 +29,7 @@ function Sidebar() {
       {/* User Section */}
       <div>
         <div className="p-4 flex items-center h-10">
-          <Link to="/User" className="flex items-center">
+          <Link to="/user" className="flex items-center">
             {image ? (  
               <img
                 src={image}
@@ -61,7 +61,7 @@ function Sidebar() {
           </li>
           <hr className="border-black" />
           <li className="group rounded py-2 hover:bg-teal-200">
-            <Link to="/BorrowB" className="flex items-center px-3 group-hover:text-black">
+            <Link to="/borrow" className="flex items-center px-3 group-hover:text-black">
               <img
                 src="/src/assets/icons/borrow.png"
                 alt="Borrow Books"
@@ -72,7 +72,7 @@ function Sidebar() {
           </li>
           <hr className="border-black" />
           <li className="group rounded py-2 hover:bg-teal-200">
-            <Link to="/History" className="flex items-center px-3 group-hover:text-black">
+            <Link to="/history" className="flex items-center px-3 group-hover:text-black">
               <img
                 src="/src/assets/icons/clock.png"
                 alt="History"

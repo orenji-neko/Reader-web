@@ -36,6 +36,7 @@ function App() {
           <Route path="Due" element={<DueBooks />} /> {/* Due Books component */}
         </Route>
         <Route path="/" element={<Index />}>
+          {/* Login & Register*/}
         </Route>
       </Routes>
     </Router>
