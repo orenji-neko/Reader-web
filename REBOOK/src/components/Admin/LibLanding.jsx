@@ -1,5 +1,5 @@
-import React, { useState, useRef } from 'react';
-import { FaUser, FaBook, FaClock, FaClipboardList } from 'react-icons/fa';
+import { useState, useRef } from 'react';
+import { FaUser, FaClock, FaClipboardList } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import { BiSolidBookAdd } from "react-icons/bi";
 
@@ -49,11 +49,11 @@ const LibLanding = () => {
           <FaUser size={24} className="mr-2 text-black" />
           <span className="group-hover:text-black transition-colors duration-200">USERS</span>
         </Link>
-        <Link to="/admin/late-books" className="bg-teal-500 text-white p-4 rounded-md flex items-center justify-center group hover:bg-teal-600">
+        <Link to="/admin/due" className="bg-teal-500 text-white p-4 rounded-md flex items-center justify-center group hover:bg-teal-600">
           <FaClock size={24} className="mr-2 text-black" />
           <span className="group-hover:text-black transition-colors duration-200">LATE BOOKS</span>
         </Link>
-        <Link to="/admin/books" className="bg-teal-500 text-white p-4 rounded-md flex items-center justify-center group hover:bg-teal-600">
+        <Link to="/admin/inventory" className="bg-teal-500 text-white p-4 rounded-md flex items-center justify-center group hover:bg-teal-600">
           <BiSolidBookAdd size={24} className="mr-2 text-black" />
           <span className="group-hover:text-black transition-colors duration-200">BOOK</span>
         </Link>
