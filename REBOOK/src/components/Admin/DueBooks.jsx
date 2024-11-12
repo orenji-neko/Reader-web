@@ -1,56 +1,65 @@
-import React, { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { FaSearch, FaTimes, FaChevronDown, FaFilter } from 'react-icons/fa';
+import { formatDate } from '../../utils/date';
 
-// Sample book data with category field added
-const latestBooksData = [
-  {
-    id: 1,
-    title: "Blink",
-    readerUsername: "Malcolm",
-    cover: "/rebook-images/blink.png",
-    category: "Non-Fiction",
-    dateBorrowed: "10/23/2024",
-    duedate: "11/02/2024",
-    overdue: "7 Days",
-    status: "Available",
-  },
-  {
-    id: 2,
-    title: "Hold Still",
-    readerUsername: "Nicki",
-    cover: "/rebook-images/hold.png",
-    category: "Fiction",
-    dateBorrowed: "10/23/2024",
-    duedate: "11/02/2024",
-    overdue: "14 Days",
-    status: "Not Available",
-  },
-  {
-    id: 3,
-    title: "Circle",
-    readerUsername: "Emily",
-    cover: "/rebook-images/circle.png",
-    category: "Fiction",
-    dateBorrowed: "09/30/2024",
-    duedate: "10/15/2024",
-    overdue: "22 Days",
-    status: "Available",
-  },
-  // Add more book entries as needed
-];
-
-// Categories and statuses
-const categories = ["All", "Fiction", "Non-Fiction", "Science", "History", "Mystery"];
 const statuses = ["All", "Pending", "Returned", "Overdue", "Available"];
 
 const DueBooks = () => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('All');
   const [selectedStatus, setSelectedStatus] = useState('All');
   const [overdueFilter, setOverdueFilter] = useState('All');
   const [isFilterDropdownOpen, setFilterDropdownOpen] = useState(false);
   const scrollRef = useRef(null);
+
+  const [requests, setRequests] = useState([]);
+  const [requestsData, setRequestsData] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [categoriesData, setCategoriesData] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState({});
+
+  /**
+   * Used for fetching data
+   */
+  useEffect(() => {
+    const fetchBooks = async () => {
+      const response = await fetch("/api/v1/requests/due");
+      const result = await response.json();
+
+      setRequestsData(result);
+      console.log(result);
+    }
+    
+    const fetchCategories = async () => {
+      const response = await fetch("/api/v1/categories");
+      const result = await response.json();
+
+      setCategoriesData(result);
+    }
+
+    fetchCategories();
+    fetchBooks();
+  }, []);
+
+  /**
+   * Used for searching and filtering
+   */
+  useEffect(() => {
+    // search
+    const filteredRequests = requestsData.filter(request => {
+
+      const matchesTerm = request.book.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                          request.book.author.name.toLowerCase().includes(searchTerm.toLowerCase());
+
+      const matchesCategory = !selectedCategory.id ? true : selectedCategory.id === request.book.categoryId;
+
+      return matchesTerm && matchesCategory;
+    });
+
+    setRequests(filteredRequests);
+    setCategories(categoriesData);
+    
+  }, [categories, categoriesData, requestsData, searchTerm, selectedCategory, selectedCategory.id]);
 
   // Toggle Filter Dropdown
   const toggleFilterDropdown = () => setFilterDropdownOpen(!isFilterDropdownOpen);
@@ -62,27 +71,6 @@ const DueBooks = () => {
   const handleCategorySelect = (category) => setSelectedCategory(category);
   const handleStatusSelect = (status) => setSelectedStatus(status);
   const handleOverdueSelect = (overdue) => setOverdueFilter(overdue);
-
-  // Filter books based on search term, category, status, and overdue filters
-  const filteredBooks = latestBooksData.filter((book) => {
-    const matchesSearch =
-      book.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      book.readerUsername.toLowerCase().includes(searchTerm.toLowerCase());
-
-    const matchesCategory = selectedCategory === 'All' || book.category === selectedCategory;
-    const matchesStatus = selectedStatus === 'All' || book.status === selectedStatus;
-    
-    let matchesOverdue = true;
-    if (overdueFilter === '1-5 Days') {
-      const overdueDays = parseInt(book.overdue);
-      matchesOverdue = overdueDays >= 1 && overdueDays <= 5;
-    } else if (overdueFilter === 'More Than 5 Days') {
-      const overdueDays = parseInt(book.overdue);
-      matchesOverdue = overdueDays > 5;
-    }
-
-    return matchesSearch && matchesCategory && matchesStatus && matchesOverdue;
-  });
 
   return (
     <div className="bg-teal-100 flex flex-col w-full h-full min-h-screen">
@@ -119,16 +107,16 @@ const DueBooks = () => {
                 <div className="border-b border-gray-300">
                   <p className="p-2 font-medium">Categories</p>
                   {categories.map((category) => (
-                    <label key={category} className="block p-2">
+                    <label key={category.id} className="block p-2">
                       <input
                         type="radio"
                         name="category"
-                        value={category}
-                        checked={selectedCategory === category}
+                        value={category.id}
+                        checked={selectedCategory.id === category.id}
                         onChange={() => handleCategorySelect(category)}
                         className="form-radio text-teal-600"
                       />
-                      <span className="ml-2">{category}</span>
+                      <span className="ml-2">{category.name}</span>
                     </label>
                   ))}
                 </div>
@@ -199,27 +187,29 @@ const DueBooks = () => {
                 </tr>
               </thead>
               <tbody>
-                {filteredBooks.map((book) => (
-                  <tr key={book.id}>
+                {requests.map((request) => (
+                  <tr key={request.book.id}>
                     <td className="p-4 border-b border-gray-200">
-                      <img src={book.cover} alt={book.title} className="h-16 w-16 object-cover rounded-md" />
+                      <img src={`/api/v1/cover/${request.book.cover}`} alt={request.book.title} className="h-16 w-16 object-cover rounded-md" />
                     </td>
-                    <td className="p-4 border-b border-gray-200">{book.title}</td>
-                    <td className="p-4 border-b border-gray-200">{book.readerUsername}</td>
-                    <td className="p-4 border-b border-gray-200 text-center">{book.dateBorrowed}</td>
-                    <td className="p-4 border-b border-gray-200 text-center">{book.duedate}</td>
-                    <td className="p-4 border-b border-gray-200 text-center">{book.overdue}</td>
-                    <td className={`p-4 border-b border-gray-200 ${book.status === 'Available' ? 'text-green-600' : 'text-red-600'}`}>
-                      {book.status}
+                    <td className="p-4 border-b border-gray-200">{request.book.title}</td>
+                    <td className="p-4 border-b border-gray-200">{request.reader.username}</td>
+                    <td className="p-4 border-b border-gray-200 text-center">{
+                      request.borrowed ? formatDate(request.borrowed) : "No Borrowed Date"
+                    }</td>
+                    <td className="p-4 border-b border-gray-200 text-center">{formatDate(request.due)}</td>
+                    <td className="p-4 border-b border-gray-200 text-center">{ request.overdue ? "Overdue" : "Not Overdue"}</td>
+                    <td className={`p-4 border-b border-gray-200 ${request.book.status === 'Available' ? 'text-green-600' : 'text-red-600'}`}>
+                      {request.book.status}
                     </td>
                     <td className="p-4 border-b border-gray-200 text-center">
-                      <Link to={`/manage/${book.readerUsername}`} className="underline">
+                      <Link to={`/manage/${request.reader.username}`} className="underline">
                         View User
                       </Link>
                     </td>
                   </tr>
                 ))}
-                {filteredBooks.length === 0 && (
+                {requests.length === 0 && (
                   <tr>
                     <td className="p-4 text-center" colSpan="8">No books found.</td>
                   </tr>
