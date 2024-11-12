@@ -1,0 +1,12 @@
+/* LoginRegister.css */
+.background {
+    background-image: url('../assets/Layout.png');
+    background-size: cover;
+    background-position: center;
+    width: 100%;
+    height: 100vh; /* Adjust based on your needs */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  

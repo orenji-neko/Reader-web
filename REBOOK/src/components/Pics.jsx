@@ -55,7 +55,7 @@ function Pics({ searchTerm }) {
   }, [itemsPerPage, filteredBooks.length, startIndex]);
 
   const handleBookClick = (book) => {
-    navigate(`/books/${book.title.toLowerCase().replace(/ /g, '-')}`);
+    navigate(`/reader/books/${book.title.toLowerCase().replace(/ /g, '-')}`);
   };
 
   const handleNext = () => {
@@ -90,13 +90,13 @@ function Pics({ searchTerm }) {
         <div className="min-w-[300px] max-w-full overflow-x-auto scroll-hide snap-start flex space-x-10 p-2">
           {filteredBooks.length > 0 ? (
             filteredBooks.slice(startIndex, startIndex + itemsPerPage).map((book) => (
-              <Link key={book.id} to={`/book/${book.id}`}>
+              <Link key={book.id} to={`/reader/book/${book.id}`}>
                 <div
                   className="flex-shrink-0 text-center bg-white p-2 rounded-md hover:shadow-2xl transition-shadow duration-900 cursor-pointer"
                   onClick={() => handleBookClick(book)}
                 >
                   <img
-                    src={`/api/v1/cover/${book.cover}`}
+                    src={`/api/v1/file/${book.cover}`}
                     alt={book.title}
                     className="object-cover h-24 rounded-md"
                   />

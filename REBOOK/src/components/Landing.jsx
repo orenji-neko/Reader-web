@@ -152,7 +152,7 @@ const Landing = () => {
                     rating={book.rating}
                     author={book.author ? book.author.name : ""}
                     status={book.status}
-                    coverUrl={`/api/v1/cover/${book.cover}`}
+                    coverUrl={`/api/v1/file/${book.cover}`}
                   />
                 ))}
               </tbody>
