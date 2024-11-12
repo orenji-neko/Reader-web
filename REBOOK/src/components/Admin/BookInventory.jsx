@@ -9,7 +9,6 @@ const BookInventory = () => {
   const [isCategoryDropdownOpen, setCategoryDropdownOpen] = useState(false);
   const [isStatusDropdownOpen, setStatusDropdownOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState({});
   const [selectedStatus, setSelectedStatus] = useState('All');
 
   const scrollRef = useRef(null);
@@ -22,33 +21,9 @@ const BookInventory = () => {
 
   const [books, setBooks] = useState([]);
   const [booksData, setBooksData] = useState([]);
-
   const [categories, setCategories] = useState([]);
   const [categoriesData, setCategoriesData] = useState([]);
-
-  const handleMouseDown = (e) => {
-    setIsDragging(true);
-    setStartY(e.clientY);
-    setScrollTop(scrollRef.current.scrollTop);
-  };
-
-  const handleMouseMove = (e) => {
-    if (!isDragging) return;
-    const deltaY = e.clientY - startY;
-    scrollRef.current.scrollTop = scrollTop - deltaY;
-  };
-
-  const handleMouseUp = () => setIsDragging(false);
-
-  const handleCategorySelect = (category) => {
-    setSelectedCategory(category);
-    setCategoryDropdownOpen(false);
-  };
-
-  const handleStatusSelect = (status) => {
-    setSelectedStatus(status);
-    setStatusDropdownOpen(false);
-  };
+  const [selectedCategory, setSelectedCategory] = useState({});
 
   /**
    * Used for fetching data
@@ -90,6 +65,30 @@ const BookInventory = () => {
     setBooks(filteredBooks);
     setCategories(categoriesData);
   }, [booksData, categories, categoriesData, searchTerm, selectedCategory, selectedCategory.id]);
+
+  const handleMouseDown = (e) => {
+    setIsDragging(true);
+    setStartY(e.clientY);
+    setScrollTop(scrollRef.current.scrollTop);
+  };
+
+  const handleMouseMove = (e) => {
+    if (!isDragging) return;
+    const deltaY = e.clientY - startY;
+    scrollRef.current.scrollTop = scrollTop - deltaY;
+  };
+
+  const handleMouseUp = () => setIsDragging(false);
+
+  const handleCategorySelect = (category) => {
+    setSelectedCategory(category);
+    setCategoryDropdownOpen(false);
+  };
+
+  const handleStatusSelect = (status) => {
+    setSelectedStatus(status);
+    setStatusDropdownOpen(false);
+  };
 
   return (
     <div className="bg-teal-100 flex flex-col w-full h-full min-h-screen">
