@@ -12,12 +12,13 @@ import Request from './components/Admin/Request'; // Import the Request componen
 import BookInventory from './components/Admin/BookInventory'; // Import the Book Inventory component
 import Readers from './components/Admin/Readers'; // Import the Readers component
 import DueBooks from './components/Admin/DueBooks'; // Import the Due Books component
+import Index from './components/Main'; // 
 
 function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<LandingLayout />}>
+        <Route path="/Reader" element={<LandingLayout />}>
           <Route index element={<Landing />} />
           <Route path="BorrowB" element={<BorrowB />} />
           <Route path="History" element={<History />} />
@@ -25,7 +26,7 @@ function App() {
           <Route path="User" element={<User />} />
           <Route path="category/:categoryId" element={<Category />} />
         </Route>
-        <Route path="/admin" element={<LiblandingLayout />}>
+        <Route path="/Librarian" element={<LiblandingLayout />}>
           <Route index element={<LibLanding />} /> {/* This is your dashboard */}
           <Route path="Request" element={<Request />} /> {/* Request component */}
           <Route path="BookInventory" element={<BookInventory />} /> {/* Book Inventory component */}
@@ -33,6 +34,8 @@ function App() {
           <Route path="LibUser" element={<User />} />
           
           <Route path="Due" element={<DueBooks />} /> {/* Due Books component */}
+        </Route>
+        <Route path="/" element={<Index />}>
         </Route>
       </Routes>
     </Router>
