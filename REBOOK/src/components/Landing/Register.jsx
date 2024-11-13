@@ -22,68 +22,87 @@ function Register({ onClose }) {
   };
 
   return (
-    <div className="background">
-      <div className="register-form">
-        <form onSubmit={handleRegister}>
-          <h2>Register</h2>
-          <div>
-            <label>Full Name:</label>
-            <input
-              type="text"
-              value={fullName}
-              onChange={(e) => setFullName(e.target.value)}
-              required
-            />
-          </div>
-          <div>
-            <label>Username:</label>
-            <input
-              type="text"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              required
-            />
-          </div>
-          <div>
-            <label>Contacts:</label>
-            <input
-              type="text"
-              value={contacts}
-              onChange={(e) => setContacts(e.target.value)}
-              required
-            />
-          </div>
-          <div>
-            <label>Email:</label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-          </div>
-          <div>
-            <label>Password:</label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-          </div>
-          <div>
-            <label>Confirm Password:</label>
-            <input
-              type="password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              required
-            />
-          </div>
-          <button type="submit">Register</button>
-          <Link to="/login">Already have an account? Login</Link>
-        </form>
-        <button onClick={onClose}><FaTimes /></button>
+    <div className="background flex items-center justify-center min-h-screen flex-col">
+      <div className="flex justify-center mb-4">
+        <a href="/">
+          <img src="/rebook-images/Component2.png" alt="ReBook Logo" className="h-16" />
+        </a>
+      </div>
+      <div className="relative flex flex-col bg-white p-5 rounded-3xl shadow-md space-y-3 w-full max-w-sm">
+        <button onClick={onClose} className="absolute top-3 right-3 text-black-500 hover:text-black-700" href="/">
+          <FaTimes />
+        </button>
+        <div className="flex justify-center mb-3">
+          <h2 className="text-3xl">REGISTER</h2>
+        </div>
+        <div className="register-form">
+          <form onSubmit={handleRegister}>
+            <div className="mb-3">
+              <input
+                type="text"
+                value={fullName}
+                placeholder="Full name"
+                className="w-full p-2 rounded-lg border border-gray-400 text-center"
+                onChange={(e) => setFullName(e.target.value)}
+                required
+              />
+            </div>
+            <div className="mb-3">
+              <input
+                type="text"
+                value={username}
+                placeholder="Username"
+                className="w-full p-2 rounded-lg border border-gray-300 text-center"
+                onChange={(e) => setUsername(e.target.value)}
+                required
+              />
+            </div>
+            <div className="mb-3">
+              <input
+                type="text"
+                value={contacts}
+                placeholder="Contacts"
+                className="w-full p-2 rounded-lg border border-gray-300 text-center"
+                onChange={(e) => setContacts(e.target.value)}
+                required
+              />
+            </div>
+            <div className="mb-3">
+              <input
+                type="email"
+                value={email}
+                placeholder="Email"
+                className="w-full p-2 rounded-lg border border-gray-300 text-center"
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+            </div>
+            <div className="mb-3">
+              <input
+                type="password"
+                value={password}
+                placeholder="Password"
+                className="w-full p-2 rounded-lg border border-gray-300 text-center"
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+            </div>
+            <div className="mb-3">
+              <input
+                type="password"
+                value={confirmPassword}
+                placeholder="Confirm Password"
+                className="w-full p-2 rounded-lg border border-gray-300 text-center"
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                required
+              />
+            </div>
+            <button type="submit" className="w-full bg-teal-500 text-white py-2 rounded-lg hover:bg-blue-700">
+              Create Account
+            </button>
+            <Link to="/login" className="block text-center text-black-500 hover:underline mt-2">Already have an account?</Link>
+          </form>
+        </div>
       </div>
     </div>
   );

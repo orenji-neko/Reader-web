@@ -2,6 +2,7 @@ import { useState } from "react";
 import PropTypes from "prop-types";
 import Logo from "../components/Logo";
 import Search from "../components/Search";
+import { Link } from "react-router-dom";
 
 const HeaderElement = ({ className = "", children }) => {
   return (
@@ -48,26 +49,35 @@ const Header = ({ onLoginClick, onRegisterClick }) => {
       </HeaderElement>
 
       <HeaderElement>
-        <button
-          className="text-xl text-white font-bold bg-blue-500 hover:bg-blue-700 px-4 py-2 rounded"
-          onClick={onLoginClick}
-        >
+        <Link to="/login" className="text-xl text-white font-bold hover:underliner">
           Login
-        </button>
+          </Link>
       </HeaderElement>
 
       <HeaderElement>
-        <button
-          className="text-xl text-white font-bold bg-green-500 hover:bg-green-700 px-4 py-2 rounded"
-          onClick={onRegisterClick}
-        >
+      <Link to="/register" className="text-xl text-white font-bold hover:underliner">
           Signup
-        </button>
+          </Link>
       </HeaderElement>
     </header>
   );
 };
 
+
+{/* <Link to="/user" className="flex items-center">
+            {image ? (  
+              <img
+                src={image}
+                alt="User"
+                className="w-10 h-10 rounded-full mr-2" // Set dimensions for user image
+              />
+            ) : (
+              <FontAwesomeIcon
+                icon={faUser} // Use the Font Awesome user icon
+                className="w-12 h-12 text-white mr-2" // Style the Font Awesome icon
+              />
+            )}
+          </Link> */}
 Header.propTypes = {
   onLoginClick: PropTypes.func,
   onRegisterClick: PropTypes.func,
