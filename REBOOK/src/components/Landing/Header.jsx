@@ -1,68 +1,76 @@
 import { useState } from "react";
+import PropTypes from "prop-types";
 import Logo from "../components/Logo";
 import Search from "../components/Search";
-import PropTypes from "prop-types";
-import { useEffect } from "react";
 
 const HeaderElement = ({ className = "", children }) => {
-    return (
-        <div className={`${className} flex-grow h-full`}>
-            {children}
-        </div>
-    );
-}
+  return (
+    <div className={`${className} flex-grow h-full`}>
+      {children}
+    </div>
+  );
+};
 
 HeaderElement.propTypes = {
-    className: PropTypes.string,
-    children: PropTypes.node
-}
+  className: PropTypes.string,
+  children: PropTypes.node,
+};
 
-const Header = ({ onChange }) => {
-    const [active, setActive] = useState("");
+const Header = ({ onLoginClick, onRegisterClick }) => {
+  const [active, setActive] = useState("");
 
-    useEffect(() => {
-        onChange(active);
+  return (
+    <header className="flex flex-row justify-evenly items-center space-x-4 p-3">
+      <HeaderElement>
+        <Logo />
+      </HeaderElement>
 
-    }, [active, onChange])
+      <HeaderElement>
+        <a
+          className="text-xl text-white font-bold hover:underline"
+          onClick={() => setActive("books")}
+        >
+          Books
+        </a>
+      </HeaderElement>
 
-    return (
-        <header className="flex flex-row justify-evenly items-center space-x-4 p-3">
-            <HeaderElement>
-                <Logo/>
-            </HeaderElement>
+      <HeaderElement>
+        <a
+          className="text-xl text-white font-bold hover:underline"
+          onClick={() => setActive("aboutus")}
+        >
+          About Us
+        </a>
+      </HeaderElement>
 
-            <HeaderElement>
-                <a className="text-xl text-white font-bold hover:underline" 
-                    onClick={() => {setActive("books")}}
-                    >
-                    Books 
-                </a>
-            </HeaderElement>
+      <HeaderElement className="flex-grow">
+        <Search />
+      </HeaderElement>
 
-            <HeaderElement className="">
-                <a className="text-xl text-white font-bold hover:underline"
-                    onClick={() => {setActive("aboutus")}}
-                    > 
-                    About Us 
-                </a>
-            </HeaderElement>
+      <HeaderElement>
+        <button
+          className="text-xl text-white font-bold bg-blue-500 hover:bg-blue-700 px-4 py-2 rounded"
+          onClick={onLoginClick}
+        >
+          Login
+        </button>
+      </HeaderElement>
 
-            <HeaderElement className="flex-grow">
-                <Search />
-            </HeaderElement>
-            
-            <HeaderElement>
-                <a className="text-xl text-white font-bold hover:underline"> Login </a>
-            </HeaderElement>
+      <HeaderElement>
+        <button
+          className="text-xl text-white font-bold bg-green-500 hover:bg-green-700 px-4 py-2 rounded"
+          onClick={onRegisterClick}
+        >
+          Signup
+        </button>
+      </HeaderElement>
+    </header>
+  );
+};
 
-            <HeaderElement>
-                <a className="text-xl text-white font-bold hover:underline"> Signup </a>
-            </HeaderElement>
-        </header>
-    );
-}
 Header.propTypes = {
-    onChange: PropTypes.func
-}
+  onLoginClick: PropTypes.func,
+  onRegisterClick: PropTypes.func,
+};
 
 export default Header;
