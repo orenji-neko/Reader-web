@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { FaTimes } from 'react-icons/fa'; 
 import './LoginRegister.css'; // Import the CSS file
 
@@ -10,6 +10,7 @@ function Register({ onClose }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const navigate = useNavigate();
 
   const handleRegister = (event) => {
     event.preventDefault();
@@ -20,6 +21,9 @@ function Register({ onClose }) {
     // Implement register logic here
     console.log('Register attempt', { fullName, username, contacts, email, password });
   };
+  const handleClose = () => {
+    navigate('/');
+  };
 
   return (
     <div className="background flex items-center justify-center min-h-screen flex-col">
@@ -29,7 +33,7 @@ function Register({ onClose }) {
         </a>
       </div>
       <div className="relative flex flex-col bg-white p-5 rounded-3xl shadow-md space-y-3 w-full max-w-sm">
-        <button onClick={onClose} className="absolute top-3 right-3 text-black-500 hover:text-black-700" href="/">
+      <button onClick={handleClose} className="absolute top-3 right-3 text-black-500 hover:text-black-700">
           <FaTimes />
         </button>
         <div className="flex justify-center mb-3">
@@ -97,7 +101,7 @@ function Register({ onClose }) {
                 required
               />
             </div>
-            <button type="submit" className="w-full bg-teal-500 text-white py-2 rounded-lg hover:bg-blue-700">
+            <button type="submit" className="w-full bg-teal-500 text-white py-2 rounded-lg ">
               Create Account
             </button>
             <Link to="/login" className="block text-center text-black-500 hover:underline mt-2">Already have an account?</Link>

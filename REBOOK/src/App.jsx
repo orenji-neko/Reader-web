@@ -16,7 +16,9 @@ import DueBooks from './components/Admin/DueBooks';
 import Index from './components/Main';
 import Login from './components/Landing/Login';
 import Register from './components/Landing/Register';
-
+import Forgot from './components/Landing/Forgot';
+import Code from './components/Landing/Code';
+import Newpass from './components/Landing/Newpass';
 function App() {
 
 
@@ -28,6 +30,12 @@ function App() {
         <Route path="/login" element={<Login />}>
         </Route>
         <Route path="/register" element={<Register />}>
+        </Route>
+        <Route path="/forgot" element={<Forgot />}>
+        </Route>
+        <Route path="/code" element={<Code />}>
+        </Route>
+        <Route path="/newpass" element={<Newpass />}>
         </Route>
         <Route path="/reader" element={<LandingLayout />}>
           <Route index element={<Landing />} />
