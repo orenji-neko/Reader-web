@@ -101,7 +101,7 @@ function Pics({ searchTerm }) {
                     className="object-cover h-24 rounded-md"
                   />
                   <h3 className="mt-2 text-[12px] font-bold">{book.title}</h3>
-                  <p className="text-[10px]">{book.author.name}</p>
+                  <p className="text-[10px]">{book.author ? book.author.name : ''}</p>
                 </div>
               </Link>
             ))
