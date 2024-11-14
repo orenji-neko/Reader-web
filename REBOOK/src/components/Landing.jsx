@@ -115,7 +115,7 @@ const Landing = () => {
                 <ul className="space-y-2 p-2">
                   {categories.map((category, index) => (
                     <li key={index} className="p-2 bg-gray-100 rounded hover:bg-teal-600 hover:text-white cursor-pointer">
-                      <Link to={`/category/${category.id}`}>{category.name}</Link> {/* Wrap with Link */}
+                      <Link to={`/reader/category/${category.id}`}>{category.name}</Link> {/* Wrap with Link */}
                     </li>
                   ))}
                 </ul>
