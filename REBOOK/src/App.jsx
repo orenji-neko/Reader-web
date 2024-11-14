@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Landing from './components/Landing';
 import BorrowB from './components/BorrowB';
@@ -19,24 +18,19 @@ import Register from './components/Landing/Register';
 import Forgot from './components/Landing/Forgot';
 import Code from './components/Landing/Code';
 import Newpass from './components/Landing/Newpass';
-function App() {
 
+function App() {
 
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Index />}>
-        </Route>
-        <Route path="/login" element={<Login />}>
-        </Route>
-        <Route path="/register" element={<Register />}>
-        </Route>
-        <Route path="/forgot" element={<Forgot />}>
-        </Route>
-        <Route path="/code" element={<Code />}>
-        </Route>
-        <Route path="/newpass" element={<Newpass />}>
-        </Route>
+        <Route path="/" element={<Index />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/forgot" element={<Forgot />} />
+        <Route path="/code" element={<Code />} />
+        <Route path="/newpass" element={<Newpass />} />
+
         <Route path="/reader" element={<LandingLayout />}>
           <Route index element={<Landing />} />
           <Route path="borrow" element={<BorrowB />} />
