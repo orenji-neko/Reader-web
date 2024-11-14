@@ -95,34 +95,32 @@ const app = new Elysia()
      */
     .post("/book", async ({ body, prisma }) => {
         const { title, authorId, cover} = body;
-
-        if(!cover) {
-            throw new Error();
-        }
         // saving file
         const fileName = await saveImage(cover);
 
-        // creating record
-        const book_added = await prisma.book.create({ 
+        const config = {
             data: { 
                 title: title,
                 rating: 5, 
                 status: "Available",
+                cover: fileName,
                 author: {
                     connect: {
                         id: parseInt(authorId ? authorId : "0")
                     }
                 },
-                cover: fileName
             }
-        });
+        }
+
+        // creating record
+        const book_added = await prisma.book.create(config);
         
         return book_added;
     }, {
         body: t.Object({
             title:      t.String(),
-            authorId:   t.Optional(t.String()),
-            cover:      t.Optional(t.File())
+            authorId:   t.String(),
+            cover:      t.File()
         })
     });
 

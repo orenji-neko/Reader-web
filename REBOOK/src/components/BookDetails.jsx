@@ -43,7 +43,7 @@ function BookDetails() {
         {/* Book Information */}
         <div className="ml-6">
           <h1 className="text-4xl font-bold">{book.title}</h1>
-          <p className="text-xl italic">By {book.author.name}</p>
+          <p className="text-xl italic">By {book.author ? book.author.name : '' }</p>
           <p className="mt-2">Rating: ⭐ {book.rating}</p>
           <button className="bg-blue-500 text-white px-4 py-2 rounded mt-4 hover:bg-blue-600">Borrow</button>
           <button className="bg-gray-300 text-black px-4 py-2 rounded ml-2 mt-4 hover:bg-gray-400">Rate</button>

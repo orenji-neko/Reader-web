@@ -4,6 +4,7 @@ import Books from "./book";
 import Files from "./file";
 import Category from "./category";
 import Request from "./request";
+import User from "./user";
 
 /**
  * v1 apis
@@ -16,6 +17,7 @@ const app = new Elysia()
             .use(Files)
             .use(Category)
             .use(Request)
+            .use(User)
     );
 
 export default app;
