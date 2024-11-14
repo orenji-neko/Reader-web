@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import Logo from "../components/Logo";
 import Search from "../components/Search";
 import { Link } from "react-router-dom";
+import navbar from "../assets/navbar.png";
 
 const HeaderElement = ({ className = "", children }) => {
   return (
@@ -21,6 +22,14 @@ const Header = ({ onLoginClick, onRegisterClick }) => {
   const [active, setActive] = useState("");
 
   return (
+    <div style={{ 
+      backgroundImage: `linear-gradient(rgba(0, 100, 0, 0.3), rgba(0, 100, 0, 0.3)), url(${navbar})`,
+      backgroundSize: 'cover',
+     
+    }
+  } 
+    className="flex flex-col w-full sm:w-full md:w-full lg:w-full xl:w-full"
+    >
     <header className="flex flex-row justify-evenly items-center space-x-4 p-3">
       <HeaderElement>
         <Logo />
@@ -60,24 +69,9 @@ const Header = ({ onLoginClick, onRegisterClick }) => {
           </Link>
       </HeaderElement>
     </header>
+    </div>
   );
 };
-
-
-{/* <Link to="/user" className="flex items-center">
-            {image ? (  
-              <img
-                src={image}
-                alt="User"
-                className="w-10 h-10 rounded-full mr-2" // Set dimensions for user image
-              />
-            ) : (
-              <FontAwesomeIcon
-                icon={faUser} // Use the Font Awesome user icon
-                className="w-12 h-12 text-white mr-2" // Style the Font Awesome icon
-              />
-            )}
-          </Link> */}
 Header.propTypes = {
   onLoginClick: PropTypes.func,
   onRegisterClick: PropTypes.func,
