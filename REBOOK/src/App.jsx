@@ -16,38 +16,19 @@ import DueBooks from './components/Admin/DueBooks';
 import Index from './components/Main';
 import Login from './components/Landing/Login';
 import Register from './components/Landing/Register';
-import Header from './components/Landing/Header';
 
 function App() {
-  const [showLogin, setShowLogin] = useState(false);
-  const [showRegister, setShowRegister] = useState(false);
 
-  const handleLoginClick = () => {
-    setShowLogin(true);
-    setShowRegister(false);
-  };
-
-  const handleRegisterClick = () => {
-    setShowRegister(true);
-    setShowLogin(false);
-  };
-
-  const closeForms = () => {
-    setShowLogin(false);
-    setShowRegister(false);
-  };
 
   return (
     <Router>
       <Routes>
-        <Route path="/" element={
-          <>
-            <Header onLoginClick={handleLoginClick} onRegisterClick={handleRegisterClick} />
-            {showLogin && <Login onClose={closeForms} />}
-            {showRegister && <Register onClose={closeForms} />}
-            <Index />
-          </>
-        } />
+        <Route path="/" element={<Index />}>
+        </Route>
+        <Route path="/login" element={<Login />}>
+        </Route>
+        <Route path="/register" element={<Register />}>
+        </Route>
         <Route path="/reader" element={<LandingLayout />}>
           <Route index element={<Landing />} />
           <Route path="borrow" element={<BorrowB />} />
