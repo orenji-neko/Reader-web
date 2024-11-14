@@ -2,16 +2,30 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaTimes } from 'react-icons/fa'; 
 import './LoginRegister.css'; // Import the CSS file
+import { useAuth } from '../../utils/AuthProvider';
 
 function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
-  const handleLogin = (event) => {
+  const { login } = useAuth();
+
+  const handleLogin = async (event) => {
     event.preventDefault();
-    // Implement login logic here
-    console.log('Login attempt', { email, password });
+
+    const response = await fetch("/api/v1/user/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ email: email, password: password })
+    })
+
+    const result = await response.json();
+    if(result.token) {
+      login(result.token);
+    }
   };
 
   const handleClose = () => {
