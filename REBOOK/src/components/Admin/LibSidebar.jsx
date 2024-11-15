@@ -17,12 +17,9 @@ function LibSidebar() {
   const { validate, logout } = useAuth();
 
   useEffect(() => {
-    validate().then(res => {
-      setName(res.fullname)
-      console.log(res)
-    })
-  }, []);
-
+    validate().then(res => setName(res.fullname))
+  }, [validate]);
+  
   return (
     <div className="min-w-64 bg-teal-500 text-white h-full flex flex-col justify-between p-4">
       {/* User Section */}
