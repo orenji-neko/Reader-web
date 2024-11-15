@@ -1,7 +1,9 @@
 import Books from "./Books";
 import Slogan from "../components/Slogan";
+import Descrip from "../components/Descrip";
+import Best from "../components/Best";
 import PropTypes from "prop-types";
-import AboutUs from "./AboutUs";
+import Abouts from "../components/Abouts";
 
 const Main = ({ active = "" }) => {
     return (
@@ -9,18 +11,24 @@ const Main = ({ active = "" }) => {
             {
                 (() => {
                     if(active) {
-                        if(active === "books") {
-                            return <Books/>
-                        }
-                        else if(active === "aboutus") {
-                            return <AboutUs/>
-                        }
+                        
                     }
                     else {
                         return (
-                            <div className="">
-                                <Slogan/>
-                            </div>
+                            <>
+                                <div className="">
+                                    <Slogan/>
+                                </div>
+                                <div className="">
+                                    <Descrip/>
+                                </div>
+                                <div className="">
+                                    <Best/>
+                                </div>
+                                <div className="">
+                                    <Abouts/>
+                                </div>
+                            </>
                         )
                     }
                 })()
