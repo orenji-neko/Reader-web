@@ -12,7 +12,11 @@ function Sidebar() {
 
   useEffect(() => {
     validate().then(res => setName(res.fullname))
+<<<<<<< HEAD
   }, [validate]);
+=======
+  }, []);
+>>>>>>> 6642c799aaba05acf6ca4b60b41fb6679f349754
 
   return (
     <div className="w-[100%] bg-teal-500 text-white h-full flex flex-col justify-between p-4">
