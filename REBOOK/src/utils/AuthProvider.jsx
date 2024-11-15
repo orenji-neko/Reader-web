@@ -4,11 +4,24 @@ import PropTypes from 'prop-types';
 const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
-    const [token, setToken] = useState(null);
+    const [token, setToken] = useState(localStorage.getItem('token'));
 
-    const login = (newToken) => {
-        setToken(newToken);
-        localStorage.setItem('token', newToken);
+    const login = async (email, password) => {
+        const loginResponse = await fetch("/api/v1/user/login", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ email: email, password: password })
+        });
+        const loginResult = await loginResponse.json();
+        if (!loginResult.token) {
+            console.log("Login failed...");
+            return;
+        }
+
+        setToken(loginResult.token);
+        localStorage.setItem('token', loginResult.token);
     };
 
     const logout = () => {
@@ -16,8 +29,21 @@ const AuthProvider = ({ children }) => {
         localStorage.removeItem('token');
     };
 
+    const validate = async () => {
+        const validResponse = await fetch("/api/v1/user/validate", {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": `${token}`
+            },
+        });
+
+        const validResult = await validResponse.json();
+        return validResult;
+    };
+
     return (
-        <AuthContext.Provider value={{ token, login, logout }}>
+        <AuthContext.Provider value={{ token, login, logout, validate }}>
             {children}
         </AuthContext.Provider>
     );
@@ -28,16 +54,10 @@ AuthProvider.propTypes = {
 };
 
 const useAuth = () => {
-    const { token, login, logout } = useContext(AuthContext);
+    const { token, login, logout, validate } = useContext(AuthContext);
 
-    useEffect(() => {
-        const savedToken = localStorage.getItem('token');
-        if (savedToken) {
-            login(savedToken);
-        }
-    }, [login]);
 
-    return { token, login, logout };
+    return { token, login, logout, validate };
 };
 
-export { AuthProvider, useAuth }
+export { AuthProvider, useAuth };
