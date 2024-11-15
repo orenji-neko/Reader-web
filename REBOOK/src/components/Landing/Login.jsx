@@ -9,23 +9,20 @@ function Login() {
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
-  const { login } = useAuth();
+  const { login, validate } = useAuth();
 
   const handleLogin = async (event) => {
     event.preventDefault();
 
-    const response = await fetch("/api/v1/user/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ email: email, password: password })
+    login(email, password);
+    validate().then(res => {
+      if(res.auth === "READER") {
+        navigate("/reader")
+      }
+      else if(res.auth === "LIBRARIAN") {
+        navigate("/librarian")
+      }
     })
-
-    const result = await response.json();
-    if(result.token) {
-      login(result.token);
-    }
   };
 
   const handleClose = () => {

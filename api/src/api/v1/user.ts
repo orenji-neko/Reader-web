@@ -58,6 +58,9 @@ const app = new Elysia({ prefix: "/user" })
 
             const token = await jwt.sign({
                 id: user.id,
+                email: user.email,
+                fullname: user.name,
+                username: user.username,
                 auth: user.auth,
             })
 
@@ -72,6 +75,27 @@ const app = new Elysia({ prefix: "/user" })
         body: t.Object({
             email: t.String(),
             password: t.String()
+        })
+    })
+
+    .get("/validate", async ({ headers, jwt, prisma }) => {
+        try {
+            const { authorization } = headers;
+            const auth = await jwt.verify(authorization);
+
+            if(!auth) {
+                throw new Error("Invalid token!")
+            }
+
+            return auth;
+        }
+        catch(err) {
+            throw err;
+        }
+
+    }, {   
+        headers: t.Object({
+            authorization: t.String()
         })
     })
 

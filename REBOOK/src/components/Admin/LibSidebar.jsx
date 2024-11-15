@@ -8,28 +8,18 @@ import { FaBookReader } from "react-icons/fa"; // Readers icon
 import { BsFillPersonLinesFill } from "react-icons/bs"; // Request icon
 import { IoMdWarning } from "react-icons/io"; // Due Books icon
 import { BiLogOut } from "react-icons/bi"; // Log Out icon
+import { useAuth } from "../../utils/AuthProvider";
 
 function LibSidebar() {
   const [image, setImage] = useState(""); // Initialize state for user image
   const [name, setName] = useState("User"); // Initialize the state for name
 
-  // Load image and name from localStorage on component mount
+  const { validate, logout } = useAuth();
+
   useEffect(() => {
-    const storedImage = localStorage.getItem("userImage");
-    const storedUserDetails = localStorage.getItem("userDetails");
-
-    // Set the image from local storage if it exists
-    if (storedImage) {
-      setImage(storedImage);
-    }
-
-    // Set the name from local storage if it exists
-    if (storedUserDetails) {
-      const { name } = JSON.parse(storedUserDetails);
-      setName(name);
-    }
-  }, []);
-
+    validate().then(res => setName(res.fullname))
+  }, [validate]);
+  
   return (
     <div className="min-w-64 bg-teal-500 text-white h-full flex flex-col justify-between p-4">
       {/* User Section */}
@@ -91,7 +81,7 @@ function LibSidebar() {
           </li>
           <hr className="border-black" />
           <li className="group rounded py-2 hover:bg-teal-200">
-            <Link to="/logout" className="flex items-center px-3">
+            <Link className="flex items-center px-3" onClick={() => logout()}>
               <BiLogOut className="inline-block mr-2 text-black" /> {/* Left-facing Log Out Icon */}
               <span className="transition-colors duration-200 group-hover:text-black text-white">Log Out</span>
             </Link>
