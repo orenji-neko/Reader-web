@@ -8,23 +8,10 @@ function Sidebar() {
   const [image, setImage] = useState(""); // Initialize state for user image
   const [name, setName] = useState("User"); // Initialize the state for name
 
-  const { logout } = useAuth()
+  const { validate, logout } = useAuth();
 
-  // Load image and name from localStorage on component mount
   useEffect(() => {
-    const storedImage = localStorage.getItem("userImage");
-    const storedUserDetails = localStorage.getItem("userDetails");
-    
-    // Set the image from local storage if it exists
-    if (storedImage) {
-      setImage(storedImage);
-    }
-
-    // Set the name from local storage if it exists
-    if (storedUserDetails) {
-      const { name } = JSON.parse(storedUserDetails);
-      setName(name);
-    }
+    validate().then(res => setName(res.fullname))
   }, []);
 
   return (
