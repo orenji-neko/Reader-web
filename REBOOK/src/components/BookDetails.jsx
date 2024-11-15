@@ -49,21 +49,33 @@ function BookDetails() {
           <button className="bg-gray-300 text-black px-4 py-2 rounded ml-2 mt-4 hover:bg-gray-400">Rate</button>
         </div>
       </div>
-      {/* Book description */}
-      <div className="mt-6">
-        <h2 className="text-2xl font-bold">Description</h2>
-        <p className="text-gray-700 mt-2">{book.description}</p>
-      </div>
-      {/* Comments section */}
-      <div className="mt-6">
-        <h2 className="text-2xl font-bold">Comments</h2>
-        <div className="mt-4 space-y-4">
-          {book.comments.map((comment, index) => (
-            <div key={index} className="bg-gray-100 p-3 rounded-md shadow-sm">
-              <p className="font-semibold">{comment.user.name}</p>
-              <p className="text-gray-600">{comment.text}</p>
-            </div>
-          ))}
+      {/* Book description and comments */}
+      <div className="mt-6 flex">
+        {/* Book description */}
+        <div className="flex-1 mr-8">
+          <h2 className="text-2xl font-bold">Description</h2>
+          <p className="mt-2 text-gray-700" style={{ lineHeight: '1.5' }}>
+            {book.description}
+          </p>
+        </div>
+        {/* Comments section */}
+        <div className="flex-1">
+          <h2 className="text-2xl font-bold">Comments</h2>
+          <div
+            className="mt-2 space-y-2 pr-2"
+            style={{
+              maxHeight: '200px', // Set a max-height to make it scrollable
+              overflowY: 'auto',
+              paddingRight: '8px', // Adds padding between content and scrollbar
+            }}
+          >
+            {book.comments.map((comment, index) => (
+              <div key={index} className="bg-gray-100 p-3 rounded-md shadow-sm" style={{ lineHeight: '1.5' }}>
+                <p className="font-semibold">{comment.user.name}</p>
+                <p className="text-gray-600">{comment.text}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>
