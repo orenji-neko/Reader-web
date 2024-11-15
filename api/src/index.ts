@@ -1,10 +1,9 @@
 import { Elysia } from "elysia";
 import api from "./api";
-
-const test = () => console.log("test worked");
+import auth from "./utils/auth";
 
 const app = new Elysia()
-  .decorate("test", test)
+  .use(auth)
   .use(api)
   .listen(3000);
 

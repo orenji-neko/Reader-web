@@ -1,17 +1,28 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaTimes } from 'react-icons/fa'; 
 import './LoginRegister.css'; // Import the CSS file
+import { useAuth } from '../../utils/AuthProvider';
 
 function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
-  const handleLogin = (event) => {
+  const { login, validate } = useAuth();
+
+  const handleLogin = async (event) => {
     event.preventDefault();
-    // Implement login logic here
-    console.log('Login attempt', { email, password });
+
+    login(email, password);
+    validate().then(res => {
+      if(res.auth === "READER") {
+        navigate("/reader")
+      }
+      else if(res.auth === "LIBRARIAN") {
+        navigate("/librarian")
+      }
+    })
   };
 
   const handleClose = () => {
@@ -38,7 +49,7 @@ function Login() {
                 value={email}
                 placeholder="user@gmail.com..."
                 className="w-full p-2 rounded-lg border border-gray-300 "
-                onChange={(e) => setUsername(e.target.value)}
+                onChange={(e) => setEmail(e.target.value)}
                 required
               />
             </div>

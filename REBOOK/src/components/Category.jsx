@@ -101,7 +101,7 @@ const Category = () => {
                 <ul className="space-y-2 p-2">
                   {categoriesData && categoriesData.map((category, index) => (
                     <li key={index} className="p-2 bg-gray-100 rounded hover:bg-teal-600 hover:text-white cursor-pointer">
-                      <Link to={`/category/${category.id}`}>{category.name}</Link>
+                      <Link to={`/reader/category/${category.id}`}>{category.name}</Link>
                     </li>
                   ))}
                 </ul>
@@ -118,16 +118,16 @@ const Category = () => {
             {filteredBooks.length > 0 ? filteredBooks.map((book) => (
                 <Link 
                   key={book.id} 
-                  to={`/book/${book.id}`} 
+                  to={`/reader/book/${book.id}`} 
                   className="text-center bg-white w-full max-w-[120px] p-2 rounded-md hover:shadow-2xl transition-shadow duration-300 cursor-pointer"
                 >
                   <img
-                    src={`/api/v1/cover/${book.cover}`}
+                    src={`/api/v1/file/${book.cover}`}
                     alt={book.title}
                     className="object-cover h-32 w-full rounded-md"
                   />
                   <h3 className="mt-2 text-sm font-bold">{book.title}</h3>
-                  <p className="text-xs">{book.author.name}</p>
+                  <p className="text-xs">{book.author ? book.author.name : '' }</p>
                 </Link>
               ))
             :

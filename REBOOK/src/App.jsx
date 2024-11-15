@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Landing from './components/Landing';
 import BorrowB from './components/BorrowB';
@@ -19,39 +18,56 @@ import Register from './components/Landing/Register';
 import Forgot from './components/Landing/Forgot';
 import Code from './components/Landing/Code';
 import Newpass from './components/Landing/Newpass';
+
+import { Navigate } from 'react-router-dom';
+import { useAuth } from './utils/AuthProvider'; // Make sure this hook returns the token or authentication status
+import PropTypes from 'prop-types';
+
+const ProtectedRoute = ({ children }) => {
+  const { token } = useAuth(); // Replace with your actual authentication logic
+
+  if (!token) {
+    console.log(token)
+    return <Navigate to="/login" />;
+  }
+
+  return children;
+};
+ProtectedRoute.propTypes = {
+  children: PropTypes.node
+}
+
 function App() {
-
-
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Index />}>
-        </Route>
-        <Route path="/login" element={<Login />}>
-        </Route>
-        <Route path="/register" element={<Register />}>
-        </Route>
-        <Route path="/forgot" element={<Forgot />}>
-        </Route>
-        <Route path="/code" element={<Code />}>
-        </Route>
-        <Route path="/newpass" element={<Newpass />}>
-        </Route>
-        <Route path="/reader" element={<LandingLayout />}>
+        <Route path="/" element={<Index />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/forgot" element={<Forgot />} />
+        <Route path="/code" element={<Code />} />
+        <Route path="/newpass" element={<Newpass />} />
+
+        <Route path="/reader" element={
+          <ProtectedRoute> 
+            <LandingLayout /> 
+          </ProtectedRoute>}>
+          
           <Route index element={<Landing />} />
-          <Route path="borrow" element={<BorrowB />} />
-          <Route path="history" element={<History />} />
-          <Route path="book/:bookId" element={<BookDetails />} />
-          <Route path="user" element={<User />} />
-          <Route path="category/:categoryId" element={<Category />} />
+
+          <Route path="borrow" element={<ProtectedRoute><BorrowB /></ProtectedRoute>} />
+          <Route path="history" element={<ProtectedRoute><History /></ProtectedRoute>} />
+          <Route path="book/:bookId" element={<ProtectedRoute><BookDetails /></ProtectedRoute>} />
+          <Route path="user" element={<ProtectedRoute><User /></ProtectedRoute>} />
+          <Route path="category/:categoryId" element={<ProtectedRoute><Category /></ProtectedRoute>} />
         </Route>
-        <Route path="/librarian" element={<LiblandingLayout />}>
+        <Route path="/librarian" element={<ProtectedRoute><LiblandingLayout /></ProtectedRoute>}>
           <Route index element={<LibLanding />} />
-          <Route path="request" element={<Request />} />
-          <Route path="inventory" element={<BookInventory />} />
-          <Route path="readers" element={<Readers />} />
-          <Route path="users" element={<User />} />
-          <Route path="due" element={<DueBooks />} />
+          <Route path="request" element={<ProtectedRoute><Request /></ProtectedRoute>} />
+          <Route path="inventory" element={<ProtectedRoute><BookInventory /></ProtectedRoute>} />
+          <Route path="readers" element={<ProtectedRoute><Readers /></ProtectedRoute>} />
+          <Route path="users" element={<ProtectedRoute><User /></ProtectedRoute>} />
+          <Route path="due" element={<ProtectedRoute><DueBooks /></ProtectedRoute>} />
         </Route>
       </Routes>
     </Router>
