@@ -1,5 +1,8 @@
 import React from 'react';
+<<<<<<< HEAD
 
+=======
+>>>>>>> 082e4987e3e0377a53e76d9ec85760d7c083d6f3
 const Abouts = () => {
     return (
         <div className="flex flex-col w-full sm:w-full md:w-full lg:w-full xl:w-full" style={{ marginTop: '110px' }}>
@@ -18,7 +21,10 @@ const Abouts = () => {
                 <h1 className="text-2xl text-white">We strive to create a space where learning and curiosity come alive. 
                     Whether it’s through a diverse collection of books or engaging community programs, our mission is to inspire, educate, and connect people from all walks of life.</h1>
             </div>
+<<<<<<< HEAD
 
+=======
+>>>>>>> 082e4987e3e0377a53e76d9ec85760d7c083d6f3
             <div className="flex flex-col justify-center items-left space-y-2" style={{ maxWidth: '1200px' }}>
                 <div>
                     <h1 className="text-5xl text-red-100" style={{ marginTop: '30px', marginLeft: '500px', marginBottom: '34px' }}>Our Team</h1>
@@ -75,5 +81,8 @@ const Abouts = () => {
         </div>
     )
 }
+<<<<<<< HEAD
 
+=======
+>>>>>>> 082e4987e3e0377a53e76d9ec85760d7c083d6f3
 export default Abouts;

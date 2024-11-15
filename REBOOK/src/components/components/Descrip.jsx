@@ -1,5 +1,8 @@
 import React from 'react';
+<<<<<<< HEAD
 
+=======
+>>>>>>> 082e4987e3e0377a53e76d9ec85760d7c083d6f3
 const Descrip = () => {
     return (
         <div className="flex flex-col w-full sm:w-full md:w-full lg:w-full xl:w-full" style={{ marginTop: '90px', marginLeft: '-280px' }}>
@@ -15,5 +18,8 @@ const Descrip = () => {
         </div>
     )
 }
+<<<<<<< HEAD
 
+=======
+>>>>>>> 082e4987e3e0377a53e76d9ec85760d7c083d6f3
 export default Descrip;
