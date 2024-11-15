@@ -1,9 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from "prop-types";
-<<<<<<< HEAD
-
-=======
->>>>>>> 082e4987e3e0377a53e76d9ec85760d7c083d6f3
 // LatestBooksEntry component
 const LatestBooksEntry = ({ title, coverUrl }) => {
   return (
@@ -15,38 +11,24 @@ const LatestBooksEntry = ({ title, coverUrl }) => {
     </div>
   );
 }
-<<<<<<< HEAD
-
-=======
->>>>>>> 082e4987e3e0377a53e76d9ec85760d7c083d6f3
 LatestBooksEntry.propTypes = {
   title: PropTypes.string.isRequired,
   coverUrl: PropTypes.string.isRequired
 }
-<<<<<<< HEAD
 
 const Best = () => {
     const [latestBooksData, setLatestBooksData] = useState([]);
 
-=======
-const Best = () => {
-    const [latestBooksData, setLatestBooksData] = useState([]);
->>>>>>> 082e4987e3e0377a53e76d9ec85760d7c083d6f3
     useEffect(() => {
         const load = async () => {
             const response = await fetch("/api/v1/books?sort=latest", { method: "GET" });
             const data = await response.json();
             setLatestBooksData(data);
         }
-<<<<<<< HEAD
 
         load();
     }, []);
 
-=======
-        load();
-    }, []);
->>>>>>> 082e4987e3e0377a53e76d9ec85760d7c083d6f3
     return (
         <>
             <div>
@@ -67,10 +49,6 @@ const Best = () => {
                     </div>
                 </div>
             </div>
-<<<<<<< HEAD
-
-=======
->>>>>>> 082e4987e3e0377a53e76d9ec85760d7c083d6f3
             <div>
                 <h1 className="text-3xl font-extrabold text-red-100" style={{ marginTop: '30px', marginLeft: '380px', marginBottom: '40px' }}>TRENDING</h1> {/* Added marginBottom */}
             </div>
@@ -92,8 +70,4 @@ const Best = () => {
         </>
     )
 }
-<<<<<<< HEAD
-
-=======
->>>>>>> 082e4987e3e0377a53e76d9ec85760d7c083d6f3
 export default Best;
