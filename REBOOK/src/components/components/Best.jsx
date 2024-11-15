@@ -15,16 +15,20 @@ LatestBooksEntry.propTypes = {
   title: PropTypes.string.isRequired,
   coverUrl: PropTypes.string.isRequired
 }
+
 const Best = () => {
     const [latestBooksData, setLatestBooksData] = useState([]);
+
     useEffect(() => {
         const load = async () => {
             const response = await fetch("/api/v1/books?sort=latest", { method: "GET" });
             const data = await response.json();
             setLatestBooksData(data);
         }
+
         load();
     }, []);
+
     return (
         <>
             <div>
