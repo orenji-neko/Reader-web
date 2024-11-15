@@ -1,27 +1,17 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom"; // Using React Router's Link
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'; // Import FontAwesomeIcon component
 import { faUser } from '@fortawesome/free-solid-svg-icons'; // Import the solid user icon
+import { useAuth } from "../utils/AuthProvider";
 
 function Sidebar() {
   const [image, setImage] = useState(""); // Initialize state for user image
   const [name, setName] = useState("User"); // Initialize the state for name
 
-  // Load image and name from localStorage on component mount
-  useEffect(() => {
-    const storedImage = localStorage.getItem("userImage");
-    const storedUserDetails = localStorage.getItem("userDetails");
-    
-    // Set the image from local storage if it exists
-    if (storedImage) {
-      setImage(storedImage);
-    }
+  const { validate, logout } = useAuth();
 
-    // Set the name from local storage if it exists
-    if (storedUserDetails) {
-      const { name } = JSON.parse(storedUserDetails);
-      setName(name);
-    }
+  useEffect(() => {
+    validate().then(res => setName(res.fullname))
   }, []);
 
   return (
@@ -83,7 +73,7 @@ function Sidebar() {
           </li>
           <hr className="border-black" />
           <li className="group rounded py-2 hover:bg-teal-200">
-            <Link to="/logout" className="flex items-center px-3 group hover:text-black">
+            <Link className="flex items-center px-3 group hover:text-black" onClick={() => logout()}>
               <img
                 src="/src/assets/icons/exit.png"
                 alt="Log Out"
