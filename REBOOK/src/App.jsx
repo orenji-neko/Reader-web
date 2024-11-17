@@ -75,6 +75,11 @@ function App() {
                   <ManagePage />
                 </ProtectedRoute>
               }/>
+              <Route path="edit/:bookId" element={
+                <ProtectedRoute>
+                  <ManagePage />
+                </ProtectedRoute>
+              }/>
             </Routes>
           }/>
           <Route path="readers" element={<ProtectedRoute><Readers /></ProtectedRoute>} />

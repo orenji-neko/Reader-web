@@ -3,6 +3,7 @@ import Pics from './Pics';
 import { Link } from 'react-router-dom';
 import { FaSearch, FaTimes, FaChevronDown } from 'react-icons/fa';
 import PropTypes from 'prop-types';
+import { useAuth } from '../utils/AuthProvider';
 
 const LatestBooksTableEntry = ({ title, coverUrl, rating, author, status }) => {
   return (
@@ -38,6 +39,8 @@ const Landing = () => {
   const [latestBooksData, setLatestBooksData] = useState([]);
   const [categories, setCategories] = useState([]);
 
+  const { token } = useAuth();
+
   const toggleDropdown = () => {
     setDropdownOpen(!isDropdownOpen);
   };
@@ -68,7 +71,12 @@ const Landing = () => {
      *  [GET] /api/v1/books
      */
     const load = async () => {
-      const book_response  = await fetch("/api/v1/books?sort=latest", { method: "GET" });
+      const book_response  = await fetch("/api/v1/books?sort=latest", { 
+        method: "GET",
+        headers: {
+          "Authorization": token
+        }
+      });
       const book_data = await book_response.json();
 
       const category_response  = await fetch("/api/v1/categories", { method: "GET" });
