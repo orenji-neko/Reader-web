@@ -1,15 +1,22 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { useAuth } from '../utils/AuthProvider';
 
 function BookDetails() {
   const { bookId } = useParams(); // Get the book title from the URL
   const navigate = useNavigate(); // Hook to navigate back
 
   const [book, setBook] = useState(null); // book details
+  const { token } = useAuth();
 
   useEffect(() => {
     const load = async () => {
-      const book_response = await fetch(`/api/v1/book/${bookId}`, { method: "GET" });
+      const book_response = await fetch(`/api/v1/book/${bookId}`, { 
+        method: "GET",
+        headers: {
+          "Authorization": token
+        }
+      });
       const book_result = await book_response.json();
       setBook(await book_result);
     }

@@ -1,10 +1,13 @@
 import { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaSearch, FaTimes, FaChevronDown, FaFilter, FaEdit, FaTrash } from 'react-icons/fa';
+import { useAuth } from '../../utils/AuthProvider';
 
 const statuses = ["All", "Approved", "Denied", "Pending", "Blocked", "Available", "Not Available"];
 
 const BookInventory = () => {
+  const { token } = useAuth();
+  
   const [isFilterDropdownOpen, setFilterDropdownOpen] = useState(false);
   const [isCategoryDropdownOpen, setCategoryDropdownOpen] = useState(false);
   const [isStatusDropdownOpen, setStatusDropdownOpen] = useState(false);
@@ -92,6 +95,25 @@ const BookInventory = () => {
     setStatusDropdownOpen(false);
   };
 
+<<<<<<< HEAD
+=======
+  const deleteBook = async (id) => {
+    try {
+      const response = await fetch(`/api/v1/book/${id}`,{ 
+        method: "DELETE",
+        headers: {
+          "Authorization": token
+        }
+      })
+      const result = await response.json();
+      alert("Deleted book!")
+    }
+    catch(err) {
+      alert(err);
+    }
+  }
+
+>>>>>>> e591aa5518e29dcb8b9d5fb06907874bf4808c56
   return (
     <div className="bg-teal-100 flex flex-col w-full h-full min-h-screen">
       <div className="bg-teal-100 p-6 flex flex-col">
@@ -233,10 +255,10 @@ const BookInventory = () => {
                     </td>
                     <td className="p-4 border-b border-gray-200 text-center">
                       <div className="flex justify-center space-x-3">
-                        <Link to={`/edit/${book.id}`} className="text-blue-500 hover:text-blue-700">
+                        <Link to={`/librarian/inventory/edit/${book.id}`} className="text-blue-500 hover:text-blue-700">
                           <FaEdit />
                         </Link>
-                        <button className="text-red-500 hover:text-red-700">
+                        <button className="text-red-500 hover:text-red-700" onClick={() => deleteBook(book.id)}>
                           <FaTrash />
                         </button>
                       </div>
