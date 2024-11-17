@@ -94,7 +94,7 @@ const app = new Elysia()
      * [DESC]   Add a book
      */
     .post("/book", async ({ body, prisma }) => {
-        const { title, authorId, cover} = body;
+        const { title, authorId, cover, categoryId, description } = body;
         // saving file
         const fileName = await saveImage(cover);
 
@@ -104,11 +104,17 @@ const app = new Elysia()
                 rating: 5, 
                 status: "Available",
                 cover: fileName,
+                description: description,
                 author: {
                     connect: {
                         id: parseInt(authorId ? authorId : "0")
                     }
                 },
+                category: {
+                    connect: {
+                        id: parseInt(categoryId ? categoryId : "0")
+                    }
+                }
             }
         }
 
@@ -120,7 +126,12 @@ const app = new Elysia()
         body: t.Object({
             title:      t.String(),
             authorId:   t.String(),
+            categoryId: t.String(),
+            description: t.String(),
             cover:      t.File()
+        }),
+        headers: t.Object({
+            authorization: t.String()
         })
     });
 

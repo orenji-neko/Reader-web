@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { FaSearch, FaTimes, FaChevronDown, FaFilter, FaEdit, FaTrash } from 'react-icons/fa';
 
 const statuses = ["All", "Approved", "Denied", "Pending", "Blocked", "Available", "Not Available"];
@@ -25,7 +25,7 @@ const BookInventory = () => {
   const [categoriesData, setCategoriesData] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState({});
 
-  const [isOpenModal, setOpenModal] = useState(false);
+  const navigate = useNavigate();
 
   /**
    * Used for fetching data
@@ -91,10 +91,6 @@ const BookInventory = () => {
     setSelectedStatus(status);
     setStatusDropdownOpen(false);
   };
-
-  const handleOpenModal = () => {
-    setOpenModal(true);
-  }
 
   return (
     <div className="bg-teal-100 flex flex-col w-full h-full min-h-screen">
@@ -204,7 +200,7 @@ const BookInventory = () => {
             <div className="flex flex-row justify-end">
               <button
                 className="bg-teal-600 text-white p-2 rounded-md hover:bg-teal-200 hover:text-black"
-                onClick={() => { han() }}
+                onClick={() => navigate("/librarian/inventory/add")}
               >Add Book</button>
             </div>
             <table className="w-full table-auto text-left">
