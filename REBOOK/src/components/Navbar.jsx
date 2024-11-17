@@ -17,7 +17,7 @@ function Navbar({ toggleSidebar, isSidebarOpen, toggleNotif }) {
           <div className="h-1 w-6 bg-black transition-transform duration-500 ease-in-out" />
           <div className="h-1 w-6 bg-black transition-transform duration-500 ease-in-out" />
         </button>
-        <a href="/">
+        <a href="/reader">
           <img src="/rebook-images/Component2.png" alt="ReBook Logo" className="ml-4 h-8" />
         </a>
       </div>
