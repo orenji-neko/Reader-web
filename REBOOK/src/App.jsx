@@ -22,6 +22,7 @@ import Newpass from './components/Landing/Newpass';
 import { Navigate } from 'react-router-dom';
 import { useAuth } from './utils/AuthProvider'; // Make sure this hook returns the token or authentication status
 import PropTypes from 'prop-types';
+import ManagePage from './components/Admin/ManagePage';
 
 const ProtectedRoute = ({ children }) => {
   const { token } = useAuth(); // Replace with your actual authentication logic
@@ -64,7 +65,18 @@ function App() {
         <Route path="/librarian" element={<ProtectedRoute><LiblandingLayout /></ProtectedRoute>}>
           <Route index element={<LibLanding />} />
           <Route path="request" element={<ProtectedRoute><Request /></ProtectedRoute>} />
-          <Route path="inventory" element={<ProtectedRoute><BookInventory /></ProtectedRoute>} />
+          <Route path="inventory/*" element={
+            <Routes>
+              <Route index element={
+                <ProtectedRoute><BookInventory /></ProtectedRoute>
+              }/>
+              <Route path="add" element={
+                <ProtectedRoute>
+                  <ManagePage />
+                </ProtectedRoute>
+              }/>
+            </Routes>
+          }/>
           <Route path="readers" element={<ProtectedRoute><Readers /></ProtectedRoute>} />
           <Route path="users" element={<ProtectedRoute><User /></ProtectedRoute>} />
           <Route path="due" element={<ProtectedRoute><DueBooks /></ProtectedRoute>} />
