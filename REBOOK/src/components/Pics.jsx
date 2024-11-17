@@ -32,7 +32,7 @@ function Pics({ searchTerm }) {
   useEffect(() => {
     const handleResize = () => {
       const screenWidth = window.innerWidth;
-      const bookWidth = 100; // Simplified, since the value doesn't change based on sidebar state
+      const bookWidth = 120; // Adjusted fixed width for book card
       const effectiveWidth = screenWidth - (isSidebarOpen ? 256 : 0); // Adjust effective width based on sidebar visibility
       const padding = 40; // Assumed padding around book cards in pixels
       const items = Math.floor(effectiveWidth / (bookWidth + padding));
@@ -94,14 +94,17 @@ function Pics({ searchTerm }) {
                 <div
                   className="flex-shrink-0 text-center bg-white p-2 rounded-md hover:shadow-2xl transition-shadow duration-900 cursor-pointer"
                   onClick={() => handleBookClick(book)}
+                  style={{ width: 132 }} // Fixed width for book card
                 >
-                  <img
-                    src={`/api/v1/file/${book.cover}`}
-                    alt={book.title}
-                    className="object-cover h-24 rounded-md"
-                  />
-                  <h3 className="mt-2 text-[12px] font-bold">{book.title}</h3>
-                  <p className="text-[10px]">{book.author ? book.author.name : ''}</p>
+                  <div style={{ padding: '9px' }}> {/* Added padding around the image */}
+                    <img
+                      src={`/api/v1/file/${book.cover}`}
+                      alt={book.title}
+                      className="object-cover h-32 w-full rounded-md" // Fixed height and width for image
+                    />
+                  </div>
+                  <h3 className="ml-2 text-[15px] font-bold flex ">{book.title}</h3>
+                  <p className="p-2 text-[10px] flex">By {book.author ? book.author.name : ''}</p>
                 </div>
               </Link>
             ))
@@ -115,6 +118,7 @@ function Pics({ searchTerm }) {
     </div>
   );
 }
+
 Pics.propTypes = {
   searchTerm: PropTypes.string
 }

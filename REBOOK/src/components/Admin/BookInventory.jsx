@@ -142,7 +142,7 @@ const BookInventory = () => {
             {isFilterDropdownOpen && (
               <div className="absolute z-10 bg-white border border-gray-300 rounded-lg shadow-md mt-1 w-48">
                 {/* Categories Dropdown */}
-                <div className="border-b border-gray-300">
+                <div className="border-b  border-gray-300">
                   <button
                     onClick={() => setCategoryDropdownOpen(!isCategoryDropdownOpen)}
                     className="flex justify-between items-center w-full p-2 hover:bg-gray-100"
@@ -207,6 +207,12 @@ const BookInventory = () => {
         </div>
 
         <h2 className="text-2xl font-bold p-4">Inventory</h2>
+        <div className="flex mr-3 mb-3 justify-end">
+              <button
+                className="bg-teal-600 text-white p-2 rounded-md hover:bg-teal-200 hover:text-black"
+                onClick={() => navigate("/librarian/inventory/add")}
+              >Add Book</button>
+            </div>
         <div className="relative bg-white p-4 rounded-2xl shadow-lg flex-1 mb-4 mx-2 overflow-hidden">
           <div
             className="overflow-y-auto max-h-full"
@@ -216,12 +222,7 @@ const BookInventory = () => {
             onMouseUp={handleMouseUp}
             onMouseLeave={handleMouseUp}
           >
-            <div className="flex flex-row justify-end">
-              <button
-                className="bg-teal-600 text-white p-2 rounded-md hover:bg-teal-200 hover:text-black"
-                onClick={() => navigate("/librarian/inventory/add")}
-              >Add Book</button>
-            </div>
+            
             <table className="w-full table-auto text-left">
               <thead>
                 <tr>
