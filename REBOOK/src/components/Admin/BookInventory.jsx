@@ -25,6 +25,8 @@ const BookInventory = () => {
   const [categoriesData, setCategoriesData] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState({});
 
+  const [isOpenModal, setOpenModal] = useState(false);
+
   /**
    * Used for fetching data
    */
@@ -89,6 +91,10 @@ const BookInventory = () => {
     setSelectedStatus(status);
     setStatusDropdownOpen(false);
   };
+
+  const handleOpenModal = () => {
+    setOpenModal(true);
+  }
 
   return (
     <div className="bg-teal-100 flex flex-col w-full h-full min-h-screen">
@@ -195,6 +201,12 @@ const BookInventory = () => {
             onMouseUp={handleMouseUp}
             onMouseLeave={handleMouseUp}
           >
+            <div className="flex flex-row justify-end">
+              <button
+                className="bg-teal-600 text-white p-2 rounded-md hover:bg-teal-200 hover:text-black"
+                onClick={() => { han() }}
+              >Add Book</button>
+            </div>
             <table className="w-full table-auto text-left">
               <thead>
                 <tr>
@@ -217,7 +229,7 @@ const BookInventory = () => {
                             />
                     </td>
                     <td className="p-4 border-b border-gray-200">{book.title}</td>
-                    <td className="p-4 border-b border-gray-200">{book.author.name}</td>
+                    <td className="p-4 border-b border-gray-200">{book.author ? book.author.name : ''}</td>
                     <td className="p-4 border-b border-gray-200 text-center">{book.available}</td>
                     <td className="p-4 border-b border-gray-200 text-center">{book.total}</td>
                     <td className={`p-4 border-b border-gray-200 ${book.status === 'Available' ? 'text-green-600' : 'text-red-600'}`}>
