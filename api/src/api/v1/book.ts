@@ -104,7 +104,8 @@ const app = new Elysia()
      * [DESC]   Add a book
      */
     .post("/book", async ({ body, prisma }) => {
-        const { title, authorId, cover, categoryId, description } = body;
+        
+        const { title, authorId, cover, categoryId, description, available } = body;
         console.log(body);
         // saving file
         const fileName = await saveImage(cover);
@@ -116,6 +117,7 @@ const app = new Elysia()
                 status: "Available",
                 cover: fileName,
                 description: description,
+                available: parseInt(available),
                 author: {
                     connect: {
                         id: parseInt(authorId ? authorId : "0")
@@ -139,6 +141,7 @@ const app = new Elysia()
             authorId:   t.String(),
             categoryId: t.String(),
             description: t.String(),
+            available: t.String(),
             cover:      t.File()
         }),
         headers: t.Object({
@@ -149,9 +152,15 @@ const app = new Elysia()
      * [POST]   /api/v1/book
      * [DESC]   Add a book
      */
-     .put("/book", async ({ body, prisma }) => {
+     .put("/book", async ({ body, prisma, jwt, headers }) => {
+        const auth:any = await jwt.verify(headers.authorization)
+
+        if(!auth) {
+            throw new Error("Unauthorized!")
+        }
+
         try {
-            const { id, title, authorId, cover, categoryId, description } = body;
+            const { id, title, authorId, cover, categoryId, description, available } = body;
             console.log(body);
             // saving file
             const fileName = await saveImage(cover);
@@ -166,6 +175,7 @@ const app = new Elysia()
                     status: "Available",
                     cover: fileName,
                     description: description,
+                    available: parseInt(available),
                     author: {
                         connect: {
                             id: parseInt(authorId ? authorId : "0")
@@ -194,11 +204,38 @@ const app = new Elysia()
             authorId:       t.String(),
             categoryId:     t.String(),
             description:    t.String(),
+            available:      t.String(),
             cover:          t.File()
         }),
         headers: t.Object({
             authorization: t.String()
         })
-    });
+    })
+    .delete("/book/:id", async ({ headers, jwt, params, prisma }) => {
+        
+        const auth:any = await jwt.verify(headers.authorization)
+
+        if(!auth) {
+            throw new Error("Unauthorized!")
+        }
+
+        const { id } = params;
+        console.log(id);
+
+        const result = await prisma.book.delete({
+            where: {
+                id: parseInt(id)
+            }
+        })
+        
+        return result;
+    }, {
+        headers: t.Object({
+            authorization: t.String()
+        }),
+        params: t.Object({
+            id: t.String()
+        })
+    })
 
 export default app;

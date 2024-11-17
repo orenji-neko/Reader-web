@@ -76,6 +76,8 @@ const ManagePage = () => {
   const [authorId, setAuthorId] = useState(-1);
   const [categoryId, setCategoryId] = useState(-1);
 
+  const [available, setAvailable] = useState(0);
+
   const [categoriesData, setCategoriesData] = useState([]);
   const [authorsData, setAuthorsData] = useState([]);
 
@@ -124,6 +126,7 @@ const ManagePage = () => {
         setAuthorId(bookResult.authorId);
         setCategoryId(bookResult.categoryId);
         setDescription(bookResult.description);
+        setAvailable(bookResult.available);
 
         // Convert cover URL to file
         const coverFile = await urlToFile(`/api/v1/file/${bookResult.cover}`, bookResult.cover, 'image/jpeg');
@@ -146,6 +149,7 @@ const ManagePage = () => {
       formData.append('authorId', authorId);
       formData.append('categoryId', categoryId);
       formData.append('description', description);
+      formData.append('available', available);
       if (cover && cover.file) {
         formData.append('cover', cover.file);
       }
@@ -178,8 +182,7 @@ const ManagePage = () => {
     };
   
     upload(bookId ? "EDIT" : "ADD");
-  }, [title, authorId, categoryId, description, cover, bookId, token, navigate]);
-  
+  }, [bookId, title, authorId, categoryId, description, available, cover, token, navigate]);
 
   return (
     <div className="flex flex-col w-full h-full min-h-screen">
@@ -214,6 +217,13 @@ const ManagePage = () => {
                 <option key={category.id} value={category.id}>{category.name}</option>
               ))}
             </select>
+            <input 
+              className="w-full p-2 rounded-lg" 
+              type="number" 
+              placeholder="Available" 
+              onChange={(e) => setAvailable(parseInt(e.target.value))} 
+              value={available}
+            />
             <textarea
               className="w-full p-2 rounded-lg h-40" 
               placeholder="Description" 
