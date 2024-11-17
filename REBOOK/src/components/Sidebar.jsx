@@ -11,7 +11,24 @@ function Sidebar() {
   const { validate, logout } = useAuth();
 
   useEffect(() => {
-    validate().then(res => setName(res.fullname))
+    // Fetch the user data from localStorage
+    const storedUserDetails = localStorage.getItem("userDetails");
+    const storedImage = localStorage.getItem("userImage");
+
+    if (storedUserDetails) {
+      const userDetails = JSON.parse(storedUserDetails);
+      setName(userDetails.name || "User");
+    }
+
+    if (storedImage) {
+      setImage(storedImage);
+    } else {
+      setImage("/rebook-images/default_profile.png");
+    }
+
+    // Alternatively, you can use the validate method if the data comes from there
+    // validate().then(res => setName(res.fullname));
+
   }, [validate]);
 
   return (
