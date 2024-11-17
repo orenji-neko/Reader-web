@@ -233,7 +233,7 @@ const BookInventory = () => {
                     </td>
                     <td className="p-4 border-b border-gray-200 text-center">
                       <div className="flex justify-center space-x-3">
-                        <Link to={`/edit/${book.id}`} className="text-blue-500 hover:text-blue-700">
+                        <Link to={`/librarian/inventory/edit/${book.id}`} className="text-blue-500 hover:text-blue-700">
                           <FaEdit />
                         </Link>
                         <button className="text-red-500 hover:text-red-700">
