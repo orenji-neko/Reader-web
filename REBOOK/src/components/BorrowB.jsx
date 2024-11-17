@@ -83,10 +83,9 @@ const BorrowB = () => {
         </div>
       </div>
 
-      <h2 className="text-2xl font-bold p-4">Manage Books</h2>
-      
+      <h2 className="text-3xl font-bold p-4">Manage Borrowed Books</h2>
       {/* Table Component */}
-      <div className="relative bg-white p-4 rounded-md shadow-lg">
+      <div className="">
         <Sortable searchTerm={searchTerm} />
       </div>
     </div>
