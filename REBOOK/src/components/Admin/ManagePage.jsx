@@ -3,10 +3,7 @@ import ImageUploading from 'react-images-uploading';
 import { FaUpload, FaTrashAlt, FaImage } from 'react-icons/fa';
 import PropTypes from 'prop-types';
 import { useAuth } from '../../utils/AuthProvider';
-<<<<<<< HEAD
-=======
 import { useParams, useNavigate } from 'react-router-dom';
->>>>>>> e591aa5518e29dcb8b9d5fb06907874bf4808c56
 
 const ImageInput = ({ onAddImage, image }) => {
     const max = 1;
@@ -70,35 +67,23 @@ ImageInput.propTypes = {
 };
 
 const ManagePage = () => {
-<<<<<<< HEAD
-=======
   const { bookId } = useParams();
-
->>>>>>> e591aa5518e29dcb8b9d5fb06907874bf4808c56
+  const [author, setAuthor] = useState("");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [cover, setCover] = useState(undefined);
 
-<<<<<<< HEAD
-  const [authorId, setAuthorId] = useState();
-  const [categoryId, setCategoryId] = useState();
-=======
   const [authorId, setAuthorId] = useState(-1);
   const [categoryId, setCategoryId] = useState(-1);
 
   const [available, setAvailable] = useState(0);
->>>>>>> e591aa5518e29dcb8b9d5fb06907874bf4808c56
 
   const [categoriesData, setCategoriesData] = useState([]);
-  const [authorsData, setAuthorsData] = useState([]);
 
   const { token } = useAuth();
-<<<<<<< HEAD
-=======
   const navigate = useNavigate();
->>>>>>> e591aa5518e29dcb8b9d5fb06907874bf4808c56
 
-  // Fetch authors and categories
+  // Fetch categories
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -111,29 +96,10 @@ const ManagePage = () => {
         });
         const categories = await categoryResponse.json();
         setCategoriesData(categories);  
-
-        const authorsResponse = await fetch("/api/v1/authors", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `${token}`
-          }
-        });
-        const authors = await authorsResponse.json();
-        setAuthorsData(authors);
       } catch (error) {
         console.error("Failed to fetch data", error);
       }
     };
-
-<<<<<<< HEAD
-    fetchData();
-  }, [token]);
-
-  const uploadHandler = useCallback(() => {
-
-    const upload = async () => {
-=======
     const fetchBook = async () => {
       try {
         const bookResponse = await fetch(`/api/v1/book/${bookId}`, {
@@ -144,8 +110,8 @@ const ManagePage = () => {
           }
         });
         const bookResult = await bookResponse.json();
+        setAuthor(bookResult.author);
         setTitle(bookResult.title);
-        setAuthorId(bookResult.authorId);
         setCategoryId(bookResult.categoryId);
         setDescription(bookResult.description);
         setAvailable(bookResult.available);
@@ -164,49 +130,56 @@ const ManagePage = () => {
     }
   }, [bookId, token]);
 
-  const uploadHandler = useCallback(() => {
+  const addOrGetAuthor = useCallback(async (authorName) => {
+    try {
+      const response = await fetch("/api/v1/authors", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `${token}`
+        },
+        body: JSON.stringify({ name: authorName })
+      });
+
+      if (!response.ok) {
+        const errorDetail = await response.json();
+        throw new Error(errorDetail.message || "Failed to add author");
+      }
+
+      const author = await response.json();
+      return author;
+    } catch (error) {
+      alert("Failed to add author: " + error.message);
+      console.log(error);
+    }
+  }, [token]);
+
+  const uploadHandler = useCallback(async () => {
+    let authorId = null;
+
+    // Add or get the author first if it doesn't exist
+    if (author) {
+      const existingOrNewAuthor = await addOrGetAuthor(author);
+      if (existingOrNewAuthor) {
+        authorId = existingOrNewAuthor.id;
+      }
+    }
+
     const upload = async (opt) => {
->>>>>>> e591aa5518e29dcb8b9d5fb06907874bf4808c56
       const formData = new FormData();
       formData.append('title', title);
       formData.append('authorId', authorId);
       formData.append('categoryId', categoryId);
       formData.append('description', description);
-<<<<<<< HEAD
-      formData.append('cover', cover.file);
-
-      try {
-        const response = await fetch("/api/v1/book", {
-          method: "POST",
-          headers: {
-            "Authorization": token
-          },
-          body: formData
-        });
-
-        const result = await response.json();
-        console.log(result);
-      } catch (error) {
-        console.error("Failed to upload book", error);
-      }
-    };
-
-    upload();
-  }, [title, authorId, description, categoryId, cover, token]);
-
-  return (
-    <div className="flex flex-col w-full h-full min-h-screen">
-      <h1 className="text-2xl font-bold p-2">Add Book</h1>
-=======
       formData.append('available', available);
       if (cover && cover.file) {
         formData.append('cover', cover.file);
       }
-  
-      if(opt === "EDIT") {
+
+      if (opt === "EDIT") {
         formData.append("id", bookId);
       }
-  
+
       try {
         const response = await fetch("/api/v1/book", {
           method: opt === "EDIT" ? "PUT" : "POST",
@@ -215,12 +188,12 @@ const ManagePage = () => {
           },
           body: formData
         });
-  
+
         if (!response.ok) {
           const errorDetail = await response.json();
           throw new Error(errorDetail.message || "Failed to upload book");
         }
-  
+
         const result = await response.json();
         alert("Uploaded Book");
         navigate("/librarian/inventory");
@@ -229,14 +202,13 @@ const ManagePage = () => {
         console.log(error);
       }
     };
-  
+
     upload(bookId ? "EDIT" : "ADD");
-  }, [bookId, title, authorId, categoryId, description, available, cover, token, navigate]);
+  }, [bookId, title, author, categoryId, description, available, cover, token, navigate, addOrGetAuthor]);
 
   return (
     <div className="flex flex-col w-full h-full min-h-screen">
       <h1 className="text-2xl font-bold p-2">{bookId ? 'Edit Book' : 'Add Book'}</h1>
->>>>>>> e591aa5518e29dcb8b9d5fb06907874bf4808c56
       <div className="bg-teal-300 rounded-md p-6 flex flex-col h-full">
         <div className="flex flex-row justify-evenly h-full">
           <div className="h-full w-full flex flex-col space-y-4 p-4">
@@ -250,14 +222,9 @@ const ManagePage = () => {
             <select
               className="w-full p-2 rounded-lg"
               onChange={(e) => setAuthorId(e.target.value)}
-<<<<<<< HEAD
-            >
-              <option value="" disabled>Select Author</option>
-=======
               value={authorId}
             >
               <option value={-1} disabled>Select Author</option>
->>>>>>> e591aa5518e29dcb8b9d5fb06907874bf4808c56
               {authorsData && authorsData.length > 0 && authorsData.map(author => (
                 <option key={author.id} value={author.id}>{author.name}</option>
               ))}
@@ -265,20 +232,13 @@ const ManagePage = () => {
             <select
               className="w-full p-2 rounded-lg"
               onChange={(e) => setCategoryId(e.target.value)}
-<<<<<<< HEAD
-            >
-              <option value="" disabled>Select Category</option>
-=======
               value={categoryId}
             >
               <option value={-1} disabled>Select Category</option>
->>>>>>> e591aa5518e29dcb8b9d5fb06907874bf4808c56
               {categoriesData && categoriesData.length > 0 && categoriesData.map(category => (
                 <option key={category.id} value={category.id}>{category.name}</option>
               ))}
             </select>
-<<<<<<< HEAD
-=======
             <input 
               className="w-full p-2 rounded-lg" 
               type="number" 
@@ -286,7 +246,6 @@ const ManagePage = () => {
               onChange={(e) => setAvailable(parseInt(e.target.value))} 
               value={available}
             />
->>>>>>> e591aa5518e29dcb8b9d5fb06907874bf4808c56
             <textarea
               className="w-full p-2 rounded-lg h-40" 
               placeholder="Description" 
@@ -301,11 +260,7 @@ const ManagePage = () => {
         <div className="flex flex-row justify-end space-x-2 mt-4">
           <button
             className="bg-teal-600 text-white p-2 rounded-md hover:bg-teal-200 hover:text-black"
-<<<<<<< HEAD
-            onClick={() => {}}
-=======
             onClick={() => { navigate("/librarian/inventory") }}
->>>>>>> e591aa5518e29dcb8b9d5fb06907874bf4808c56
           >
             Cancel
           </button>
@@ -322,12 +277,8 @@ const ManagePage = () => {
 };
 
 export default ManagePage;
-<<<<<<< HEAD
-=======
-
 const urlToFile = async (url, filename, mimeType) => {
   const response = await fetch(url);
   const blob = await response.blob();
   return new File([blob], filename, { type: mimeType });
 };
->>>>>>> e591aa5518e29dcb8b9d5fb06907874bf4808c56
