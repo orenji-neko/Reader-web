@@ -68,12 +68,12 @@ ImageInput.propTypes = {
 
 const ManagePage = () => {
   const { bookId } = useParams();
-
   const [author, setAuthor] = useState("");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [cover, setCover] = useState(undefined);
 
+  const [authorId, setAuthorId] = useState(-1);
   const [categoryId, setCategoryId] = useState(-1);
 
   const [available, setAvailable] = useState(0);
@@ -100,7 +100,6 @@ const ManagePage = () => {
         console.error("Failed to fetch data", error);
       }
     };
-
     const fetchBook = async () => {
       try {
         const bookResponse = await fetch(`/api/v1/book/${bookId}`, {
@@ -220,13 +219,16 @@ const ManagePage = () => {
               onChange={(e) => setTitle(e.target.value)} 
               value={title}
             />
-            <input 
-              className="w-full p-2 rounded-lg" 
-              type="text" 
-              placeholder="Author" 
-              onChange={(e) => setAuthor(e.target.value)} 
-              value={author}
-            />
+            <select
+              className="w-full p-2 rounded-lg"
+              onChange={(e) => setAuthorId(e.target.value)}
+              value={authorId}
+            >
+              <option value={-1} disabled>Select Author</option>
+              {authorsData && authorsData.length > 0 && authorsData.map(author => (
+                <option key={author.id} value={author.id}>{author.name}</option>
+              ))}
+            </select>
             <select
               className="w-full p-2 rounded-lg"
               onChange={(e) => setCategoryId(e.target.value)}
@@ -275,7 +277,6 @@ const ManagePage = () => {
 };
 
 export default ManagePage;
-
 const urlToFile = async (url, filename, mimeType) => {
   const response = await fetch(url);
   const blob = await response.blob();
