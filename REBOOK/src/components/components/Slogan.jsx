@@ -1,9 +1,7 @@
 import headbar from "../assets/headbar.png";
 
 const Slogan = () => {
-    
     return (
-        
         <div style={{ 
             backgroundImage: `linear-gradient(rgba(0, 100, 0, 0.3), rgba(0, 100, 0, 0.3)), url(${headbar})`,
             backgroundSize: 'cover',
