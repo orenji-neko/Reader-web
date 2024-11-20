@@ -1,4 +1,4 @@
-import Books from "./Books";
+
 import Slogan from "../components/Slogan";
 import Descrip from "../components/Descrip";
 import Best from "../components/Best";
@@ -22,12 +22,14 @@ const Main = ({ active = "" }) => {
                                 <div className="">
                                     <Descrip/>
                                 </div>
-                                <div className="">
+                                <div className="w-full">
                                     <Best/>
                                 </div>
-                                <div className="">
+                                <div className="w-full">
                                     <Abouts/>
+                                    
                                 </div>
+
                             </>
                         )
                     }

@@ -104,13 +104,9 @@ const app = new Elysia()
      * [DESC]   Add a book
      */
     .post("/book", async ({ body, prisma }) => {
-<<<<<<< HEAD
-        const { title, authorId, cover, categoryId, description } = body;
-=======
         
         const { title, authorId, cover, categoryId, description, available } = body;
         console.log(body);
->>>>>>> e591aa5518e29dcb8b9d5fb06907874bf4808c56
         // saving file
         const fileName = await saveImage(cover);
 
@@ -121,10 +117,7 @@ const app = new Elysia()
                 status: "Available",
                 cover: fileName,
                 description: description,
-<<<<<<< HEAD
-=======
                 available: parseInt(available),
->>>>>>> e591aa5518e29dcb8b9d5fb06907874bf4808c56
                 author: {
                     connect: {
                         id: parseInt(authorId ? authorId : "0")
@@ -148,10 +141,7 @@ const app = new Elysia()
             authorId:   t.String(),
             categoryId: t.String(),
             description: t.String(),
-<<<<<<< HEAD
-=======
             available: t.String(),
->>>>>>> e591aa5518e29dcb8b9d5fb06907874bf4808c56
             cover:      t.File()
         }),
         headers: t.Object({

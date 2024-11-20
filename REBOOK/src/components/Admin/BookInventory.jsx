@@ -95,8 +95,6 @@ const BookInventory = () => {
     setStatusDropdownOpen(false);
   };
 
-<<<<<<< HEAD
-=======
   const deleteBook = async (id) => {
     try {
       const response = await fetch(`/api/v1/book/${id}`,{ 
@@ -113,7 +111,6 @@ const BookInventory = () => {
     }
   }
 
->>>>>>> e591aa5518e29dcb8b9d5fb06907874bf4808c56
   return (
     <div className="bg-teal-100 flex flex-col w-full h-full min-h-screen">
       <div className="bg-teal-100 p-6 flex flex-col">
