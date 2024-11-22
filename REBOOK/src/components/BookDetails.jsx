@@ -22,7 +22,6 @@ function BookDetails() {
     }
 
     load();
-    console.log(book);
   }, [book, bookId]);
 
   if (!book) {
@@ -31,6 +30,26 @@ function BookDetails() {
 
   const handleGoBack = () => {
     navigate("/reader");
+  }
+
+  const borrow = async (id) => {
+    try {
+      const formData = new FormData()
+      formData.append("bookId", id);
+
+      const response = await fetch(`/api/v1/request`, {
+        method: "POST",
+        headers: {
+          "Authorization": token
+        },
+        body: formData
+      })
+      const result = await response.json()
+      alert("Success: ", result)
+    }
+    catch(err) {
+      alert("Error: ", err)
+    }
   }
 
   return (
@@ -52,7 +71,11 @@ function BookDetails() {
           <h1 className="text-4xl font-bold">{book.title}</h1>
           <p className="text-xl italic">By {book.author ? book.author.name : '' }</p>
           <p className="mt-2">Rating: ⭐ {book.rating}</p>
-          <button className="bg-blue-500 text-white px-4 py-2 rounded mt-4 hover:bg-blue-600">Borrow</button>
+          <button className="bg-blue-500 text-white px-4 py-2 rounded mt-4 hover:bg-blue-600"
+            onClick={() => { borrow(book.id) }}
+          >
+            Borrow
+          </button>
           <button className="bg-gray-300 text-black px-4 py-2 rounded ml-2 mt-4 hover:bg-gray-400">Rate</button>
         </div>
       </div>

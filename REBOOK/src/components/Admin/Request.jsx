@@ -1,6 +1,8 @@
 import { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { FaSearch, FaTimes, FaChevronDown, FaFilter } from 'react-icons/fa';
+import { useAuth } from '../../utils/AuthProvider';
+import { formatDate } from "../../utils/date"
 
 const statuses = ["All", "Approved", "Denied", "Pending", "Blocked", "Available", "Not Available"];
 
@@ -25,47 +27,65 @@ const Request = () => {
   const [categoriesData, setCategoriesData] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState({});
 
-  /**
-   * Used for fetching data
-   */
-  useEffect(() => {
-    const fetchBooks = async () => {
-      const response = await fetch("/api/v1/requests");
-      const result = await response.json();
+  const { token } = useAuth();
 
-      setRequestsData(result);
+  const fetchData = async () => {
+    try {
+      const [requestsResponse, categoriesResponse] = await Promise.all([
+        fetch("/api/v1/requests", {
+          method: "GET",
+          headers: {
+            "Authorization": token
+          }
+        }),
+        fetch("/api/v1/categories")
+      ]);
+
+      const requestsResult = await requestsResponse.json();
+      const categoriesResult = await categoriesResponse.json();
+
+      setRequestsData(requestsResult);
+      setCategoriesData(categoriesResult);
+      
+      // Apply filters immediately after fetching
+      filterData(requestsResult, categoriesResult);
+    } catch (error) {
+      console.error("Error fetching data:", error);
     }
-    
-    const fetchCategories = async () => {
-      const response = await fetch("/api/v1/categories");
-      const result = await response.json();
+  };
 
-      setCategoriesData(result);
-    }
-
-    fetchCategories();
-    fetchBooks();
-  }, []);
-
-  /**
-   * Used for searching and filtering
-   */
-  useEffect(() => {
-    // search
-    const filteredRequests = requestsData.filter(request => {
-
+  const filterData = (currentRequestsData, currentCategoriesData) => {
+    const filteredRequests = currentRequestsData.filter(request => {
       const matchesTerm = request.book.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                          request.book.author.name.toLowerCase().includes(searchTerm.toLowerCase());
+                         request.book.author.name.toLowerCase().includes(searchTerm.toLowerCase());
 
       const matchesCategory = !selectedCategory.id ? true : selectedCategory.id === request.book.categoryId;
 
-      return matchesTerm && matchesCategory;
+      const matchesStatus = selectedStatus === 'All' ? true : request.status === selectedStatus.toUpperCase();
+
+      return matchesTerm && matchesCategory && matchesStatus;
     });
 
     setRequests(filteredRequests);
-    setCategories(categoriesData);
+    setCategories(currentCategoriesData);
+  };
 
-  }, [categories, categoriesData, requestsData, searchTerm, selectedCategory, selectedCategory.id]);
+  // Set up auto-fetching
+  useEffect(() => {
+    // Initial fetch
+    fetchData();
+
+    // Set up interval for fetching (every 30 seconds)
+    const intervalId = setInterval(fetchData, 30000);
+
+    // Cleanup on unmount
+    return () => clearInterval(intervalId);
+  }, []); // Empty dependency array for initial setup
+
+  // Handle filtering when search terms or filters change
+  useEffect(() => {
+    filterData(requestsData, categoriesData);
+  }, [searchTerm, selectedCategory, selectedStatus, requestsData, categoriesData]);
 
   const handleMouseDown = (e) => {
     setIsDragging(true);
@@ -91,6 +111,43 @@ const Request = () => {
     setStatusDropdownOpen(false);
   };
 
+  const approve = async (id) => {
+    try {
+      const response = await fetch(`/api/v1/request/approve/${id}`, {
+        method: "PUT",
+        headers: {
+          "Authorization": token
+        }
+      });
+
+      const result = await response.json();
+      alert("Approved!");
+      // Fetch updated data immediately after approval
+      fetchData();
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const deny = async (id) => {
+    try {
+      const response = await fetch(`/api/v1/request/deny/${id}`, {
+        method: "PUT",
+        headers: {
+          "Authorization": token
+        }
+      });
+
+      const result = await response.json();
+      alert("Denied!");
+      // Fetch updated data immediately after denial
+      fetchData();
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  // Rest of the component remains the same...
   return (
     <div className="bg-teal-100 flex flex-col w-full h-full min-h-screen">
       <div className="bg-teal-100 p-6 flex flex-col">
@@ -200,6 +257,7 @@ const Request = () => {
                   <th className="p-4 border-b border-gray-300">Author</th>
                   <th className="p-4 border-b border-gray-300">Reader</th>
                   <th className="p-4 border-b border-gray-300">Status</th>
+                  <th className="p-4 border-b border-gray-300">Managed At</th>
                   <th className="p-4 border-b border-gray-300"></th>
                 </tr>
               </thead>
@@ -213,13 +271,28 @@ const Request = () => {
                       <td className="p-4 border-b border-gray-200">{request.book.title}</td>
                       <td className="p-4 border-b border-gray-200">{request.book.author.name}</td>
                       <td className="p-4 border-b border-gray-200">{request.reader.name}</td>
-                      <td className={`p-4 border-b border-gray-200 ${request.book.status === 'Available' ? 'text-green-600' : 'text-red-600'}`}>
-                        {request.book.status}
+                      <td className={`p-4 border-b border-gray-200 ${
+                        request.status === "PENDING" ? "text-yellow-400"    :  
+                          request.status === "APPROVED" ? "text-green-400"  :
+                            request.status === "DENIED" ? "text-red-400"    : 
+                            "text-dark"
+                      }`}>
+                        {request.status}
                       </td>
                       <td className="p-4 border-b border-gray-200">
-                        <Link to={`/manage/${request.id}`} className="underline">
-                          View Details
-                        </Link>
+                        { formatDate(request.updatedAt) }
+                      </td>
+                      <td className="p-4 border-b border-gray-200 space-x-2">
+                        <a className="underline text-green-500 hover:text-green-200"
+                          onClick={() => approve(request.id)}
+                        >
+                          Approve
+                        </a>
+                        <a className="underline text-red-500 hover:text-red-200"
+                          onClick={() => deny(request.id)}
+                        >
+                          Deny
+                        </a>
                       </td>
                     </tr>
                   ))

@@ -19,7 +19,36 @@ function Register({ onClose }) {
       return;
     }
     // Implement register logic here
-    console.log('Register attempt', { fullName, username, contacts, email, password });
+    //console.log('Register attempt', { fullName, username, contacts, email, password });
+
+    const register = async () => {
+      try {
+        const response = await fetch("/api/v1/user/signup", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            email: email,
+            password: password,
+            fullname: fullName,
+            username: username,
+            contacts: contacts
+          })
+        })
+
+        const result = await response.json();
+
+      }
+      catch(err) {
+        console.log("err", err);
+      }
+      finally {
+        navigate("/login");
+      }
+    }
+
+    register();
   };
   const handleClose = () => {
     navigate('/');

@@ -15,6 +15,7 @@ const AuthProvider = ({ children }) => {
             body: JSON.stringify({ email: email, password: password })
         });
         const loginResult = await loginResponse.json();
+        console.log(loginResult);
         if (!loginResult.token) {
             console.log("Login failed...");
             return;

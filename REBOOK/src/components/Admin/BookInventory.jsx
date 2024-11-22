@@ -7,6 +7,7 @@ const statuses = ["All", "Approved", "Denied", "Pending", "Blocked", "Available"
 
 const BookInventory = () => {
   const { token } = useAuth();
+  const navigate = useNavigate();
   
   const [isFilterDropdownOpen, setFilterDropdownOpen] = useState(false);
   const [isCategoryDropdownOpen, setCategoryDropdownOpen] = useState(false);
@@ -19,57 +20,85 @@ const BookInventory = () => {
   const [startY, setStartY] = useState(0);
   const [scrollTop, setScrollTop] = useState(0);
 
-  const toggleFilterDropdown = () => setFilterDropdownOpen(!isFilterDropdownOpen);
-  const clearSearch = () => setSearchTerm('');
-
   const [books, setBooks] = useState([]);
   const [booksData, setBooksData] = useState([]);
   const [categories, setCategories] = useState([]);
   const [categoriesData, setCategoriesData] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState({});
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const navigate = useNavigate();
+  const fetchData = async () => {
+    try {
+      setError(null);
+      const [booksResponse, categoriesResponse] = await Promise.all([
+        fetch("/api/v1/books", {
+          headers: {
+            "Authorization": token
+          }
+        }),
+        fetch("/api/v1/categories", {
+          headers: {
+            "Authorization": token
+          }
+        })
+      ]);
 
-  /**
-   * Used for fetching data
-   */
-  useEffect(() => {
-    const fetchBooks = async () => {
-      const response = await fetch("/api/v1/books");
-      const result = await response.json();
+      if (!booksResponse.ok || !categoriesResponse.ok) {
+        throw new Error('Failed to fetch data');
+      }
 
-      setBooksData(result);
+      const [booksResult, categoriesResult] = await Promise.all([
+        booksResponse.json(),
+        categoriesResponse.json()
+      ]);
+
+      setBooksData(booksResult);
+      setCategoriesData(categoriesResult);
+      
+      // Apply filters immediately after fetching
+      filterData(booksResult, categoriesResult);
+    } catch (err) {
+      setError('Failed to load data. Please try again later.');
+      console.error('Fetch error:', err);
+    } finally {
+      setIsLoading(false);
     }
-    
-    const fetchCategories = async () => {
-      const response = await fetch("/api/v1/categories");
-      const result = await response.json();
+  };
 
-      setCategoriesData(result);
-    }
-
-    fetchCategories();
-    fetchBooks();
-  }, []);
-
-  /**
-   * Used for searching and filtering
-   */
-  useEffect(() => {
-    // search
-    const filteredBooks = booksData.filter(book => {
-
+  const filterData = (currentBooksData, currentCategoriesData) => {
+    const filteredBooks = currentBooksData.filter(book => {
       const matchesTerm = book.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                          book.author.name.toLowerCase().includes(searchTerm.toLowerCase());
+                         (book.author?.name || '').toLowerCase().includes(searchTerm.toLowerCase());
 
       const matchesCategory = !selectedCategory.id ? true : selectedCategory.id === book.categoryId;
 
-      return matchesTerm && matchesCategory;
+      const matchesStatus = selectedStatus === 'All' ? true : book.status === selectedStatus;
+
+      return matchesTerm && matchesCategory && matchesStatus;
     });
 
     setBooks(filteredBooks);
-    setCategories(categoriesData);
-  }, [booksData, categories, categoriesData, searchTerm, selectedCategory, selectedCategory.id]);
+    setCategories(currentCategoriesData);
+  };
+
+  // Set up auto-fetching
+  useEffect(() => {
+    fetchData();
+
+    // Fetch every 30 seconds
+    const intervalId = setInterval(fetchData, 30000);
+
+    return () => clearInterval(intervalId);
+  }, [token]); // Add token as dependency
+
+  // Handle filtering when search terms or filters change
+  useEffect(() => {
+    filterData(booksData, categoriesData);
+  }, [searchTerm, selectedCategory, selectedStatus, booksData, categoriesData]);
+
+  const toggleFilterDropdown = () => setFilterDropdownOpen(!isFilterDropdownOpen);
+  const clearSearch = () => setSearchTerm('');
 
   const handleMouseDown = (e) => {
     setIsDragging(true);
@@ -96,25 +125,34 @@ const BookInventory = () => {
   };
 
   const deleteBook = async (id) => {
+    if (!window.confirm('Are you sure you want to delete this book?')) {
+      return;
+    }
+
     try {
-      const response = await fetch(`/api/v1/book/${id}`,{ 
+      const response = await fetch(`/api/v1/book/${id}`, { 
         method: "DELETE",
         headers: {
           "Authorization": token
         }
-      })
-      const result = await response.json();
-      alert("Deleted book!")
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to delete book');
+      }
+
+      await response.json();
+      alert("Book deleted successfully!");
+      // Refresh data after deletion
+      fetchData();
+    } catch (err) {
+      alert("Error deleting book: " + err.message);
     }
-    catch(err) {
-      alert(err);
-    }
-  }
+  };
 
   return (
     <div className="bg-teal-100 flex flex-col w-full h-full min-h-screen">
       <div className="bg-teal-100 p-6 flex flex-col">
-        {/* Search Bar and Filter Dropdowns */}
         <div className="flex justify-between items-center max-w-2xl mb-2 space-x-4">
           <div className="flex items-center border border-gray-300 rounded-full p-2 bg-white flex-1">
             <FaSearch className="text-black mr-2" />
@@ -129,7 +167,6 @@ const BookInventory = () => {
               <FaTimes className="text-black cursor-pointer ml-2" onClick={clearSearch} />
             )}
           </div>
-          {/* Filter Dropdown */}
           <div className="relative">
             <button
               onClick={toggleFilterDropdown}
@@ -141,7 +178,6 @@ const BookInventory = () => {
             </button>
             {isFilterDropdownOpen && (
               <div className="absolute z-10 bg-white border border-gray-300 rounded-lg shadow-md mt-1 w-48">
-                {/* Categories Dropdown */}
                 <div className="border-b border-gray-300">
                   <button
                     onClick={() => setCategoryDropdownOpen(!isCategoryDropdownOpen)}
@@ -171,7 +207,6 @@ const BookInventory = () => {
                     </ul>
                   )}
                 </div>
-                {/* Status Dropdown */}
                 <div className="border-b border-gray-300">
                   <button
                     onClick={() => setStatusDropdownOpen(!isStatusDropdownOpen)}
@@ -222,53 +257,64 @@ const BookInventory = () => {
                 onClick={() => navigate("/librarian/inventory/add")}
               >Add Book</button>
             </div>
-            <table className="w-full table-auto text-left">
-              <thead>
-                <tr>
-                  <th className="p-4 border-b border-gray-300 text-left">Cover</th>
-                  <th className="p-4 border-b border-gray-300 text-left">Title</th>
-                  <th className="p-4 border-b border-gray-300 text-left">Author</th>
-                  <th className="p-4 border-b border-gray-300 text-right">Available</th>
-                  <th className="p-4 border-b border-gray-300 text-right">Total</th>
-                  <th className="p-4 border-b border-gray-300 text-left">Status</th>
-                  <th className="p-4 border-b border-gray-300 text-center">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {books.map((book) => (
-                  <tr key={book.id}>
-                    <td className="p-4 border-b border-gray-200">
-                      <img  src={`/api/v1/file/${book.cover}`} 
-                            alt={book.title} 
-                            className="h-16 w-16 object-cover rounded-md" 
-                            />
-                    </td>
-                    <td className="p-4 border-b border-gray-200">{book.title}</td>
-                    <td className="p-4 border-b border-gray-200">{book.author ? book.author.name : ''}</td>
-                    <td className="p-4 border-b border-gray-200 text-center">{book.available}</td>
-                    <td className="p-4 border-b border-gray-200 text-center">{book.total}</td>
-                    <td className={`p-4 border-b border-gray-200 ${book.status === 'Available' ? 'text-green-600' : 'text-red-600'}`}>
-                      {book.status}
-                    </td>
-                    <td className="p-4 border-b border-gray-200 text-center">
-                      <div className="flex justify-center space-x-3">
-                        <Link to={`/librarian/inventory/edit/${book.id}`} className="text-blue-500 hover:text-blue-700">
-                          <FaEdit />
-                        </Link>
-                        <button className="text-red-500 hover:text-red-700" onClick={() => deleteBook(book.id)}>
-                          <FaTrash />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-                {books.length === 0 && (
+
+            {isLoading ? (
+              <div className="text-center py-4">Loading...</div>
+            ) : error ? (
+              <div className="text-center text-red-500 py-4">{error}</div>
+            ) : (
+              <table className="w-full table-auto text-left">
+                <thead>
                   <tr>
-                    <td className="p-4 text-center" colSpan="8">No books found.</td>
+                    <th className="p-4 border-b border-gray-300 text-left">Cover</th>
+                    <th className="p-4 border-b border-gray-300 text-left">Title</th>
+                    <th className="p-4 border-b border-gray-300 text-left">Author</th>
+                    <th className="p-4 border-b border-gray-300 text-right">Available</th>
+                    <th className="p-4 border-b border-gray-300 text-right">Total</th>
+                    <th className="p-4 border-b border-gray-300 text-left">Status</th>
+                    <th className="p-4 border-b border-gray-300 text-center">Actions</th>
                   </tr>
-                )}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {books.length > 0 ? books.map((book) => (
+                    <tr key={book.id}>
+                      <td className="p-4 border-b border-gray-200">
+                        <img 
+                          src={`/api/v1/file/${book.cover}`} 
+                          alt={book.title} 
+                          className="h-16 w-16 object-cover rounded-md"
+                          onError={(e) => {
+                            e.target.onerror = null;
+                            e.target.src = '/placeholder-book.png';
+                          }}
+                        />
+                      </td>
+                      <td className="p-4 border-b border-gray-200">{book.title}</td>
+                      <td className="p-4 border-b border-gray-200">{book.author ? book.author.name : ''}</td>
+                      <td className="p-4 border-b border-gray-200 text-center">{book.available}</td>
+                      <td className="p-4 border-b border-gray-200 text-center">{book.total}</td>
+                      <td className={`p-4 border-b border-gray-200 ${book.status === 'Available' ? 'text-green-600' : 'text-red-600'}`}>
+                        {book.status}
+                      </td>
+                      <td className="p-4 border-b border-gray-200 text-center">
+                        <div className="flex justify-center space-x-3">
+                          <Link to={`/librarian/inventory/edit/${book.id}`} className="text-blue-500 hover:text-blue-700">
+                            <FaEdit />
+                          </Link>
+                          <button className="text-red-500 hover:text-red-700" onClick={() => deleteBook(book.id)}>
+                            <FaTrash />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  )) : (
+                    <tr>
+                      <td className="p-4 text-center" colSpan="8">No books found.</td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            )}
           </div>
         </div>
       </div>
