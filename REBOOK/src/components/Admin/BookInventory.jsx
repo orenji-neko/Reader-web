@@ -178,12 +178,7 @@ const BookInventory = () => {
             </button>
             {isFilterDropdownOpen && (
               <div className="absolute z-10 bg-white border border-gray-300 rounded-lg shadow-md mt-1 w-48">
-<<<<<<< HEAD
                 <div className="border-b border-gray-300">
-=======
-                {/* Categories Dropdown */}
-                <div className="border-b  border-gray-300">
->>>>>>> 9e3126bbe203840d002f1793ef544c26a327cae5
                   <button
                     onClick={() => setCategoryDropdownOpen(!isCategoryDropdownOpen)}
                     className="flex justify-between items-center w-full p-2 hover:bg-gray-100"
@@ -262,7 +257,6 @@ const BookInventory = () => {
             onMouseUp={handleMouseUp}
             onMouseLeave={handleMouseUp}
           >
-<<<<<<< HEAD
             <div className="flex flex-row justify-end">
               <button
                 className="bg-teal-600 text-white p-2 rounded-md hover:bg-teal-200 hover:text-black"
@@ -277,50 +271,6 @@ const BookInventory = () => {
             ) : (
               <table className="w-full table-auto text-left">
                 <thead>
-=======
-            
-            <table className="w-full table-auto text-left">
-              <thead>
-                <tr>
-                  <th className="p-4 border-b border-gray-300 text-left">Cover</th>
-                  <th className="p-4 border-b border-gray-300 text-left">Title</th>
-                  <th className="p-4 border-b border-gray-300 text-left">Author</th>
-                  <th className="p-4 border-b border-gray-300 text-right">Available</th>
-                  <th className="p-4 border-b border-gray-300 text-right">Total</th>
-                  <th className="p-4 border-b border-gray-300 text-left">Status</th>
-                  <th className="p-4 border-b border-gray-300 text-center">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {books.map((book) => (
-                  <tr key={book.id}>
-                    <td className="p-4 border-b border-gray-200">
-                      <img  src={`/api/v1/file/${book.cover}`} 
-                            alt={book.title} 
-                            className="h-16 w-16 object-cover rounded-md" 
-                            />
-                    </td>
-                    <td className="p-4 border-b border-gray-200">{book.title}</td>
-                    <td className="p-4 border-b border-gray-200">{book.author ? book.author.name : ''}</td>
-                    <td className="p-4 border-b border-gray-200 text-center">{book.available}</td>
-                    <td className="p-4 border-b border-gray-200 text-center">{book.total}</td>
-                    <td className={`p-4 border-b border-gray-200 ${book.status === 'Available' ? 'text-green-600' : 'text-red-600'}`}>
-                      {book.status}
-                    </td>
-                    <td className="p-4 border-b border-gray-200 text-center">
-                      <div className="flex justify-center space-x-3">
-                        <Link to={`/librarian/inventory/edit/${book.id}`} className="text-blue-500 hover:text-blue-700">
-                          <FaEdit />
-                        </Link>
-                        <button className="text-red-500 hover:text-red-700" onClick={() => deleteBook(book.id)}>
-                          <FaTrash />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-                {books.length === 0 && (
->>>>>>> 9e3126bbe203840d002f1793ef544c26a327cae5
                   <tr>
                     <th className="p-4 border-b border-gray-300 text-left">Cover</th>
                     <th className="p-4 border-b border-gray-300 text-left">Title</th>
