@@ -72,7 +72,7 @@ const ManagePage = () => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [cover, setCover] = useState(undefined);
-
+  const [authorsData, setAuthorsData] = useState("");
   const [authorId, setAuthorId] = useState(-1);
   const [categoryId, setCategoryId] = useState(-1);
 

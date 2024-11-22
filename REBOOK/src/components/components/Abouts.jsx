@@ -64,7 +64,7 @@ const Abouts = () => {
                     </div>
                     <div className="flex flex-col items-center">
                     <img src="/src/assets/icons/Frontend.png" alt="Front-End" className="h-24 w-24 rounded-full" /> {/* Made circular */}
-                    <p className="text-center text-white">Back-End</p>
+                    <p className="text-center text-white">Front-End</p>
                         <div className="flex space-x-4">
                         <div className="flex flex-col items-center">
                                 <img src="/src/assets/icons/Helper2.png" alt="Helper 2 (Front-End)" className="h-24 w-24 rounded-full" /> {/* Made circular */}
