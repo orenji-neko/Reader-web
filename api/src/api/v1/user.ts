@@ -42,7 +42,7 @@ const app = new Elysia({ prefix: "/user" })
         })
     })
 
-    .post("/login", async ({ prisma, jwt, body }) => {
+    .post("/login", async ({ prisma, jwt, body, set }) => {
         try {
             const { email, password } = body;
 
@@ -52,7 +52,7 @@ const app = new Elysia({ prefix: "/user" })
                 }
             });
 
-            if(!await Bun.password.verify(password, user.password, "bcrypt")) {
+            if(!await Bun.password.verify(password, user.password)) {
                 throw new Error("Invalid password!")
             }
 
@@ -67,9 +67,9 @@ const app = new Elysia({ prefix: "/user" })
             return { type: "Success", token: token }
         }   
         catch(err) {
-            if(err) {
-                throw err
-            }
+            const _err: any = err;
+            set.status = 401;
+            return { type: "Error", message: _err.message }
         }
     }, {
         body: t.Object({
@@ -98,5 +98,49 @@ const app = new Elysia({ prefix: "/user" })
             authorization: t.String()
         })
     })
+
+   /**
+   * [GET]    /user/list
+   * [DESC]   Get details of the authenticated user.
+   */
+  .get("/", async ({ headers, prisma, jwt, query }) => {
+    try {
+      const { authorization } = headers;
+      const { filter, value } = query;
+      const userauth:any = await jwt.verify(authorization);
+
+      if (!userauth) {
+        throw new Error("Invalid token!");
+      }
+
+      let users = [];
+      if(filter === "AUTH" && value === "READER") {
+        users = await prisma.user.findMany({
+            where: {
+                auth: "READER"
+            }
+        })
+      }
+      else {
+        users = await prisma.user.findMany();
+      }
+
+      return users;
+    } catch (err) {
+      console.error("Error fetching user:", err);
+      return {
+        status: 422,
+        message: err || "Unprocessable Entity"
+      };
+    }
+  }, {
+    headers: t.Object({
+      authorization: t.String()
+    }),
+    query: t.Object({
+      filter:   t.Optional(t.String()),
+      value:    t.Optional(t.String())
+    })
+  }) 
 
 export default app;

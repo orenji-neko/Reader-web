@@ -1,31 +1,52 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { FaSearch, FaTimes, FaChevronDown, FaFilter } from 'react-icons/fa';
-
-const readersdata = [
-  {
-    readerProfile: "/rebook-images/blink.png",
-    username: "Nicki",
-    status: "Not Available",
-    dateRegistered: "2024-11-01",
-    requests: "2",
-    readerStatus: "Suspended",
-    borrowedBooks: "3",
-    dueBooks: "1"
-  },
-
-];
+import { useAuth } from '../../utils/AuthProvider';
+import { formatDate } from "../../utils/date"
 
 const statuses = ["All", "Suspended", "Not Suspended"];
 const dateFilters = ["Yesterday", "Last 7 Days", "Last 30 Days", "This Month"];
 
 const Readers = () => {
+  const { token } = useAuth()
+  
   const [isFilterDropdownOpen, setFilterDropdownOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedStatus, setSelectedStatus] = useState('All');
   const [selectedDateFilter, setSelectedDateFilter] = useState('All');
 
+  const [filteredReaders, setFilteredReaders] = useState([]);
+  const [readersData, setReadersData] = useState([]);
+
   const scrollRef = useRef(null);
+
+  useEffect(() => {
+    setInterval(async () => {
+      const response = await fetch("/api/v1/user", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": token
+        }
+      })
+      const result = await response.json()
+      setReadersData(result)
+    }, 1000);
+  }, [token]);
+
+  useEffect(() => {
+    setFilteredReaders(() => {
+      return readersData.filter((reader) => {
+        const matchesSearch = reader.username.toLowerCase().includes(searchTerm.toLowerCase());
+        const matchesStatus = selectedStatus === "All" || reader.readerStatus === selectedStatus;
+        //const matchesDate = filterByDate(reader.dateRegistered);
+        return matchesSearch && matchesStatus //&& matchesDate;
+      })
+    })
+
+    
+
+  }, [readersData, searchTerm, selectedStatus])
 
   const toggleFilterDropdown = () => setFilterDropdownOpen(!isFilterDropdownOpen);
   const clearSearch = () => setSearchTerm('');
@@ -62,13 +83,6 @@ const Readers = () => {
         return true;
     }
   };
-
-  const filteredReaders = readersdata.filter((reader) => {
-    const matchesSearch = reader.username.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesStatus = selectedStatus === "All" || reader.readerStatus === selectedStatus;
-    const matchesDate = filterByDate(reader.dateRegistered);
-    return matchesSearch && matchesStatus && matchesDate;
-  });
 
   return (
     <div className="bg-teal-100 flex flex-col w-full h-full min-h-screen">
@@ -164,13 +178,13 @@ const Readers = () => {
               <tbody>
                 {filteredReaders.length > 0 ? (
                   filteredReaders.map((reader) => (
-                    <tr key={reader.username} className="hover:bg-teal-50">
+                    <tr key={reader.id} className="hover:bg-teal-50">
                       <td className="p-4 border-b border-gray-200">
-                        <img src={reader.readerProfile} alt={reader.username} className="h-16 w-16 object-cover rounded-full" />
+                        <img src={reader.profile} alt={reader.username} className="h-16 w-16 object-cover rounded-full" />
                       </td>
                       <td className="p-4 border-b border-gray-200">{reader.username}</td>
-                      <td className="p-4 border-b border-gray-200 text-left">{reader.dateRegistered}</td>
-                      <td className="p-4 border-b border-gray-200 text-center">{reader.requests}</td>
+                      <td className="p-4 border-b border-gray-200 text-left">{reader.createdAt}</td>
+                      <td className="p-4 border-b border-gray-200 text-center">{}</td>
                       <td className="p-4 border-b border-gray-200 text-center">{reader.borrowedBooks}</td>
                       <td className="p-4 border-b border-gray-200 text-center">{reader.dueBooks}</td>
                       <td className={`p-4 border-b border-gray-200 ${reader.readerStatus === 'Suspended' ? 'text-red-600' : 'text-green-600'}`}>

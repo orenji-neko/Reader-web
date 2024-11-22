@@ -125,10 +125,12 @@ const ManagePage = () => {
       }
     }
 
-    fetchData();
-    if (bookId) {
-      fetchBook();
-    }
+    setTimeout(() => {
+      fetchData();
+      if (bookId) {
+        fetchBook();
+      }
+    }, 1000);
   }, [bookId, token]);
 
   const addOrGetAuthor = useCallback(async (authorName) => {
