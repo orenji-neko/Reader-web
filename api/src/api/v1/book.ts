@@ -118,6 +118,7 @@ const app = new Elysia()
                 cover: fileName,
                 description: description,
                 available: parseInt(available),
+                total: parseInt(available),
                 author: {
                     connect: {
                         id: parseInt(authorId ? authorId : "0")
@@ -127,7 +128,7 @@ const app = new Elysia()
                     connect: {
                         id: parseInt(categoryId ? categoryId : "0")
                     }
-                }
+                },
             }
         }
 

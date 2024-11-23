@@ -28,72 +28,65 @@ const BookInventory = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const fetchData = async () => {
-    try {
-      setError(null);
-      const [booksResponse, categoriesResponse] = await Promise.all([
-        fetch("/api/v1/books", {
-          headers: {
-            "Authorization": token
-          }
-        }),
-        fetch("/api/v1/categories", {
-          headers: {
-            "Authorization": token
-          }
-        })
-      ]);
-
-      if (!booksResponse.ok || !categoriesResponse.ok) {
-        throw new Error('Failed to fetch data');
-      }
-
-      const [booksResult, categoriesResult] = await Promise.all([
-        booksResponse.json(),
-        categoriesResponse.json()
-      ]);
-
-      setBooksData(booksResult);
-      setCategoriesData(categoriesResult);
-      
-      // Apply filters immediately after fetching
-      filterData(booksResult, categoriesResult);
-    } catch (err) {
-      setError('Failed to load data. Please try again later.');
-      console.error('Fetch error:', err);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const filterData = (currentBooksData, currentCategoriesData) => {
-    const filteredBooks = currentBooksData.filter(book => {
-      const matchesTerm = book.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         (book.author?.name || '').toLowerCase().includes(searchTerm.toLowerCase());
-
-      const matchesCategory = !selectedCategory.id ? true : selectedCategory.id === book.categoryId;
-
-      const matchesStatus = selectedStatus === 'All' ? true : book.status === selectedStatus;
-
-      return matchesTerm && matchesCategory && matchesStatus;
-    });
-
-    setBooks(filteredBooks);
-    setCategories(currentCategoriesData);
-  };
 
   // Set up auto-fetching
   useEffect(() => {
-    fetchData();
+    const fetchData = async () => {
+      try {
+        setError(null);
+        const [booksResponse, categoriesResponse] = await Promise.all([
+          fetch("/api/v1/books", {
+            headers: {
+              "Authorization": token
+            }
+          }),
+          fetch("/api/v1/categories", {
+            headers: {
+              "Authorization": token
+            }
+          })
+        ]);
 
-    // Fetch every 30 seconds
-    const intervalId = setInterval(fetchData, 30000);
+        if (!booksResponse.ok || !categoriesResponse.ok) {
+          throw new Error('Failed to fetch data');
+        }
 
-    return () => clearInterval(intervalId);
+        const [booksResult, categoriesResult] = await Promise.all([
+          booksResponse.json(),
+          categoriesResponse.json()
+        ]);
+
+        setBooksData(booksResult);
+        setCategoriesData(categoriesResult);
+
+      } catch (err) {
+        setError('Failed to load data. Please try again later.');
+        console.error('Fetch error:', err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    setInterval(fetchData, 1000);
   }, [token]); // Add token as dependency
 
   // Handle filtering when search terms or filters change
   useEffect(() => {
+    const filterData = (currentBooksData, currentCategoriesData) => {
+      const filteredBooks = currentBooksData.filter(book => {
+        const matchesTerm = book.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                          (book.author?.name || '').toLowerCase().includes(searchTerm.toLowerCase());
+
+        const matchesCategory = !selectedCategory.id ? true : selectedCategory.id === book.categoryId;
+
+        const matchesStatus = selectedStatus === 'All' ? true : book.status === selectedStatus;
+
+        return matchesTerm && matchesCategory && matchesStatus;
+      });
+
+      setBooks(filteredBooks);
+      setCategories(currentCategoriesData);
+    };
     filterData(booksData, categoriesData);
   }, [searchTerm, selectedCategory, selectedStatus, booksData, categoriesData]);
 
@@ -242,12 +235,6 @@ const BookInventory = () => {
         </div>
 
         <h2 className="text-2xl font-bold p-4">Inventory</h2>
-        <div className="flex mr-3 mb-3 justify-end">
-              <button
-                className="bg-teal-600 text-white p-2 rounded-md hover:bg-teal-200 hover:text-black"
-                onClick={() => navigate("/librarian/inventory/add")}
-              >Add Book</button>
-            </div>
         <div className="relative bg-white p-4 rounded-2xl shadow-lg flex-1 mb-4 mx-2 overflow-hidden">
           <div
             className="overflow-y-auto max-h-full"

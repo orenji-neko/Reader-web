@@ -143,4 +143,37 @@ const app = new Elysia({ prefix: "/user" })
     })
   }) 
 
+  .get("/requests", async ({ prisma, query, headers, jwt }) => {
+    const { authorization } = headers;
+    const { filter } = query;
+    const userauth:any = await jwt.verify(authorization);
+
+    if (!userauth) {
+        throw new Error("Invalid token!");
+    }
+
+    const config: any = {
+        where: {
+            readerId: userauth.id
+        },
+        include: {
+            book: true
+        }
+    }
+
+    if(query.filter && query.value) {
+        config.where[query.filter] = query.value;
+    }
+
+    return await prisma.request.findMany(config);
+  }, {
+    headers: t.Object({
+      authorization: t.String()
+    }),
+    query: t.Object({
+        filter: t.Optional(t.String()),
+        value: t.Optional(t.String())
+    })
+  })
+
 export default app;

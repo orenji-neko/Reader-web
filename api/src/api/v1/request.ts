@@ -34,6 +34,7 @@ const app = new Elysia()
         authorization: t.String()
       })
     })
+
     .get("/requests/due", async ({ prisma }) => {
         const config = {
           include: {
@@ -154,9 +155,10 @@ const app = new Elysia()
           },
           data: {
             status: "APPROVED",
-            managedBy: userauth.name
+            managedBy: userauth.name,
+            due: new Date(new Date().setDate(new Date().getDate() + 3)) // current date + 3 days
           }
-        });
+        });        
     
         if (tempReq.status === "DENIED" || tempReq.status === "PENDING") {
           await prisma.book.update({
@@ -187,6 +189,7 @@ const app = new Elysia()
         id: t.String()
       })
     })
+
     .put("/request/deny/:id", async ({ jwt, prisma, params, headers }) => {
       try {
         const userauth = await jwt.verify(headers.authorization);
@@ -247,6 +250,68 @@ const app = new Elysia()
       params: t.Object({
         id: t.String()
       })
-    });    
+    })
+    
+    .put("/request/return/:id", async ({ jwt, prisma, params, headers }) => {
+      try {
+        const userauth = await jwt.verify(headers.authorization);
+        const { id } = params;
+    
+        if (!userauth) {
+          throw new Error("Unauthorized!");
+        }
+    
+        if (userauth.auth !== "LIBRARIAN") {
+          throw new Error("Unauthorized!");
+        }
+    
+        const tempReq = await prisma.request.findUnique({ where: { id: parseInt(id) } });
+        if (!tempReq) {
+          throw new Error("Request not found");
+        }
+    
+        const tempBook = await prisma.book.findUnique({ where: { id: tempReq.bookId } });
+        if (!tempBook) {
+          throw new Error("Book not found");
+        }
+    
+        const result = await prisma.request.update({
+          where: {
+            id: parseInt(id)
+          },
+          data: {
+            status: "RETURNED",
+          }
+        });
+    
+        if (tempReq.status === "APPROVED" || tempReq.status === "PENDING") {
+          await prisma.book.update({
+            where: {
+              id: tempReq.bookId
+            },
+            data: {
+              available: tempBook.available + 1
+            }
+          });
+        }
+    
+        return result;
+      } catch (err) {
+        if(err) {
+          console.error("Error processing deny request:", err);
+          return {
+            status: 500,
+            message: err || "Internal Server Error"
+          };
+        }
+      }
+    }, {
+      headers: t.Object({
+        authorization: t.String()
+      }),
+      params: t.Object({
+        id: t.String()
+      })
+    });  
 
 export default app;

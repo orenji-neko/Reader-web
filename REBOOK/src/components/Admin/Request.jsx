@@ -85,7 +85,7 @@ const Request = () => {
   // Handle filtering when search terms or filters change
   useEffect(() => {
     filterData(requestsData, categoriesData);
-  }, [searchTerm, selectedCategory, selectedStatus, requestsData, categoriesData]);
+  }, [searchTerm, selectedCategory, selectedStatus, requestsData, categoriesData, filterData]);
 
   const handleMouseDown = (e) => {
     setIsDragging(true);
@@ -140,6 +140,24 @@ const Request = () => {
 
       const result = await response.json();
       alert("Denied!");
+      // Fetch updated data immediately after denial
+      fetchData();
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const ret = async (id) => {
+    try {
+      const response = await fetch(`/api/v1/request/return/${id}`, {
+        method: "PUT",
+        headers: {
+          "Authorization": token
+        }
+      });
+
+      const result = await response.json();
+      alert("Returned!");
       // Fetch updated data immediately after denial
       fetchData();
     } catch (err) {
@@ -283,16 +301,26 @@ const Request = () => {
                         { formatDate(request.updatedAt) }
                       </td>
                       <td className="p-4 border-b border-gray-200 space-x-2">
-                        <a className="underline text-green-500 hover:text-green-200"
-                          onClick={() => approve(request.id)}
-                        >
-                          Approve
-                        </a>
-                        <a className="underline text-red-500 hover:text-red-200"
-                          onClick={() => deny(request.id)}
-                        >
-                          Deny
-                        </a>
+                        {request.status === "PENDING" ? <>
+                          <a className="underline text-green-500 hover:text-green-200"
+                            onClick={() => approve(request.id)}
+                          >
+                            Approve
+                          </a>
+                          <a className="underline text-red-500 hover:text-red-200"
+                            onClick={() => deny(request.id)}
+                          >
+                            Deny
+                          </a>
+                        </> : <> </> }
+                        { request.status === "APPROVED" ? 
+                          <a className="underline text-green-500 hover:text-green-200"
+                            onClick={ () => ret(request.id) }
+                          >
+                            Returned
+                          </a>
+                          : <></>
+                        }
                       </td>
                     </tr>
                   ))

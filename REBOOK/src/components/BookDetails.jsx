@@ -71,8 +71,9 @@ function BookDetails() {
           <h1 className="text-4xl font-bold">{book.title}</h1>
           <p className="text-xl italic">By {book.author ? book.author.name : '' }</p>
           <p className="mt-2">Rating: ⭐ {book.rating}</p>
-          <button className="bg-blue-500 text-white px-4 py-2 rounded mt-4 hover:bg-blue-600"
+          <button className="bg-blue-500 text-white px-4 py-2 rounded mt-4 hover:bg-blue-600 disabled:bg-gray-500"
             onClick={() => { borrow(book.id) }}
+            disabled={book.available <= 0}
           >
             Borrow
           </button>
