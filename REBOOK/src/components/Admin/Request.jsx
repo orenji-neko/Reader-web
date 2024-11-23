@@ -4,7 +4,7 @@ import { FaSearch, FaTimes, FaChevronDown, FaFilter } from 'react-icons/fa';
 import { useAuth } from '../../utils/AuthProvider';
 import { formatDate } from "../../utils/date"
 
-const statuses = ["All", "Approved", "Denied", "Pending", "Blocked", "Available", "Not Available"];
+const statuses = ["All", "Approved", "Denied", "Pending", "Returned"];
 
 const Request = () => {
   const [isFilterDropdownOpen, setFilterDropdownOpen] = useState(false);
@@ -24,68 +24,64 @@ const Request = () => {
   const [requests, setRequests] = useState([]);
   const [requestsData, setRequestsData] = useState([]);
   const [categories, setCategories] = useState([]);
-  const [categoriesData, setCategoriesData] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState({});
 
   const { token } = useAuth();
 
-  const fetchData = async () => {
-    try {
-      const [requestsResponse, categoriesResponse] = await Promise.all([
-        fetch("/api/v1/requests", {
-          method: "GET",
-          headers: {
-            "Authorization": token
-          }
-        }),
-        fetch("/api/v1/categories")
-      ]);
-
-      const requestsResult = await requestsResponse.json();
-      const categoriesResult = await categoriesResponse.json();
-
-      setRequestsData(requestsResult);
-      setCategoriesData(categoriesResult);
-      
-      // Apply filters immediately after fetching
-      filterData(requestsResult, categoriesResult);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
-
-  const filterData = (currentRequestsData, currentCategoriesData) => {
-    const filteredRequests = currentRequestsData.filter(request => {
-      const matchesTerm = request.book.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         request.book.author.name.toLowerCase().includes(searchTerm.toLowerCase());
-
-      const matchesCategory = !selectedCategory.id ? true : selectedCategory.id === request.book.categoryId;
-
-      const matchesStatus = selectedStatus === 'All' ? true : request.status === selectedStatus.toUpperCase();
-
-      return matchesTerm && matchesCategory && matchesStatus;
-    });
-
-    setRequests(filteredRequests);
-    setCategories(currentCategoriesData);
-  };
-
   // Set up auto-fetching
   useEffect(() => {
-    // Initial fetch
-    fetchData();
+    const fetchData = async () => {
+      try {
+        const [requestsResponse, categoriesResponse] = await Promise.all([
+          fetch("/api/v1/requests", {
+            method: "GET",
+            headers: {
+              "Authorization": token
+            }
+          }),
+          fetch("/api/v1/categories", {
+            method: "GET",
+            headers: {
+              "Authorization": token
+            }
+          })
+        ]);
 
+        const requestsResult = await requestsResponse.json();
+        const categoriesResult = await categoriesResponse.json();
+
+        setRequestsData(requestsResult);
+        setCategories(categoriesResult);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData()
     // Set up interval for fetching (every 30 seconds)
-    const intervalId = setInterval(fetchData, 30000);
-
-    // Cleanup on unmount
-    return () => clearInterval(intervalId);
-  }, []); // Empty dependency array for initial setup
+    setInterval(fetchData, 3000);
+  }, [token]); // Empty dependency array for initial setup
 
   // Handle filtering when search terms or filters change
   useEffect(() => {
-    filterData(requestsData, categoriesData);
-  }, [searchTerm, selectedCategory, selectedStatus, requestsData, categoriesData, filterData]);
+    const filterData = (currentRequestsData) => {
+      const filteredRequests = currentRequestsData.filter(request => {
+        const matchesTerm = request.book.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                            request.book.author.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                            request.reader.name.toLowerCase().includes(searchTerm.toLowerCase())
+
+        const matchesCategory = !selectedCategory.id ? true : selectedCategory.id === request.book.categoryId;
+
+        const matchesStatus = selectedStatus === 'All' ? true : request.status === selectedStatus.toUpperCase();
+
+        return matchesTerm && matchesCategory && matchesStatus;
+      });
+
+      setRequests(filteredRequests);
+    };
+
+    filterData(requestsData);
+  }, [searchTerm, selectedCategory, selectedStatus, requestsData]);
 
   const handleMouseDown = (e) => {
     setIsDragging(true);
