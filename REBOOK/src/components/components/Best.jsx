@@ -12,8 +12,10 @@ const LatestBooksEntry = ({ title, author, coverUrl, onClick }) => {
     >
       <img src={coverUrl} alt={title} className="h-32 w-full object-cover rounded-md" style={{ height: '100px', width: '80px' }} />
       <div className="mt-1 text-center">
-        <h3 className="text-xs font-bold">{title}</h3>
-        <h4 className="text-xs">By: {author}</h4>
+        <h4 className="text-xs font-bold">{title}</h4>
+        <h4 className="text-xs truncate" style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '80px' }}>
+          By: {author}
+        </h4>
       </div>
     </div>
   );
@@ -98,7 +100,6 @@ const Best = () => {
                 title={book.title}
                 author={book.author?.name}
                 coverUrl={`/api/v1/file/${book.cover}`}
-                
                 onClick={() => setSelectedBook(book)}
               />
             ))}
@@ -106,20 +107,20 @@ const Best = () => {
         </div>
         {selectedBook && (
           <div className="relative p-4 bg-white shadow-xl rounded-2xl flex flex-col items-center hover:shadow-xl transition-shadow" style={{ height: '126vh', width: '30vw', marginRight: '80px' }}>
-          <button onClick={handleRemoveSelectedBook} className="absolute top-2 right-2 text-gray-500 font-bold hover:text-black">
-          &#x2715;
-          </button>
-          <img src={`/api/v1/file/${selectedBook.cover}`} alt={selectedBook.title} className="object-cover rounded-md" style={{ height: '35%', width: '50%' }} />
-          <h2 className="text-3xl font-bold mb-2">{selectedBook.title}</h2>
-          <p className="text-lg font-medium mb-1">{selectedBook.author?.name}</p>
-          <p className="text-lg font-medium mb-1">{selectedBook.category?.name}</p>
-          <StarRating rating={selectedBook.rating} />
-          <div className="w-full text-left my-1">
-            <h3 className="font-bold">Description</h3>
+            <button onClick={handleRemoveSelectedBook} className="absolute top-2 right-2 text-gray-500 font-bold hover:text-black">
+              &#x2715;
+            </button>
+            <img src={`/api/v1/file/${selectedBook.cover}`} alt={selectedBook.title} className="object-cover rounded-md" style={{ height: '35%', width: '50%' }} />
+            <h2 className="text-3xl font-bold mb-2">{selectedBook.title}</h2>
+            <p className="text-lg font-medium mb-1 truncate" style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '80%' }}>{selectedBook.author?.name}</p>
+            <p className="text-lg font-medium mb-1">{selectedBook.category?.name}</p>
+            <StarRating rating={selectedBook.rating} />
+            <div className="w-full text-left my-1">
+              <h3 className="font-bold">Description</h3>
+            </div>
+            <p className="text-sm mb-2 border border text-justify border-black p-2 rounded-3xl" style={{ width: '100%', height: '35%', overflowY: 'auto' }}>&nbsp;&nbsp;&nbsp;&nbsp;{selectedBook.description}</p>
+            <a href="/login" className="mt-2 px-4 py-2 bg-teal-500 text-white rounded-md hover:bg-teal-600">Borrow</a>
           </div>
-          <p className="text-sm mb-2 border border text-justify border-black p-2 rounded-3xl" style={{ width: '100%', height: '35%', overflowY: 'auto' }}>{selectedBook.description}</p>
-          <a href="/login" className="mt-2 px-4 py-2 bg-teal-500 text-white rounded-md hover:bg-teal-600">Borrow</a>
-        </div>        
         )}
       </div>
     </div>
