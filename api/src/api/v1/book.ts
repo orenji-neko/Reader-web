@@ -48,7 +48,7 @@ const app = new Elysia()
 
         const books = await prisma.book.findMany(config);
 
-        return books;
+        return books.map(book => ({...book, status: book.available <= 0 ? 'Unavailable' : 'Available'}));
     }, {
         query: t.Object({
             sort: t.Optional(t.String())

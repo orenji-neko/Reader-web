@@ -4,7 +4,7 @@ import { FaSearch, FaTimes, FaChevronDown, FaFilter } from 'react-icons/fa';
 import { useAuth } from '../../utils/AuthProvider';
 import { formatDate } from "../../utils/date"
 
-const statuses = ["All", "Approved", "Denied", "Pending", "Blocked", "Available", "Not Available"];
+const statuses = ["APPROVED", "DENIED", "PENDING", "RETURNED"];
 
 const Request = () => {
   const [isFilterDropdownOpen, setFilterDropdownOpen] = useState(false);
@@ -29,49 +29,35 @@ const Request = () => {
 
   const { token } = useAuth();
 
-  const fetchData = async () => {
-    try {
-      const [requestsResponse, categoriesResponse] = await Promise.all([
-        fetch("/api/v1/requests", {
-          method: "GET",
-          headers: {
-            "Authorization": token
-          }
-        }),
-        fetch("/api/v1/categories")
-      ]);
-
-      const requestsResult = await requestsResponse.json();
-      const categoriesResult = await categoriesResponse.json();
-
-      setRequestsData(requestsResult);
-      setCategoriesData(categoriesResult);
-      
-      // Apply filters immediately after fetching
-      filterData(requestsResult, categoriesResult);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
-
-  const filterData = (currentRequestsData, currentCategoriesData) => {
-    const filteredRequests = currentRequestsData.filter(request => {
-      const matchesTerm = request.book.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         request.book.author.name.toLowerCase().includes(searchTerm.toLowerCase());
-
-      const matchesCategory = !selectedCategory.id ? true : selectedCategory.id === request.book.categoryId;
-
-      const matchesStatus = selectedStatus === 'All' ? true : request.status === selectedStatus.toUpperCase();
-
-      return matchesTerm && matchesCategory && matchesStatus;
-    });
-
-    setRequests(filteredRequests);
-    setCategories(currentCategoriesData);
-  };
-
   // Set up auto-fetching
   useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [requestsResponse, categoriesResponse] = await Promise.all([
+          fetch("/api/v1/requests", {
+            method: "GET",
+            headers: {
+              "Authorization": token
+            }
+          }),
+          fetch("/api/v1/categories", {
+            method: "GET",
+            headers: {
+              "Authorization": token
+            }
+          })
+        ]);
+
+        const requestsResult = await requestsResponse.json();
+        const categoriesResult = await categoriesResponse.json();
+
+        setRequestsData(requestsResult);
+        setCategoriesData(categoriesResult);
+        console.log(categoriesResult);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
     // Initial fetch
     fetchData();
 
@@ -84,8 +70,23 @@ const Request = () => {
 
   // Handle filtering when search terms or filters change
   useEffect(() => {
+    const filterData = (currentRequestsData) => {
+      const filteredRequests = currentRequestsData.filter(request => {
+        const matchesTerm = request.book.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                          request.book.author.name.toLowerCase().includes(searchTerm.toLowerCase());
+
+        const matchesCategory = !selectedCategory.id ? true : selectedCategory.id === request.book.categoryId;
+
+        const matchesStatus = selectedStatus === 'All' ? true : request.status === selectedStatus.toUpperCase();
+
+        return matchesTerm && matchesCategory && matchesStatus;
+      });
+
+      setRequests(filteredRequests);
+    };
+
     filterData(requestsData, categoriesData);
-  }, [searchTerm, selectedCategory, selectedStatus, requestsData, categoriesData, filterData]);
+  }, [searchTerm, selectedCategory, selectedStatus, requestsData, categoriesData]);
 
   const handleMouseDown = (e) => {
     setIsDragging(true);

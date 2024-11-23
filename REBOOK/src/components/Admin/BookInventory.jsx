@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { FaSearch, FaTimes, FaChevronDown, FaFilter, FaEdit, FaTrash } from 'react-icons/fa';
 import { useAuth } from '../../utils/AuthProvider';
 
-const statuses = ["All", "Approved", "Denied", "Pending", "Blocked", "Available", "Not Available"];
+const statuses = ["Available", "Unavailable"];
 
 const BookInventory = () => {
   const { token } = useAuth();
@@ -136,8 +136,6 @@ const BookInventory = () => {
 
       await response.json();
       alert("Book deleted successfully!");
-      // Refresh data after deletion
-      fetchData();
     } catch (err) {
       alert("Error deleting book: " + err.message);
     }
