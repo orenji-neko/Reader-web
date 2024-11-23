@@ -233,6 +233,12 @@ const BookInventory = () => {
         </div>
 
         <h2 className="text-2xl font-bold p-4">Inventory</h2>
+        <div className="flex flex-row justify-end mb-3 mr-2">
+              <button
+                className="bg-teal-600 text-white p-2 rounded-md hover:bg-teal-200 hover:text-black"
+                onClick={() => navigate("/librarian/inventory/add")}
+              >Add Book</button>
+            </div>
         <div className="relative bg-white p-4 rounded-2xl shadow-lg flex-1 mb-4 mx-2 overflow-hidden">
           <div
             className="overflow-y-auto max-h-full"
