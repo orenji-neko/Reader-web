@@ -4,7 +4,7 @@ import { FaSearch, FaTimes, FaChevronDown, FaFilter } from 'react-icons/fa';
 import { useAuth } from '../../utils/AuthProvider';
 import { formatDate } from "../../utils/date"
 
-const statuses = ["APPROVED", "DENIED", "PENDING", "RETURNED"];
+const statuses = ["All", "Approved", "Denied", "Pending", "Returned"];
 
 const Request = () => {
   const [isFilterDropdownOpen, setFilterDropdownOpen] = useState(false);
@@ -24,7 +24,6 @@ const Request = () => {
   const [requests, setRequests] = useState([]);
   const [requestsData, setRequestsData] = useState([]);
   const [categories, setCategories] = useState([]);
-  const [categoriesData, setCategoriesData] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState({});
 
   const { token } = useAuth();
@@ -52,28 +51,24 @@ const Request = () => {
         const categoriesResult = await categoriesResponse.json();
 
         setRequestsData(requestsResult);
-        setCategoriesData(categoriesResult);
-        console.log(categoriesResult);
+        setCategories(categoriesResult);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
-    // Initial fetch
-    fetchData();
 
+    fetchData()
     // Set up interval for fetching (every 30 seconds)
-    const intervalId = setInterval(fetchData, 30000);
-
-    // Cleanup on unmount
-    return () => clearInterval(intervalId);
-  }, []); // Empty dependency array for initial setup
+    setInterval(fetchData, 3000);
+  }, [token]); // Empty dependency array for initial setup
 
   // Handle filtering when search terms or filters change
   useEffect(() => {
     const filterData = (currentRequestsData) => {
       const filteredRequests = currentRequestsData.filter(request => {
         const matchesTerm = request.book.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                          request.book.author.name.toLowerCase().includes(searchTerm.toLowerCase());
+                            request.book.author.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                            request.reader.name.toLowerCase().includes(searchTerm.toLowerCase())
 
         const matchesCategory = !selectedCategory.id ? true : selectedCategory.id === request.book.categoryId;
 
@@ -85,8 +80,8 @@ const Request = () => {
       setRequests(filteredRequests);
     };
 
-    filterData(requestsData, categoriesData);
-  }, [searchTerm, selectedCategory, selectedStatus, requestsData, categoriesData]);
+    filterData(requestsData);
+  }, [searchTerm, selectedCategory, selectedStatus, requestsData]);
 
   const handleMouseDown = (e) => {
     setIsDragging(true);
