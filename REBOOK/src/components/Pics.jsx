@@ -31,7 +31,7 @@ function Pics({ searchTerm }) {
 
   useEffect(() => {
     const handleResize = () => {
-      const screenWidth = window.innerWidth;
+      const screenWidth = window.innerWidth - 60;
       const bookWidth = 120; // Adjusted fixed width for book card
       const effectiveWidth = screenWidth - (isSidebarOpen ? 256 : 0); // Adjust effective width based on sidebar visibility
       const padding = 40; // Assumed padding around book cards in pixels
@@ -94,7 +94,7 @@ function Pics({ searchTerm }) {
                 <div
                   className="flex-shrink-0 text-center bg-white p-2 rounded-md hover:shadow-2xl transition-shadow duration-900 cursor-pointer"
                   onClick={() => handleBookClick(book)}
-                  style={{ width: 132 }} // Fixed width for book card
+                  style={{ width: 132, height: 250 }} // Fixed width and height for book card
                 >
                   <div style={{ padding: '9px' }}> {/* Added padding around the image */}
                     <img
@@ -103,8 +103,8 @@ function Pics({ searchTerm }) {
                       className="object-cover h-32 w-full rounded-md" // Fixed height and width for image
                     />
                   </div>
-                  <h3 className="ml-2 text-[15px] font-bold flex ">{book.title}</h3>
-                  <p className="p-2 text-[10px] flex">By {book.author ? book.author.name : ''}</p>
+                  <h3 className="ml-2 text-[15px] font-bold">{book.title}</h3>
+                  <p className="p-2 text-[10px]">By {book.author ? book.author.name : ''}</p>
                 </div>
               </Link>
             ))
