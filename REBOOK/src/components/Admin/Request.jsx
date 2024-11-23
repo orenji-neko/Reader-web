@@ -147,6 +147,24 @@ const Request = () => {
     }
   };
 
+  const ret = async (id) => {
+    try {
+      const response = await fetch(`/api/v1/request/return/${id}`, {
+        method: "PUT",
+        headers: {
+          "Authorization": token
+        }
+      });
+
+      const result = await response.json();
+      alert("Returned!");
+      // Fetch updated data immediately after denial
+      fetchData();
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   // Rest of the component remains the same...
   return (
     <div className="bg-teal-100 flex flex-col w-full h-full min-h-screen">
@@ -297,7 +315,7 @@ const Request = () => {
                         </> : <> </> }
                         { request.status === "APPROVED" ? 
                           <a className="underline text-green-500 hover:text-green-200"
-                            onClick={ () => {} }
+                            onClick={ () => ret(request.id) }
                           >
                             Returned
                           </a>

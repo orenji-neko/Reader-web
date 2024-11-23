@@ -67,7 +67,7 @@ const Sortable = ({ searchTerm }) => {
           </thead>
           <tbody>
             {requests.length > 0 ? (
-              requestsData.map((request, index) => (
+              requests.map((request, index) => (
                 <tr key={index} className=" bg-white">
                   <td className="py-2 px-4 border-b">
                     <img src={`/api/v1/file/${request.book.cover}`} alt={request.book.title} className="w-10 h-10 object-cover" />
