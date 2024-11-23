@@ -36,7 +36,7 @@ function Sidebar() {
       {/* User Section */}
       <div>
         <div className="p-4 flex items-center h-10">
-          <Link to="/reader/user" className="flex items-center">
+          <Link to="/user" className="flex items-center">
             {image ? (  
               <img
                 src={image}
