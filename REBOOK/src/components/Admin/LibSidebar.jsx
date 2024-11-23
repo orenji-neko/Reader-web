@@ -42,7 +42,7 @@ function LibSidebar() {
     <div className="min-w-64 bg-teal-500 text-white h-full flex flex-col justify-between p-4">
       <div>
         <div className="p-4 flex items-center h-10">
-          <Link to="/librarian/users" className="flex items-center">
+          <Link to="/librarian/libuser" className="flex items-center">
             {image ? (
               <img
                 src={image}
