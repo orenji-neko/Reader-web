@@ -34,6 +34,7 @@ const app = new Elysia()
         authorization: t.String()
       })
     })
+
     .get("/requests/due", async ({ prisma }) => {
         const config = {
           include: {
@@ -154,9 +155,10 @@ const app = new Elysia()
           },
           data: {
             status: "APPROVED",
-            managedBy: userauth.name
+            managedBy: userauth.name,
+            due: new Date(new Date().setDate(new Date().getDate() + 3)) // current date + 3 days
           }
-        });
+        });        
     
         if (tempReq.status === "DENIED" || tempReq.status === "PENDING") {
           await prisma.book.update({

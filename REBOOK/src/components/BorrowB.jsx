@@ -12,6 +12,8 @@ const BorrowB = () => {
   const [scrollTop, setScrollTop] = useState(0);
 
   const categories = ["Fiction", "Non-Fiction", "Science", "History", "Mystery"]; // Define categories
+  
+  const [statusFilter, setStatusFilter] = useState("");
 
   const toggleDropdown = () => {
     setDropdownOpen(!isDropdownOpen);
