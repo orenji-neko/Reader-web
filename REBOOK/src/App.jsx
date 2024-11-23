@@ -4,6 +4,7 @@ import BorrowB from './components/BorrowB';
 import History from './components/History';
 import BookDetails from './components/BookDetails';
 import User from './components/User';
+import LibUser from './components/Admin/LibUser';
 import LandingLayout from './components/Layout/LandingLayout';
 import Category from './components/Category';
 import LiblandingLayout from './components/Admin/LiblandingLayout';
@@ -18,11 +19,11 @@ import Register from './components/Landing/Register';
 import Forgot from './components/Landing/Forgot';
 import Code from './components/Landing/Code';
 import Newpass from './components/Landing/Newpass';
+import ManagePage from './components/Admin/ManagePage';
 
 import { Navigate } from 'react-router-dom';
 import { useAuth } from './utils/AuthProvider'; // Make sure this hook returns the token or authentication status
 import PropTypes from 'prop-types';
-import ManagePage from './components/Admin/ManagePage';
 
 const ProtectedRoute = ({ children }) => {
   const { token } = useAuth(); // Replace with your actual authentication logic
@@ -34,9 +35,10 @@ const ProtectedRoute = ({ children }) => {
 
   return children;
 };
+
 ProtectedRoute.propTypes = {
   children: PropTypes.node
-}
+};
 
 function App() {
   return (
@@ -50,40 +52,39 @@ function App() {
         <Route path="/newpass" element={<Newpass />} />
 
         <Route path="/reader" element={
-          <ProtectedRoute> 
-            <LandingLayout /> 
+          <ProtectedRoute>
+            <LandingLayout />
           </ProtectedRoute>}>
-          
           <Route index element={<Landing />} />
-
           <Route path="borrow" element={<ProtectedRoute><BorrowB /></ProtectedRoute>} />
           <Route path="history" element={<ProtectedRoute><History /></ProtectedRoute>} />
           <Route path="book/:bookId" element={<ProtectedRoute><BookDetails /></ProtectedRoute>} />
           <Route path="user" element={<ProtectedRoute><User /></ProtectedRoute>} />
           <Route path="category/:categoryId" element={<ProtectedRoute><Category /></ProtectedRoute>} />
         </Route>
+
         <Route path="/librarian" element={<ProtectedRoute><LiblandingLayout /></ProtectedRoute>}>
           <Route index element={<LibLanding />} />
           <Route path="request" element={<ProtectedRoute><Request /></ProtectedRoute>} />
+          <Route path="libuser" element={<ProtectedRoute><LibUser /></ProtectedRoute>} />
           <Route path="inventory/*" element={
             <Routes>
               <Route index element={
                 <ProtectedRoute><BookInventory /></ProtectedRoute>
-              }/>
+              } />
               <Route path="add" element={
                 <ProtectedRoute>
                   <ManagePage />
                 </ProtectedRoute>
-              }/>
+              } />
               <Route path="edit/:bookId" element={
                 <ProtectedRoute>
                   <ManagePage />
                 </ProtectedRoute>
-              }/>
+              } />
             </Routes>
-          }/>
+          } />
           <Route path="readers" element={<ProtectedRoute><Readers /></ProtectedRoute>} />
-          <Route path="users" element={<ProtectedRoute><User /></ProtectedRoute>} />
           <Route path="due" element={<ProtectedRoute><DueBooks /></ProtectedRoute>} />
         </Route>
       </Routes>
