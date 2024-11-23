@@ -39,7 +39,7 @@ function LibSidebar() {
   }, [validate]);
 
   return (
-    <div className="min-w-64 bg-teal-500 text-white h-full flex flex-col justify-between p-4">
+    <div className="w-[100%] bg-teal-500 text-white h-full flex flex-col justify-between p-4 border-r-2 border-teal-400">
       <div>
         <div className="p-4 flex items-center h-10">
           <Link to="/librarian/libuser" className="flex items-center">
@@ -107,11 +107,18 @@ function LibSidebar() {
         </ul>
       </div>
       {/* Footer Section */}
-      <div className="p-0">
+      <div style={{ position: "relative", height: "100vh" }}>
         <img
           src="/rebook-images/bok1.png"
           alt="bgbook"
-          className="w-40 h-30 sm:w-48 sm:h-36 mt-auto"
+          style={{
+            width: "9rem",
+            height: "9rem",
+            filter: "brightness(0.2)", // Adjust the value to make the image darker
+            position: "absolute",
+            bottom: -12,
+            left: -10
+          }}
         />
       </div>
     </div>

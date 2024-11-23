@@ -12,8 +12,10 @@ const Descrip = () => {
                     </h1>
                 </div>
             </div>
-            <div className="flex justify-center mt-4 lg:mt-0 lg:ml-4 lg:absolute lg:right-0" style={{ marginRight: '80px' }}>
-                <iframe width="460" height="215" src="https://www.youtube.com/embed/JYghqEPdNoo" title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
+            <div className="flex justify-center mt-4 lg:mt-0 lg:ml-4 lg:absolute lg:right-0 " style={{ marginRight: '80px' }}>
+                <iframe width="480" height="235" src="https://www.youtube.com/embed/JYghqEPdNoo" title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen style={{
+            borderRadius: "10px" // Match this with the container's border-radius
+          }}></iframe>
             </div>
         </div>
     );
