@@ -257,12 +257,7 @@ const BookInventory = () => {
             onMouseUp={handleMouseUp}
             onMouseLeave={handleMouseUp}
           >
-            <div className="flex flex-row justify-end">
-              <button
-                className="bg-teal-600 text-white p-2 rounded-md hover:bg-teal-200 hover:text-black"
-                onClick={() => navigate("/librarian/inventory/add")}
-              >Add Book</button>
-            </div>
+         
 
             {isLoading ? (
               <div className="text-center py-4">Loading...</div>

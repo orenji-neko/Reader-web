@@ -41,19 +41,19 @@ const LibLanding = () => {
       
       {/* Main Content */}
       <div className="grid grid-cols-4 gap-4 px-8 mb-6">
-        <Link to="/admin/request" className="bg-teal-500 font-bold text-white p-4 rounded-md flex items-center justify-center group hover:bg-teal-600">
+        <Link to="/librarian/request" className="bg-teal-500 font-bold text-white p-4 rounded-md flex items-center justify-center group hover:bg-teal-600">
           <FaClipboardList size={24} className="mr-2 text-black" />
           <span className="group-hover:text-black transition-colors duration-200">REQUEST</span>
         </Link>
-        <Link to="/admin/users" className="bg-teal-500 font-bold text-white p-4 rounded-md flex items-center justify-center group hover:bg-teal-600">
+        <Link to="/librarian/readers" className="bg-teal-500 font-bold text-white p-4 rounded-md flex items-center justify-center group hover:bg-teal-600">
           <FaUser size={24} className="mr-2 text-black" />
           <span className="group-hover:text-black transition-colors duration-200">USERS</span>
         </Link>
-        <Link to="/admin/due" className="bg-teal-500 font-bold text-white p-4 rounded-md flex items-center justify-center group hover:bg-teal-600">
+        <Link to="/librarian/due" className="bg-teal-500 font-bold text-white p-4 rounded-md flex items-center justify-center group hover:bg-teal-600">
           <FaClock size={24} className="mr-2 text-black" />
           <span className="group-hover:text-black transition-colors duration-200">LATE BOOKS</span>
         </Link>
-        <Link to="/admin/inventory" className="bg-teal-500 font-bold text-white p-4 rounded-md flex items-center justify-center group hover:bg-teal-600">
+        <Link to="/librarian/inventory" className="bg-teal-500 font-bold text-white p-4 rounded-md flex items-center justify-center group hover:bg-teal-600">
           <BiSolidBookAdd size={24} className="mr-2 text-black" />
           <span className="group-hover:text-black transition-colors duration-200">BOOK</span>
         </Link>
