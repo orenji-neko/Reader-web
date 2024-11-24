@@ -1,6 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../utils/AuthProvider';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faStar as faStarRegular } from '@fortawesome/free-regular-svg-icons';
+import { faStar as faStarSolid } from '@fortawesome/free-solid-svg-icons';
 
 function BookDetails() {
   const { bookId } = useParams(); // Get the book title from the URL
@@ -96,15 +99,20 @@ function BookDetails() {
           <h1 className="text-4xl font-bold">{book.title}</h1>
           <p className="text-xl italic">By {book.author ? book.author.name : '' }</p>
           <p className="mt-2">Rating: ⭐ {book.rating}</p>
-          <button className="bg-blue-500 text-white px-4 py-2 rounded mt-4 hover:bg-blue-600 disabled:bg-gray-500"
-            onClick={() => { borrow(book.id) }}
-            disabled={book.available <= 0}
-          >
-            Borrow
-          </button>
-          <button className={`text-black px-4 py-2 rounded ml-2 mt-4 hover:bg-gray-400 ${ isRated ? 'bg-yellow-300' : 'bg-yellow-200' } `}
+          <button className="bg-teal-500 text-white px-4 py-2 w-40 rounded mt-4 hover:bg-teal-600 disabled:bg-gray-500"
+        onClick={() => { borrow(book.id) }}
+        disabled={book.available <= 0}
+      >
+        Borrow
+</button>
+
+<button 
+            className={`text-black px-4 py-2 rounded ml-2 mt-4 hover:bg-gray-400 ${ isRated ? 'bg-white' : 'bg-white' } `}
             onClick={() => rate(book.id)}
-          > { isRated ? 'Rated' : 'Rate'} </button>
+        >
+            <FontAwesomeIcon icon={isRated ? faStarRegular : faStarRegular} className="mr-2" />
+            {isRated ? 'Rated' : 'Rate'}
+        </button>
         </div>
       </div>
       {/* Book description and comments */}
