@@ -82,15 +82,16 @@ const app = new Elysia()
                             }
                         },
                         userId: false,
-                        bookId: false
+                        bookId: false,
                     }
                 },
+                ratings: true
             },
             orderBy: undefined
         }
 
         const result = await prisma.book.findUnique(config);
-        return result;
+        return {...result, rating: result.ratings.length};
     }, {
         params: t.Object({
             id: t.String()

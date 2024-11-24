@@ -113,19 +113,19 @@ const app = new Elysia({ prefix: "/user" })
         throw new Error("Invalid token!");
       }
 
-      let users = [];
-      if(filter === "AUTH" && value === "READER") {
-        users = await prisma.user.findMany({
-            where: {
-                auth: "READER"
-            }
-        })
+      let config:any = {
+        include: {
+            requests: true
+        }
       }
-      else {
-        users = await prisma.user.findMany();
+      
+      if(filter === "AUTH" && value === "READER") {
+        config.where = {
+            auth: true
+        }
       }
 
-      return users;
+      return await prisma.user.findMany(config);
     } catch (err) {
       console.error("Error fetching user:", err);
       return {

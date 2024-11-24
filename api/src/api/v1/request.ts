@@ -28,6 +28,12 @@ const app = new Elysia()
             }
         }
 
+        if(auth.auth === "READER") {
+          config.where = {
+            readerId: auth.id
+          }
+        }
+
         return await prisma.request.findMany(config);
     }, {
       headers: t.Object({
@@ -36,47 +42,43 @@ const app = new Elysia()
     })
 
     .get("/requests/due", async ({ prisma }) => {
-        const config = {
-          include: {
-            book: {
-              include: {
-                author: true
-              }
-            },
-            reader: {
-              select: {
-                id: true,
-                email: true,
-                name: true,
-                username:true
-              }
+      const config = {
+        where: {
+          due: {
+            lt: new Date()
+          },
+          status: "APPROVED"
+        },
+        include: {
+          book: {
+            include: {
+              author: true
+            }
+          },
+          reader: {
+            select: {
+              id: true,
+              email: true,
+              name: true,
+              username: true
             }
           }
-        };
-      
-        const requests = await prisma.request.findMany(config);
-      
-        // Get the current date and time
-        const currentDateTime = new Date();
-      
-        // Filter requests where due date is equal to or greater than current date and time
-        const dueRequests = requests.map(request => {
-            if(request.due && request.borrowed) {
-              return {
-                  ...request,
-                  overdue: request.due >= request.borrowed
-              }
-            }
-            else {
-              return {
-                  ...request,
-                  overdue: null
-              }
-            }
+        }
+      };
+    
+      try {
+        const overdueRequests = await prisma.request.findMany(config);
+        return overdueRequests.map(req => {
+          if(req.due && req.borrowed) {
+            
+          }
         });
-      
-        return dueRequests;
-    })
+      } catch (err) {
+        console.error("Error fetching overdue requests:", err);
+        return { error: "Unable to fetch overdue requests." };
+      }
+    })    
+
     .post("/request", async ({ jwt, prisma, headers, body }) => {
       try {
         const userauth:any = await jwt.verify(headers.authorization);
@@ -156,7 +158,8 @@ const app = new Elysia()
           data: {
             status: "APPROVED",
             managedBy: userauth.name,
-            due: new Date(new Date().setDate(new Date().getDate() + 3)) // current date + 3 days
+            due: new Date(new Date().setDate(new Date().getDate() + 3)), // current date + 3 days
+            borrowed: new Date()
           }
         });        
     

@@ -7,7 +7,9 @@ function BookDetails() {
   const navigate = useNavigate(); // Hook to navigate back
 
   const [book, setBook] = useState(null); // book details
-  const { token } = useAuth();
+  const { token, validate } = useAuth();
+
+  const [isRated, setIsRated] = useState(false);
 
   useEffect(() => {
     const load = async () => {
@@ -18,11 +20,17 @@ function BookDetails() {
         }
       });
       const book_result = await book_response.json();
-      setBook(await book_result);
+      setBook(book_result);
+
+      const user = await validate();
+      const isBookMatch = book_result.ratings.find(rating => rating.readerId === user.id) ? true : false;
+      setIsRated(isBookMatch);
     }
 
-    load();
-  }, [book, bookId]);
+    const id = setTimeout(load, 1000);
+
+    return () => clearTimeout(id);
+  }, [book, bookId, token, validate]);
 
   if (!book) {
     return <p>Book not found!</p>; // Handle case where the book does not exist
@@ -52,6 +60,23 @@ function BookDetails() {
     }
   }
 
+  const rate = async (id) => {
+    const response = await fetch("/api/v1/rating", {
+      method: "POST",
+      headers: {
+        "Authorization": token,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        bookId: id.toString()
+      })
+    })
+
+    const result = await response.json()
+    console.log(result);
+    alert("rated book!")
+  }
+
   return (
     <div className="book-details p-6 h-screen">
       {/* Chevron for navigating back */}
@@ -77,7 +102,9 @@ function BookDetails() {
           >
             Borrow
           </button>
-          <button className="bg-gray-300 text-black px-4 py-2 rounded ml-2 mt-4 hover:bg-gray-400">Rate</button>
+          <button className={`text-black px-4 py-2 rounded ml-2 mt-4 hover:bg-gray-400 ${ isRated ? 'bg-yellow-300' : 'bg-yellow-200' } `}
+            onClick={() => rate(book.id)}
+          > { isRated ? 'Rated' : 'Rate'} </button>
         </div>
       </div>
       {/* Book description and comments */}
