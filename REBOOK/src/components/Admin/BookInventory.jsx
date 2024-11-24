@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { FaSearch, FaTimes, FaChevronDown, FaFilter, FaEdit, FaTrash } from 'react-icons/fa';
 import { useAuth } from '../../utils/AuthProvider';
 
-const statuses = ["Available", "Unavailable"];
+const statuses = ["All", "Available", "Unavailable"];
 
 const BookInventory = () => {
   const { token } = useAuth();

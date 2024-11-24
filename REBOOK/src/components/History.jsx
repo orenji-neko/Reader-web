@@ -1,6 +1,8 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { FaSearch, FaTimes, FaChevronDown } from 'react-icons/fa'; // Ensure react-icons is installed
 import { Link } from "react-router-dom";
+import { useAuth } from '../utils/AuthProvider';
+import { formatDate } from '../utils/date';
 
 const History = () => {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
@@ -10,15 +12,27 @@ const History = () => {
   const [startY, setStartY] = useState(0);
   const [scrollTop, setScrollTop] = useState(0);
 
-  const latestBooksData = [
-    { id: 2, title: "Book Title 2", dateborrowed: "09/19/2024", cover: "/rebook-images/blink.png", duedate: "09/20/2024"},
-    { id: 3, title: "Book Title 3", dateborrowed: "09/20/2024", cover: "/rebook-images/hold.png", duedate: "09/21/2024"},
-    { id: 4, title: "Book Title 4", dateborrowed: "09/21/2024", cover: "/rebook-images/slow.png", duedate: "09/22/2024"},
-    { id: 5, title: "Book Title 5", dateborrowed: "09/22/2024", cover: "/rebook-images/solitaire.png", duedate: "09/23/2024"},
-  ];
+  const [ requestsData, setRequestsData] = useState([])
+  const { token } = useAuth();
 
-  const filteredBooks = latestBooksData.filter(book => 
-    book.title.toLowerCase().includes(searchTerm.toLowerCase())
+  useEffect(() => {
+    const id = setTimeout(async () => {
+      const response = await fetch("/api/v1/requests", {
+        method: "GET",
+        headers: {
+          "Authorization": token  
+        }
+      })
+
+      const result = await response.json();
+      setRequestsData(result)
+    }, 1000)
+
+    return () => id
+  }, [])
+
+  const filteredRequests = requestsData.filter(req => 
+    req.book.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const toggleDropdown = () => {
@@ -106,18 +120,20 @@ const History = () => {
                 <th className="p-4 border-b border-gray-300">Title</th>
                 <th className="p-4 border-b border-gray-300">Date Borrowed</th>
                 <th className="p-4 border-b border-gray-300">Due Date</th>
+                <th className="p-4 border-b border-gray-300">Status</th>
                 <th className="p-4 border-b border-gray-300"></th>
               </tr>
             </thead>
             <tbody>
-              {filteredBooks.map((book) => (
-                <tr key={book.id}>
+              {filteredRequests.map((request) => (
+                <tr key={request.id}>
                   <td className="p-4 border-b border-gray-200">
-                    <img src={book.cover} alt={book.title} className="h-16 w-16 object-cover rounded-md" />
+                    <img src={`/api/v1/file/${request.book.cover}`} alt={request.book.title} className="h-16 w-16 object-cover rounded-md" />
                   </td>
-                  <td className="p-4 border-b border-gray-200">{book.title}</td>
-                  <td className="p-4 border-b border-gray-200">{book.dateborrowed}</td>
-                  <td className="p-4 border-b border-gray-200">{book.duedate}</td>
+                  <td className="p-4 border-b border-gray-200">{request.book.title}</td>
+                  <td className="p-4 border-b border-gray-200">{ request.borrowed ? formatDate(request.borrowed) : 'No Borrowed Date'}</td>
+                  <td className="p-4 border-b border-gray-200">{ formatDate(request.due) }</td>
+                  <td className="p-4 border-b border-gray-200">{ request.status }</td>
                   <td>
                     <Link to="/BorrowB" className="flex items-center px-3 group-hover:text-black">
                       <u>Manage</u>

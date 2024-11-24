@@ -272,6 +272,8 @@ const Request = () => {
                   <th className="p-4 border-b border-gray-300">Reader</th>
                   <th className="p-4 border-b border-gray-300">Status</th>
                   <th className="p-4 border-b border-gray-300">Managed At</th>
+                  <th className="p-4 border-b border-gray-300">Borrowed At</th>
+                  <th className="p-4 border-b border-gray-300">Due Date</th>
                   <th className="p-4 border-b border-gray-300"></th>
                 </tr>
               </thead>
@@ -295,6 +297,12 @@ const Request = () => {
                       </td>
                       <td className="p-4 border-b border-gray-200">
                         { formatDate(request.updatedAt) }
+                      </td>
+                      <td className="p-4 border-b border-gray-200">
+                        { formatDate(request.borrowed) }
+                      </td>
+                      <td className="p-4 border-b border-gray-200">
+                        { formatDate(request.due) }
                       </td>
                       <td className="p-4 border-b border-gray-200 space-x-2">
                         {request.status === "PENDING" ? <>
