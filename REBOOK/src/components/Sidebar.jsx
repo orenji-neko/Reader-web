@@ -32,7 +32,7 @@ function Sidebar() {
   }, [validate]);
 
   return (
-    <div className="w-[100%] bg-teal-500 text-white h-full flex flex-col justify-between p-4">
+    <div className="w-[100%] bg-teal-500 text-white h-full flex flex-col justify-between p-4 border-r-2 border-teal-400">
       {/* User Section */}
       <div>
         <div className="p-4 flex items-center h-10">
@@ -50,8 +50,8 @@ function Sidebar() {
               />
             )}
           </Link>
-          <h1 className="text-black text-sm sm:text-base mb-2 pt-3">
-            Welcome, <span className="font-bold">{name}</span>
+          <h1 className="text-black mb-2 pt-3">
+            Welcome,  <span className="font-bold">{name}</span>
           </h1>
         </div>
         {/* Navigation Links */}
@@ -62,6 +62,9 @@ function Sidebar() {
                 src="/src/assets/icons/search-engine.png"
                 alt="Browse Books"
                 className="inline-block mr-2 transition-transform duration-200 group-hover:scale-110"
+                style={{
+                  filter: "brightness(0.1)", // Adjust the value to make the image darker
+                }}
               />
               <span className="transition-colors duration-200 group-hover:text-black">Browse Books</span>
             </Link>
@@ -73,6 +76,9 @@ function Sidebar() {
                 src="/src/assets/icons/borrow.png"
                 alt="Borrow Books"
                 className="inline-block mr-2 transition-transform duration-200 group-hover:scale-110"
+                style={{
+                  filter: "brightness(0.1)", // Adjust the value to make the image darker
+                }}
               />
               <span className="transition-colors duration-200 group-hover:text-black">Borrow Books</span>
             </Link>
@@ -104,13 +110,22 @@ function Sidebar() {
         </ul>
       </div>
       {/* Footer / Image Section */}
-      <div className="p-0">
+      <div style={{ position: "relative", height: "100vh" }}>
         <img
           src="/rebook-images/bok1.png"
           alt="bgbook"
-          className="w-40 h-30 sm:w-48 sm:h-36 mt-auto"
+          style={{
+            width: "9rem",
+            height: "9rem",
+            filter: "brightness(0.2)", // Adjust the value to make the image darker
+            position: "absolute",
+            bottom: -12,
+            left: -10
+          }}
         />
       </div>
+
+
     </div>
   );
 }

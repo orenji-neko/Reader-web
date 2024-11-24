@@ -7,7 +7,7 @@ const LatestBooksEntry = ({ title, author, coverUrl, onClick }) => {
   return (
     <div 
       onClick={onClick} 
-      className="flex flex-col items-center p-2 border rounded-lg bg-white shadow-xl cursor-pointer hover:shadow-2xl transition-shadow" 
+      className="flex flex-col items-center p-2 border rounded-lg bg-white border-gray-600 shadow-xl cursor-pointer hover:shadow-2xl transition-shadow" 
       style={{ width: '90px', height: '170px' }}
     >
       <img src={coverUrl} alt={title} className="h-32 w-full object-cover rounded-md" style={{ height: '100px', width: '80px' }} />
@@ -106,7 +106,7 @@ const Best = () => {
           </div>
         </div>
         {selectedBook && (
-          <div className="relative p-4 bg-white shadow-xl rounded-2xl flex flex-col items-center hover:shadow-xl transition-shadow" style={{ height: '126vh', width: '30vw', marginRight: '80px' }}>
+          <div className="relative p-4 bg-white border border-gray-500 shadow-xl rounded-2xl flex flex-col items-center hover:shadow-xl transition-shadow" style={{ height: '126vh', width: '30vw', marginRight: '80px' }}>
             <button onClick={handleRemoveSelectedBook} className="absolute top-2 right-2 text-gray-500 font-bold hover:text-black">
               &#x2715;
             </button>

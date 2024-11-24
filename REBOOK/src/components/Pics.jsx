@@ -92,7 +92,8 @@ function Pics({ searchTerm }) {
             filteredBooks.slice(startIndex, startIndex + itemsPerPage).map((book) => (
               <Link key={book.id} to={`/reader/book/${book.id}`}>
                 <div
-                  className="flex-shrink-0 text-center bg-white p-2 rounded-md hover:shadow-2xl transition-shadow duration-900 cursor-pointer"
+                  className="flex-shrink-0 text-center bg-white p-2 rounded-lg border border-gray-300 hover:shadow-2xl transition-shadow duration-900 cursor-pointer"
+
                   onClick={() => handleBookClick(book)}
                   style={{ width: 132, height: 250 }} // Fixed width and height for book card
                 >
