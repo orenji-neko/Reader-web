@@ -7,13 +7,13 @@ const LatestBooksEntry = ({ title, author, coverUrl, onClick }) => {
   return (
     <div 
       onClick={onClick} 
-      className="flex flex-col items-center p-2 border rounded-lg bg-white border-gray-600 shadow-xl cursor-pointer hover:shadow-2xl transition-shadow" 
+      className="flex flex-col items-center p-2 border rounded-lg bg-white shadow-xl cursor-pointer hover:shadow-2xl transition-shadow" 
       style={{ width: '90px', height: '170px' }}
     >
       <img src={coverUrl} alt={title} className="h-32 w-full object-cover rounded-md" style={{ height: '100px', width: '80px' }} />
       <div className="mt-1 text-center">
         <h4 className="text-xs font-bold">{title}</h4>
-        <h4 className="text-xs truncate" style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '80px' }}>
+        <h4 className="text-xs" style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '80px' }}>
           By: {author}
         </h4>
       </div>
@@ -118,8 +118,12 @@ const Best = () => {
             <div className="w-full text-left my-1">
               <h3 className="font-bold">Description</h3>
             </div>
-            <p className="text-sm mb-2 border border text-justify border-black p-2 rounded-3xl" style={{ width: '100%', height: '35%', overflowY: 'auto' }}>&nbsp;&nbsp;&nbsp;&nbsp;{selectedBook.description}</p>
-            <a href="/login" className="mt-2 px-4 py-2 bg-teal-500 text-white rounded-md hover:bg-teal-600">Borrow</a>
+            <p className="text-sm mb-2 border text-justify border-black p-2 rounded-3xl" style={{ width: '100%', height: '35%', overflowY: 'auto' }}>
+              &nbsp;&nbsp;&nbsp;&nbsp;{selectedBook.description}
+            </p>
+            <a href="/login" className="mt-2 px-4 py-2 bg-teal-500 text-white rounded-md hover:bg-teal-600">
+              Borrow
+            </a>
           </div>
         )}
       </div>
