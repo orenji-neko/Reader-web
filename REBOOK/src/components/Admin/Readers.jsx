@@ -184,9 +184,9 @@ const Readers = () => {
                       </td>
                       <td className="p-4 border-b border-gray-200">{reader.username}</td>
                       <td className="p-4 border-b border-gray-200 text-left">{ formatDate(reader.createdAt) }</td>
-                      <td className="p-4 border-b border-gray-200 text-center">{}</td>
-                      <td className="p-4 border-b border-gray-200 text-center">{reader.borrowedBooks}</td>
-                      <td className="p-4 border-b border-gray-200 text-center">{reader.dueBooks}</td>
+                      <td className="p-4 border-b border-gray-200 text-center">{reader.requestsAmount}</td>
+                      <td className="p-4 border-b border-gray-200 text-center">{reader.borrowedAmount}</td>
+                      <td className="p-4 border-b border-gray-200 text-center">{reader.dueAmount}</td>
                       <td className={`p-4 border-b border-gray-200 ${reader.readerStatus === 'Suspended' ? 'text-red-600' : 'text-green-600'}`}>
                         {reader.readerStatus}
                       </td>
