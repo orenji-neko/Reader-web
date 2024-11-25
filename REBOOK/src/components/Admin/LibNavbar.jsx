@@ -2,7 +2,7 @@ import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBell } from '@fortawesome/free-solid-svg-icons';
 
-function LibNavbar({ toggleSidebar, isSidebarOpen }) {
+function LibNavbar({ toggleSidebar, isSidebarOpen, toggleNotif }) {
   return (
     <div className="flex justify-between bg-teal-200 p-4 border-b-2 border-gray-400">
       <div className="flex items-center">
@@ -21,7 +21,7 @@ function LibNavbar({ toggleSidebar, isSidebarOpen }) {
         </a>
       </div>
       <div className="flex items-center">
-        <FontAwesomeIcon icon={faBell} className="text-black text-xl cursor-pointer" />
+        <FontAwesomeIcon icon={faBell} className="text-black text-xl cursor-pointer" onClick={() => toggleNotif() } />
       </div>
     </div>
   );

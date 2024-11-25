@@ -173,6 +173,19 @@ const app = new Elysia()
             }
           });
         }
+
+        // generate notification
+        await prisma.notification.create({
+          data: {
+            description: `Your request for book ${tempBook.title} has been approved!`,
+            user: {
+              connect: {
+                id: tempReq.readerId
+              }
+            },
+            cover: tempBook.cover ? tempBook.cover : 'undefined.jpg'
+          }
+        })
     
         return result;
       } catch (err) {
@@ -195,7 +208,7 @@ const app = new Elysia()
 
     .put("/request/deny/:id", async ({ jwt, prisma, params, headers }) => {
       try {
-        const userauth = await jwt.verify(headers.authorization);
+        const userauth:any = await jwt.verify(headers.authorization);
         const { id } = params;
     
         if (!userauth) {
@@ -235,6 +248,19 @@ const app = new Elysia()
             }
           });
         }
+
+        // generate notification
+        await prisma.notification.create({
+          data: {
+            description: `Your request for book ${tempBook.title} has been denied!`,
+            user: {
+              connect: {
+                id: tempReq.readerId
+              }
+            },
+            cover: tempBook.cover ? tempBook.cover : 'undefined.jpg'
+          }
+        })
     
         return result;
       } catch (err) {
@@ -297,6 +323,19 @@ const app = new Elysia()
             }
           });
         }
+
+        // generate notification
+        await prisma.notification.create({
+          data: {
+            description: `Your borrowed book ${tempBook.title} has been returned!`,
+            user: {
+              connect: {
+                id: tempReq.readerId
+              }
+            },
+            cover: tempBook.cover ? tempBook.cover : 'undefined.jpg'
+          }
+        })
     
         return result;
       } catch (err) {

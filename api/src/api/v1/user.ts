@@ -141,7 +141,40 @@ const app = new Elysia({ prefix: "/user" })
       filter:   t.Optional(t.String()),
       value:    t.Optional(t.String())
     })
-  }) 
+  })
+
+  /**
+   * [GET]    /user/details
+   */
+  .get("/details", async ({ headers, prisma, jwt }) => {
+    try {
+      const { authorization } = headers;
+      const userauth:any = await jwt.verify(authorization);
+      
+      if(!userauth) {
+        throw new Error("Unauthorized!")
+      }
+
+      const { id } = userauth;
+      const user = await prisma.user.findUnique({
+        where: {
+          id: id
+        }
+      })
+      return user;
+      
+    } catch (err) {
+      console.error("Error fetching user:", err);
+      return {
+        status: 422,
+        message: err || "Unprocessable Entity"
+      };
+    }
+  }, {
+    headers: t.Object({
+      authorization: t.String()
+    })
+  })
 
   .get("/requests", async ({ prisma, query, headers, jwt }) => {
     const { authorization } = headers;
@@ -175,5 +208,88 @@ const app = new Elysia({ prefix: "/user" })
         value: t.Optional(t.String())
     })
   })
+
+  .put("/", async ({ headers, prisma, body, jwt }) => {
+    try {
+        const { authorization } = headers;
+        if (!authorization) {
+            return new Response(JSON.stringify({
+                status: 401,
+                message: "No authorization token provided"
+            }), { status: 401 });
+        }
+
+        const userauth = await jwt.verify(authorization);
+        if (!userauth || !userauth.id || !userauth.email) {
+            return new Response(JSON.stringify({
+                status: 401,
+                message: "Invalid token"
+            }), { status: 401 });
+        }
+
+        const { name, email, password, contacts, profile } = body;
+
+        // Validate email matches authenticated user
+        if (userauth.email !== email) {
+            return new Response(JSON.stringify({
+                status: 403,
+                message: "Unauthorized: Email mismatch"
+            }), { status: 403 });
+        }
+
+        // Update user data
+        const updateData: any = {
+            name,
+            email,
+            contacts
+        };
+
+        // Only include password if it's being updated
+        if (password) {
+            updateData.password = await Bun.password.hash(password, "bcrypt");
+        }
+
+        // Only include profile if it's being updated
+        if (profile) {
+            updateData.profile = profile;
+        }
+
+        const updatedUser = await prisma.user.update({
+            where: {
+                id: parseInt(userauth.id)
+            },
+            data: updateData
+        });
+
+        return new Response(JSON.stringify({
+            status: 200,
+            message: "User updated successfully",
+            data: {
+                name: updatedUser.name,
+                email: updatedUser.email,
+                contacts: updatedUser.contacts,
+                profile: updatedUser.profile
+            }
+        }), { status: 200 });
+
+    } catch (error) {
+        console.error('Server error:', error);
+        return new Response(JSON.stringify({
+            status: 422,
+            message: error.message || "Error updating user"
+        }), { status: 422 });
+    }
+  }, {
+      headers: t.Object({
+          authorization: t.String()
+      }),
+      body: t.Object({
+          name: t.String(),
+          email: t.String(),
+          password: t.Optional(t.String()),  // Make password optional
+          contacts: t.String(),
+          profile: t.Optional(t.String())
+      })
+  });
 
 export default app;
