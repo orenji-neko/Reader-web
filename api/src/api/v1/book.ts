@@ -163,7 +163,6 @@ const app = new Elysia()
 
         try {
             const { id, title, authorId, cover, categoryId, description, available } = body;
-            console.log(body);
             // saving file
             const fileName = await saveImage(cover);
 
