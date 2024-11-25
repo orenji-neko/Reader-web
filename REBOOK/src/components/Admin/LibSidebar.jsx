@@ -16,26 +16,29 @@ function LibSidebar() {
   const [image, setImage] = useState(""); // Initialize state for user image
   const [name, setName] = useState("User"); // Initialize the state for name
 
-  const { validate, logout } = useAuth();
+  const { validate, logout, token } = useAuth();
 
   useEffect(() => {
-    // Fetch user data from localStorage
-    const storedUserDetails = localStorage.getItem("userDetails");
-    const storedImage = localStorage.getItem("userImage");
+    const fetchData = async () => {
+      const response = await fetch("/api/v1/user/details", {
+        method: "GET",
+        headers: {
+          "Authorization": token
+        }
+      });
 
-    if (storedUserDetails) {
-      const userDetails = JSON.parse(storedUserDetails);
-      setName(userDetails.name || "User");
+      if (!response.ok) {
+        throw new Error('Failed to fetch user details');
+      }
+
+      const result = await response.json();
+      
+      setName(result.username);
+      setImage(result.profile ? result.profile : null);
     }
 
-    if (storedImage) {
-      setImage(storedImage);
-    } else {
-      setImage("/rebook-images/default_profile.png");
-    }
+    fetchData();
 
-    // Alternatively, fetch user data from the validate method if needed
-    // validate().then(res => setName(res.fullname));
   }, [validate]);
 
   return (
@@ -45,7 +48,7 @@ function LibSidebar() {
           <Link to="/librarian/libuser" className="flex items-center">
             {image ? (
               <img
-                src={image}
+                src={`/api/v1/file/${image}`}
                 alt="User"
                 className="w-10 h-10 rounded-full mr-2"
               />

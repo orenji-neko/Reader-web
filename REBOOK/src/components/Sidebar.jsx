@@ -8,26 +8,28 @@ function Sidebar() {
   const [image, setImage] = useState(""); // Initialize state for user image
   const [name, setName] = useState("User"); // Initialize the state for name
 
-  const { validate, logout } = useAuth();
+  const { validate, logout, token } = useAuth();
 
   useEffect(() => {
-    // Fetch the user data from localStorage
-    const storedUserDetails = localStorage.getItem("userDetails");
-    const storedImage = localStorage.getItem("userImage");
+    const fetchData = async () => {
+      const response = await fetch("/api/v1/user/details", {
+        method: "GET",
+        headers: {
+          "Authorization": token
+        }
+      });
 
-    if (storedUserDetails) {
-      const userDetails = JSON.parse(storedUserDetails);
-      setName(userDetails.name || "User");
+      if (!response.ok) {
+        throw new Error('Failed to fetch user details');
+      }
+
+      const result = await response.json();
+      
+      setName(result.username);
+      setImage(result.profile ? result.profile : null);
     }
 
-    if (storedImage) {
-      setImage(storedImage);
-    } else {
-      setImage("/rebook-images/default_profile.png");
-    }
-
-    // Alternatively, you can use the validate method if the data comes from there
-    // validate().then(res => setName(res.fullname));
+    fetchData();
 
   }, [validate]);
 
@@ -35,11 +37,11 @@ function Sidebar() {
     <div className="w-[100%] bg-teal-500 text-white h-full flex flex-col justify-between p-4 border-r-2 border-teal-400">
       {/* User Section */}
       <div>
-        <div className="p-4 flex items-center h-10">
+        <div className="p-6 flex items-center h-10">
           <Link to="/reader/user" className="flex items-center">
             {image ? (  
               <img
-                src={image}
+                src={`/api/v1/file/${image}`}
                 alt="User"
                 className="w-10 h-10 rounded-full mr-2" // Set dimensions for user image
               />
@@ -51,7 +53,7 @@ function Sidebar() {
             )}
           </Link>
           <h1 className="text-black mb-2 pt-3">
-            Welcome,  <span className="font-bold">{name}</span>
+            Welcome,  <br/> <span className="font-bold">{name}</span>
           </h1>
         </div>
         {/* Navigation Links */}

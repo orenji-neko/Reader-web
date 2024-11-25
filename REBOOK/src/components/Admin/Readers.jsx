@@ -180,10 +180,10 @@ const Readers = () => {
                   filteredReaders.map((reader) => (
                     <tr key={reader.id} className="hover:bg-teal-50">
                       <td className="p-4 border-b border-gray-200">
-                        <img src={reader.profile} alt={reader.username} className="h-16 w-16 object-cover rounded-full" />
+                        <img src={`/api/v1/file/${reader.profile}`} alt={reader.username} className="h-16 w-16 object-cover rounded-full" />
                       </td>
                       <td className="p-4 border-b border-gray-200">{reader.username}</td>
-                      <td className="p-4 border-b border-gray-200 text-left">{reader.createdAt}</td>
+                      <td className="p-4 border-b border-gray-200 text-left">{ formatDate(reader.createdAt) }</td>
                       <td className="p-4 border-b border-gray-200 text-center">{}</td>
                       <td className="p-4 border-b border-gray-200 text-center">{reader.borrowedBooks}</td>
                       <td className="p-4 border-b border-gray-200 text-center">{reader.dueBooks}</td>
