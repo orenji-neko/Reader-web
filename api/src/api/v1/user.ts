@@ -125,7 +125,42 @@ const app = new Elysia({ prefix: "/user" })
         }
       }
 
-      return await prisma.user.findMany(config);
+      const configRequests: any = {
+        where: {
+          due: {
+            lt: new Date()
+          },
+          reader: {
+            id: parseInt(userauth.id)
+          },
+          status: "APPROVED"
+        },
+        include: {
+          book: {
+            include: {
+              author: true
+            }
+          },
+          reader: {
+            select: {
+              id: true,
+              email: true,
+              name: true,
+              username: true
+            }
+          }
+        }
+      };
+
+      let users = await prisma.user.findMany(config);
+      users = users.map(usr => ({
+        ...usr,
+        requestsAmount: usr.requests.length,
+        borrowedAmount: usr.requests.filter(req => req.status === "APPROVED").length,
+        dueAmount: usr.requests.filter(req => new Date(req.due).getTime() <= Date.now()).length
+      }))
+
+      return users
     } catch (err) {
       console.error("Error fetching user:", err);
       return {

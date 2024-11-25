@@ -39,19 +39,22 @@ const ImageInput = ({ onAddImage, image }) => {
                                 </div>
                             )}
                             <div className="flex space-x-4 mt-4">
-                                <button
-                                    className={`p-2 text-white rounded-lg ${isDragging ? 'bg-red-500' : 'bg-blue-500'}`}
-                                    onClick={onImageUpload}
-                                    {...dragProps}
-                                >
-                                    <FaUpload />
-                                </button>
-                                <button
-                                    className="p-2 text-white bg-red-500 rounded-lg"
-                                    onClick={onImageRemoveAll}
-                                >
-                                    <FaTrashAlt />
-                                </button>
+                              { !image ? 
+                                  <button
+                                      className={`p-2 text-white rounded-lg ${isDragging ? 'bg-red-500' : 'bg-blue-500'}`}
+                                      onClick={onImageUpload}
+                                      {...dragProps}
+                                  >
+                                      <FaUpload />
+                                  </button>
+                                :
+                                  <button
+                                      className="p-2 text-white bg-red-500 rounded-lg"
+                                      onClick={onImageRemoveAll}
+                                  >
+                                      <FaTrashAlt />
+                                  </button>
+                                }
                             </div>
                         </div>
                     )}
@@ -111,7 +114,7 @@ const ManagePage = () => {
           }
         });
         const bookResult = await bookResponse.json();
-        setAuthor(bookResult.author);
+        setAuthor(bookResult.author.name);
         setTitle(bookResult.title);
         setCategoryId(bookResult.categoryId);
         setDescription(bookResult.description);
